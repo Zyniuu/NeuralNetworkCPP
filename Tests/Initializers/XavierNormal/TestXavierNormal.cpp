@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 #include <numeric>
-#include "../TestUtils/TestUtils.hpp"
+#include "../../TestUtils/TestUtils.hpp"
 #include "../../../NeuralNetworkCPP/Initializers/XavierNormal/XavierNormal.hpp"
 
 // Test whether XavierNormal generates values within an expected range

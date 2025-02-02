@@ -1,7 +1,7 @@
 /**
  * C++ neural network library
  *
- * Helpers.hpp
+ * TestUtils.hpp
  */
 
 #ifndef TESTUTILS_HPP
