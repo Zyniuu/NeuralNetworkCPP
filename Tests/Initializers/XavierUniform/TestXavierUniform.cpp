@@ -68,3 +68,13 @@ TEST(XavierUniformTests, DistributionCheck)
     EXPECT_NEAR(mean, 0.0, 0.1);              // Mean should be close to 0
     EXPECT_NEAR(stdDev, expectedStdDev, 0.1); // Standard deviation should match expected
 }
+
+// Test that small inputs and outputs do not cause issues
+TEST(XavierUniformTests, SmallInputsOutputs)
+{
+    int inputs = 1;
+    int outputs = 1;
+    nn::XavierUniform initializer(inputs, outputs);
+
+    EXPECT_NO_THROW(initializer.getRandomNum());
+}
