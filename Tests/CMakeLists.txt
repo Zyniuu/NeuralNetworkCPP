@@ -15,17 +15,20 @@ include_directories(
     googletest/include
     ../NeuralNetworkCPP/Initializers/Common
     ../NeuralNetworkCPP/Initializers/XavierNormal
+    ../NeuralNetworkCPP/Initializers/XavierUniform
 )
 
 # List of source files for the tests
 set(TEST_SOURCES
     Initializers/XavierNormal/TestXavierNormal.cpp
+    Initializers/XavierUniform/TestXavierUniform.cpp
     tests.cpp
 )
 
 # List of source files of the neural network
 set(NN_SOURCES
     ../NeuralNetworkCPP/Initializers/XavierNormal/XavierNormal.cpp
+    ../NeuralNetworkCPP/Initializers/XavierUniform/XavierUniform.cpp
 )
 
 # Create the test executable

@@ -1,18 +1,13 @@
-#include <gtest/gtest.h>
-#include <vector>
-#include <numeric>
-#include "../../../NeuralNetworkCPP/Initializers/XavierNormal/XavierNormal.hpp"
+/**
+ * C++ neural network library
+ *
+ * TestXavierNormal.cpp
+ */
 
-// Helper function to calculate standard deviation
-double calculateStdDev(const std::vector<double> &values, double mean)
-{
-    double sum = 0.0;
-    for (double v : values)
-    {
-        sum += (v - mean) * (v - mean);
-    }
-    return std::sqrt(sum / values.size());
-}
+#include <gtest/gtest.h>
+#include <numeric>
+#include "../TestUtils/TestUtils.hpp"
+#include "../../../NeuralNetworkCPP/Initializers/XavierNormal/XavierNormal.hpp"
 
 // Test whether XavierNormal generates values within an expected range
 TEST(XavierNormalTests, ValueRange)

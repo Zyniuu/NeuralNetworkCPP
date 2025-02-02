@@ -32,7 +32,7 @@ namespace nn
         /**
          * @brief Generates a random number following Xavier normal distribution.
          *
-         * @return A randomly initialized weight value.
+         * @return A randomly initialized value.
          */
         double getRandomNum() override;
     };
