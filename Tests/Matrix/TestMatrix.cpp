@@ -180,87 +180,130 @@ TEST(MatrixTests, InequalityOperator)
     EXPECT_TRUE(A != B);
 }
 
+// Test xavier normal init
+TEST(MatrixTests, XavierNormalInitialization)
+{
+    int rows = 1000, cols = 1000;
+    int inputs = rows, outputs = cols;
+
+    nn::XavierNormal initializer(inputs, outputs);
+    nn::Matrix matrix(rows, cols, [&initializer]() { return initializer.getRandomNum(); });
+
+    double sum = 0.0, sum_sq = 0.0;
+    int total_elements = rows * cols;
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            double value = matrix[{i, j}];
+            sum += value;
+            sum_sq += value * value;
+        }
+    }
+
+    double mean = sum / total_elements;
+    double variance = (sum_sq / total_elements) - (mean * mean);
+    double expected_stddev = sqrt(2.0 / (inputs + outputs));
+
+    EXPECT_NEAR(mean, 0.0, 0.05);
+    EXPECT_NEAR(sqrt(variance), expected_stddev, 0.1);
+}
+
 // Test xavier uniform init
 TEST(MatrixTests, XavierUniformInitialization)
 {
-    int rows = 5;
-    int cols = 5;
-    nn::XavierUniform initializer(rows, cols);
-    nn::Matrix matrix(rows, cols, [&initializer]() { 
-        return initializer.getRandomNum(); 
-    });
+    int rows = 1000, cols = 1000;
+    int inputs = rows, outputs = cols;
 
-    for (int i = 0; i < rows; ++i)
+    nn::XavierUniform initializer(inputs, outputs);
+    nn::Matrix matrix(rows, cols, [&initializer]() { return initializer.getRandomNum(); });
+
+    double min_value = std::numeric_limits<double>::max();
+    double max_value = std::numeric_limits<double>::lowest();
+    double sum = 0.0;
+    int total_elements = rows * cols;
+
+    for (int i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; ++j)
+        for (int j = 0; j < cols; j++)
         {
-            double value = matrix(i, j);
-            EXPECT_GE(value, -1.0);
-            EXPECT_LE(value, 1.0);
+            double value = matrix[{i, j}];
+            sum += value;
+            min_value = std::min(min_value, value);
+            max_value = std::max(max_value, value);
         }
     }
-}
 
-// Test xavier normal init
-TEST(MatrixTests, XavierNormalInitialization) {
-    int rows = 5, cols = 5;
-    nn::XavierNormal initializer(rows, cols);
-    
-    nn::Matrix m(rows, cols, [&initializer]() { 
-        return initializer.getRandomNum(); 
-    });
-    
-    EXPECT_EQ(m.getRows(), rows);
-    EXPECT_EQ(m.getCols(), cols);
-    
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            double value = m(i, j);
-            EXPECT_GE(value, -1.0);
-            EXPECT_LE(value, 1.0);
-        }
-    }
+    double mean = sum / total_elements;
+    double limit = sqrt(6.0 / (inputs + outputs));
+
+    EXPECT_NEAR(mean, 0.0, 0.05);
+    EXPECT_GE(min_value, -limit);
+    EXPECT_LE(max_value, limit);
 }
 
 // Test He normal init
 TEST(MatrixTests, HeNormalInitialization)
 {
-    int rows = 5;
-    int cols = 5;
-    nn::HeNormal initializer(rows, cols);
-    nn::Matrix matrix(rows, cols, [&initializer]() { 
-        return initializer.getRandomNum(); 
-    });
+    int rows = 1000, cols = 1000;
+    int inputs = rows, outputs = cols;
 
-    for (int i = 0; i < rows; ++i)
+    nn::HeNormal initializer(inputs, outputs);
+    nn::Matrix matrix(rows, cols, [&initializer]() { return initializer.getRandomNum(); });
+
+    double sum = 0.0, sum_sq = 0.0;
+    int total_elements = rows * cols;
+
+    for (int i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; ++j)
+        for (int j = 0; j < cols; j++)
         {
-            double value = matrix(i, j);
-            EXPECT_NEAR(value, 0.0, 2.0);
+            double value = matrix[{i, j}];
+            sum += value;
+            sum_sq += value * value;
         }
     }
+
+    double mean = sum / total_elements;
+    double variance = (sum_sq / total_elements) - (mean * mean);
+    double expected_stddev = sqrt(2.0 / inputs);
+
+    EXPECT_NEAR(mean, 0.0, 0.05);
+    EXPECT_NEAR(sqrt(variance), expected_stddev, 0.1);
 }
 
 // Test He uniform init
-TEST(MatrixTests, HeUniformInitialization) {
-    int rows = 5, cols = 5;
-    nn::HeUniform initializer(rows, cols);
-    
-    nn::Matrix m(rows, cols, [&initializer]() { 
-        return initializer.getRandomNum(); 
-    });
-    
-    EXPECT_EQ(m.getRows(), rows);
-    EXPECT_EQ(m.getCols(), cols);
-    
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            double value = m(i, j);
-            EXPECT_GE(value, -2.0);
-            EXPECT_LE(value, 2.0);
+TEST(MatrixTests, HeUniformInitialization)
+{
+    int rows = 1000, cols = 1000;
+    int inputs = rows, outputs = cols;
+
+    nn::HeUniform initializer(inputs, outputs);
+    nn::Matrix matrix(rows, cols, [&initializer]() { return initializer.getRandomNum(); });
+
+    double min_value = std::numeric_limits<double>::max();
+    double max_value = std::numeric_limits<double>::lowest();
+    double sum = 0.0;
+    int total_elements = rows * cols;
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            double value = matrix[{i, j}];
+            sum += value;
+            min_value = std::min(min_value, value);
+            max_value = std::max(max_value, value);
         }
     }
+
+    double mean = sum / total_elements;
+    double limit = sqrt(6.0 / inputs);
+
+    EXPECT_NEAR(mean, 0.0, 0.05);
+    EXPECT_GE(min_value, -limit);
+    EXPECT_LE(max_value, limit);
 }
 
 // Test function mapping (e.g., squaring elements)
