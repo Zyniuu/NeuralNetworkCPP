@@ -27,7 +27,7 @@ namespace nn
          * @param inputs Number of input neurons.
          * @param outputs Number of output neurons.
          */
-        XavierUniform(const int &inputs, const int &outputs);
+        XavierUniform(const int inputs, const int outputs);
 
         /**
          * @brief Generates a random number following Xavier uniform distribution.

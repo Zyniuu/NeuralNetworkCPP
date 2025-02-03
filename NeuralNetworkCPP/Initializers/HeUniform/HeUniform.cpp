@@ -8,7 +8,7 @@
 
 namespace nn
 {
-    HeUniform::HeUniform(const int &inputs, const int &outputs)
+    HeUniform::HeUniform(const int inputs, const int outputs)
         : Initializer(inputs, outputs)
     {
         double limit = std::sqrt(6.0 / inputs);                         // Compute range for uniform distribution

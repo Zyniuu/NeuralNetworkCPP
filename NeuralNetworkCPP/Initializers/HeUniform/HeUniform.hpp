@@ -27,7 +27,7 @@ namespace nn
          * @param inputs Number of input neurons.
          * @param outputs Number of output neurons (not used in He Uniform).
          */
-        HeUniform(const int &inputs, const int &outputs);
+        HeUniform(const int inputs, const int outputs);
 
         /**
          * @brief Generates a random number following He uniform distribution.

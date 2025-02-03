@@ -8,7 +8,7 @@
 
 namespace nn
 {
-    HeNormal::HeNormal(const int &inputs, const int &outputs)
+    HeNormal::HeNormal(const int inputs, const int outputs)
         : Initializer(inputs, outputs)
     {
         double sigma = std::sqrt(2.0 / m_inputs);            // Compute standard deviation for He initialization

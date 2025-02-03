@@ -29,7 +29,7 @@ namespace nn
          * @param inputs Number of input neurons.
          * @param outputs Number of output neurons.
          */
-        Initializer(const int &inputs, const int &outputs)
+        Initializer(const int inputs, const int outputs)
             : m_inputs(inputs), m_outputs(outputs), m_gen(std::random_device{}()) {}
 
         /**

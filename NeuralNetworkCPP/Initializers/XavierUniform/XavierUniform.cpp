@@ -8,7 +8,7 @@
 
 namespace nn
 {
-    XavierUniform::XavierUniform(const int &inputs, const int &outputs)
+    XavierUniform::XavierUniform(const int inputs, const int outputs)
         : Initializer(inputs, outputs)
     {
         double limit = std::sqrt(6.0 / (inputs + outputs));             // Calculate the limit based on Xavier initialization formula

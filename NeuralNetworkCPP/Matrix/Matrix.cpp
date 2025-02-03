@@ -19,17 +19,17 @@ namespace nn
     Matrix::Matrix(Matrix &&matrix)
         : m_rows(matrix.m_rows), m_cols(matrix.m_cols), m_data(std::move(matrix.m_data)) {}
 
-    Matrix::Matrix(const int &rows, const int &cols, const double &initVal)
+    Matrix::Matrix(const int rows, const int cols, double initVal)
         : m_rows(rows), m_cols(cols), m_data(rows * cols, initVal) {}
 
-    Matrix::Matrix(const int &rows, const int &cols, const std::vector<double> &data)
+    Matrix::Matrix(const int rows, const int cols, const std::vector<double> &data)
         : m_rows(rows), m_cols(cols), m_data(data)
     {
         if (data.size() != rows * cols)
             throw std::invalid_argument("Data size does not match matrix dimensions.");
     }
 
-    Matrix::Matrix(const int &rows, const int &cols, std::function<double()> func)
+    Matrix::Matrix(const int rows, const int cols, std::function<double()> func)
         : m_rows(rows), m_cols(cols), m_data(rows * cols)
     {
         ThreadPool::parallelFor(0, rows * cols, [&](int i) { 
@@ -47,12 +47,12 @@ namespace nn
         return m_data[index.first * m_cols + index.second];
     }
 
-    double &Matrix::operator()(const int &row, const int &col)
+    double &Matrix::operator()(const int row, const int col)
     {
         return m_data[row * m_cols + col];
     }
 
-    const double &Matrix::operator()(const int &row, const int &col) const
+    const double &Matrix::operator()(const int row, const int col) const
     {
         return m_data[row * m_cols + col];
     }
@@ -116,7 +116,7 @@ namespace nn
         return *this;
     }
 
-    Matrix &Matrix::operator+=(const double &scalar)
+    Matrix &Matrix::operator+=(const double scalar)
     {
         ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
             m_data[i] += scalar;
@@ -137,7 +137,7 @@ namespace nn
         return *this;
     }
 
-    Matrix &Matrix::operator-=(const double &scalar)
+    Matrix &Matrix::operator-=(const double scalar)
     {
         ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
             m_data[i] -= scalar;
@@ -167,7 +167,7 @@ namespace nn
         return *this;
     }
 
-    Matrix &Matrix::operator*=(const double &scalar)
+    Matrix &Matrix::operator*=(const double scalar)
     {
         ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
             m_data[i] *= scalar;
@@ -181,16 +181,21 @@ namespace nn
         if (m_rows != other.m_rows || m_cols != other.m_cols)
             throw std::invalid_argument("Matrix dimensions must match for division.");
         
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
-            if (other.m_data[i] == 0.0)
+        // Check for division by zero before starting the loop
+        for (const auto &val : other.m_data)
+        {
+            if (val == 0.0)
                 throw std::runtime_error("Division by zero is not allowed.");
+        }
+        
+        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
             m_data[i] /= other.m_data[i];
         });
 
         return *this;
     }
 
-    Matrix &Matrix::operator/=(const double &scalar)
+    Matrix &Matrix::operator/=(const double scalar)
     {
         if (scalar == 0)
             throw std::runtime_error("Division by zero is not allowed.");
@@ -242,14 +247,14 @@ namespace nn
         return result;
     }
 
-    Matrix operator*(const double &scalar, const Matrix &right)
+    Matrix operator*(const double scalar, const Matrix &right)
     {
         Matrix result = right;
         result *= scalar;
         return result;
     }
 
-    Matrix operator*(const Matrix &left, const double &scalar)
+    Matrix operator*(const Matrix &left, const double scalar)
     {
         return scalar * left;
     }
@@ -261,14 +266,14 @@ namespace nn
         return result;
     }
 
-    Matrix operator+(const double &scalar, const Matrix &right)
+    Matrix operator+(const double scalar, const Matrix &right)
     {
         Matrix result = right;
         result += scalar;
         return result;
     }
 
-    Matrix operator+(const Matrix &left, const double &scalar)
+    Matrix operator+(const Matrix &left, const double scalar)
     {
         return scalar + left;
     }
@@ -280,7 +285,7 @@ namespace nn
         return result;
     }
 
-    Matrix operator-(const Matrix &right, const double &scalar)
+    Matrix operator-(const Matrix &right, const double scalar)
     {
         Matrix result = right;
         result -= scalar;
@@ -294,7 +299,7 @@ namespace nn
         return result;
     }
 
-    Matrix operator/(const Matrix &right, const double &scalar)
+    Matrix operator/(const Matrix &right, const double scalar)
     {
         Matrix result = right;
         result /= scalar;

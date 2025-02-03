@@ -8,7 +8,7 @@
 
 namespace nn
 {
-    XavierNormal::XavierNormal(const int &inputs, const int &outputs)
+    XavierNormal::XavierNormal(const int inputs, const int outputs)
         : Initializer(inputs, outputs)
     {
         double sigma = std::sqrt(2.0 / (m_inputs + m_outputs));

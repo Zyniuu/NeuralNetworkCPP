@@ -11,24 +11,30 @@
 #include <thread>
 #include <vector>
 #include <future>
+#include <algorithm>
 
 namespace nn
 {
     template <typename _Func>
-    inline void ThreadPool::parallelFor(const int &start, const int &end, _Func func)
+    void ThreadPool::parallelFor(int start, int end, _Func func)
     {
-        int numThreads = std::thread::hardware_concurrency();
+        // Determine the number of threads to use
+        int numThreads = std::max(1, static_cast<int>(std::thread::hardware_concurrency()));
+        int rangeSize = end - start;
 
-        if (numThreads <= 1 || (end - start) < 10) // Avoid unnecessary threading
+        // If the range is small or there's only one thread, execute sequentially
+        if (rangeSize < numThreads || numThreads <= 1)
         {
             for (int i = start; i < end; i++)
                 func(i);
             return;
         }
 
+        // Split the work into chunks
         std::vector<std::future<void>> futures;
-        int chunkSize = (end - start + numThreads - 1) / numThreads; // Round up
+        int chunkSize = (rangeSize + numThreads - 1) / numThreads; // Round up
 
+        // Launch threads to process each chunk
         for (int i = 0; i < numThreads; i++)
         {
             int chunkStart = start + i * chunkSize;
@@ -43,6 +49,7 @@ namespace nn
             }
         }
 
+        // Wait for all threads to finish
         for (auto &f : futures)
             f.get();
     }

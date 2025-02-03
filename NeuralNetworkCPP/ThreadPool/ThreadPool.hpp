@@ -21,7 +21,7 @@ namespace nn
          * @param func Function to execute on each index.
          */
         template <typename _Func>
-        static inline void parallelFor(const int &start, const int &end, _Func func);
+        static void parallelFor(int start, int end, _Func func);
     };
 }
 
