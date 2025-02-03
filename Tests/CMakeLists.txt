@@ -19,6 +19,7 @@ include_directories(
     ../NeuralNetworkCPP/Initializers/HeNormal
     ../NeuralNetworkCPP/Initializers/HeUniform
     ../NeuralNetworkCPP/ThreadPool
+    ../NeuralNetworkCPP/Matrix
 )
 
 # List of source files for the tests
@@ -28,6 +29,7 @@ set(TEST_SOURCES
     Initializers/HeNormal/TestHeNormal.cpp
     Initializers/HeUniform/TestHeUniform.cpp
     ThreadPool/TestThreadPool.cpp
+    Matrix/TestMatrix.cpp
     tests.cpp
 )
 
@@ -38,6 +40,7 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Initializers/HeNormal/HeNormal.cpp
     ../NeuralNetworkCPP/Initializers/HeUniform/HeUniform.cpp
     ../NeuralNetworkCPP/ThreadPool/ThreadPool.tpp
+    ../NeuralNetworkCPP/Matrix/Matrix.cpp
 )
 
 # Create the test executable

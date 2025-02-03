@@ -36,15 +36,10 @@ namespace nn
 
             if (chunkStart < chunkEnd) // Avoid empty ranges
             {
-                futures.push_back(
-                    std::async(
-                        std::launch::async, [=]()
-                        {
-                            for (int j = chunkStart; j < chunkEnd; j++)
-                                func(j);
-                        }
-                    )
-                );
+                futures.push_back(std::async(std::launch::async, [=]() {
+                    for (int j = chunkStart; j < chunkEnd; j++)
+                        func(j);
+                }));
             }
         }
 
