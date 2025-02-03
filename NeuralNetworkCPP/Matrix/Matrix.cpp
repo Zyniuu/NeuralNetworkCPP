@@ -204,14 +204,21 @@ namespace nn
 
     std::ostream &operator<<(std::ostream &out, const Matrix &m)
     {
-        for (int i = 0; i < m.m_rows; i++)
+        const int cell_width = 10;
+        const int precision = 6;
+
+        out << (char)218 << std::string(m.getCols() * (cell_width + 1), ' ') << (char)191 << "\n";
+
+        for (int i = 0; i < m.getRows(); i++)
         {
-            for (int j = 0; j < m.m_cols; j++)
-            {
-                out << std::setw(8) << m[{i, j}] << " ";
-            }
-            out << "\n";
+            out << (char)179;
+            for (int j = 0; j < m.getCols(); j++)
+                out << std::fixed << std::setw(cell_width) << std::setprecision(precision) << m[{i, j}] << " ";
+            out << (char)179 << "\n";
         }
+
+        out << (char)192 << std::string(m.getCols() * (cell_width + 1), ' ') << (char)217 << "\n";
+
         return out;
     }
 

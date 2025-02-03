@@ -6,6 +6,10 @@
 
 #include <gtest/gtest.h>
 #include "../../NeuralNetworkCPP/Matrix/Matrix.hpp"
+#include "../../NeuralNetworkCPP/Initializers/XavierUniform/XavierUniform.hpp"
+#include "../../NeuralNetworkCPP/Initializers/XavierNormal/XavierNormal.hpp"
+#include "../../NeuralNetworkCPP/Initializers/HeNormal/HeNormal.hpp"
+#include "../../NeuralNetworkCPP/Initializers/HeUniform/HeUniform.hpp"
 
 // Test constructor with default values
 TEST(MatrixTests, DefaultConstructor)
@@ -176,12 +180,96 @@ TEST(MatrixTests, InequalityOperator)
     EXPECT_TRUE(A != B);
 }
 
+// Test xavier uniform init
+TEST(MatrixTests, XavierUniformInitialization)
+{
+    int rows = 5;
+    int cols = 5;
+    nn::XavierUniform initializer(rows, cols);
+    nn::Matrix matrix(rows, cols, [&initializer]() { 
+        return initializer.getRandomNum(); 
+    });
+
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            double value = matrix(i, j);
+            EXPECT_GE(value, -1.0);
+            EXPECT_LE(value, 1.0);
+        }
+    }
+}
+
+// Test xavier normal init
+TEST(MatrixTests, XavierNormalInitialization) {
+    int rows = 5, cols = 5;
+    nn::XavierNormal initializer(rows, cols);
+    
+    nn::Matrix m(rows, cols, [&initializer]() { 
+        return initializer.getRandomNum(); 
+    });
+    
+    EXPECT_EQ(m.getRows(), rows);
+    EXPECT_EQ(m.getCols(), cols);
+    
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            double value = m(i, j);
+            EXPECT_GE(value, -1.0);
+            EXPECT_LE(value, 1.0);
+        }
+    }
+}
+
+// Test He normal init
+TEST(MatrixTests, HeNormalInitialization)
+{
+    int rows = 5;
+    int cols = 5;
+    nn::HeNormal initializer(rows, cols);
+    nn::Matrix matrix(rows, cols, [&initializer]() { 
+        return initializer.getRandomNum(); 
+    });
+
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            double value = matrix(i, j);
+            EXPECT_NEAR(value, 0.0, 2.0);
+        }
+    }
+}
+
+// Test He uniform init
+TEST(MatrixTests, HeUniformInitialization) {
+    int rows = 5, cols = 5;
+    nn::HeUniform initializer(rows, cols);
+    
+    nn::Matrix m(rows, cols, [&initializer]() { 
+        return initializer.getRandomNum(); 
+    });
+    
+    EXPECT_EQ(m.getRows(), rows);
+    EXPECT_EQ(m.getCols(), cols);
+    
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            double value = m(i, j);
+            EXPECT_GE(value, -2.0);
+            EXPECT_LE(value, 2.0);
+        }
+    }
+}
+
 // Test function mapping (e.g., squaring elements)
 TEST(MatrixTests, MapFunction)
 {
     nn::Matrix A(2, 2, {1, 2, 3, 4});
-    nn::Matrix C = A.map([](double x)
-                         { return x * x; });
+    nn::Matrix C = A.map([](double x) { 
+        return x * x; 
+    });
 
     EXPECT_EQ(C(0, 0), 1);
     EXPECT_EQ(C(1, 1), 16);
