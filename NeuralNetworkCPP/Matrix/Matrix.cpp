@@ -40,6 +40,34 @@ namespace nn
         });
     }
 
+    Matrix::Matrix(std::ifstream &file)
+    {
+        // Check if the file is open and readable
+        if (!file.is_open())
+            throw std::runtime_error("File is not open for reading");
+
+        // Read the number of rows and columns from the file
+        file.read(reinterpret_cast<char *>(&m_rows), sizeof(m_rows));
+        file.read(reinterpret_cast<char *>(&m_cols), sizeof(m_cols));
+
+        // Check if the dimensions are valid
+        if (m_rows <= 0 || m_cols <= 0)
+            throw std::runtime_error("Invalid matrix dimensions in file.");
+
+        // Allocate temporary storage for the matrix data
+        std::vector<double> temp(m_rows * m_cols);
+
+        // Read the matrix data from the file
+        file.read(reinterpret_cast<char *>(temp.data()), sizeof(double) * m_rows * m_cols);
+
+        // Check if reading was successful
+        if (!file.good())
+            throw std::runtime_error("Failed to read matrix from file.");
+
+        // Move the data into the member variable
+        m_data = std::move(temp);
+    }
+
     double &Matrix::operator[](const std::pair<int, int> &index)
     {
         return m_data[index.first * m_cols + index.second];
@@ -58,6 +86,24 @@ namespace nn
     const double &Matrix::operator()(const int row, const int col) const
     {
         return m_data[row * m_cols + col];
+    }
+
+    void Matrix::save(std::ofstream &file) const
+    {
+        // Check if the file is open and writable
+        if (!file.is_open())
+            throw std::runtime_error("File is not open for writing.");
+        
+        // Write the number of rows and columns to the file
+        file.write(reinterpret_cast<const char *>(&m_rows), sizeof(m_rows));
+        file.write(reinterpret_cast<const char *>(&m_cols), sizeof(m_cols));
+
+        // Write the matrix data to the file
+        file.write(reinterpret_cast<const char *>(m_data.data()), sizeof(double) * m_rows * m_cols);
+
+        // Check if writing was successful
+        if (!file.good())
+            throw std::runtime_error("Failed to write matrix data to file.");
     }
 
     Matrix Matrix::cwiseProduct(const Matrix &other)

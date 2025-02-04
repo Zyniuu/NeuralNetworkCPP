@@ -5,6 +5,7 @@
  */
 
 #include <gtest/gtest.h>
+#include <filesystem>
 #include "../../NeuralNetworkCPP/Matrix/Matrix.hpp"
 #include "../../NeuralNetworkCPP/Initializers/XavierUniform/XavierUniform.hpp"
 #include "../../NeuralNetworkCPP/Initializers/XavierNormal/XavierNormal.hpp"
@@ -377,4 +378,76 @@ TEST(MatrixTests, NumericalStabilitySmallValues)
 
     EXPECT_NEAR(C(0, 0), 2e-9, 1e-12);
     EXPECT_NEAR(C(1, 1), 0.0, 1e-12);
+}
+
+// Test saving and loading matrix from a file
+TEST(MatrixTests, SaveAndLoad)
+{
+    nn::Matrix original(2, 3, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+
+    // Save the matrix to a file
+    std::ofstream outFile("test_matrix.bin", std::ios::binary);
+    ASSERT_TRUE(outFile.is_open());
+    original.save(outFile);
+    outFile.close();
+
+    // Load the matrix from the file
+    std::ifstream inFile("test_matrix.bin", std::ios::binary);
+    ASSERT_TRUE(inFile.is_open());
+    nn::Matrix loaded(inFile);
+    inFile.close();
+
+    // Verify that the loaded matrix matches the original
+    EXPECT_EQ(original.getRows(), loaded.getRows());
+    EXPECT_EQ(original.getCols(), loaded.getCols());
+
+    for (int i = 0; i < original.getRows(); i++)
+    {
+        for (int j = 0; j < original.getCols(); j++)
+        {
+            EXPECT_DOUBLE_EQ(original(i, j), loaded(i, j));
+        }
+    }
+
+    std::filesystem::remove("test_matrix.bin");
+}
+
+// Test saving to an invalid file
+TEST(MatrixTests, SaveInvalidFile)
+{
+    nn::Matrix matrix(2, 2);
+    std::ofstream outFile;
+
+    // Attempt to save to a closed file
+    EXPECT_THROW(matrix.save(outFile), std::runtime_error);
+}
+
+// Test loading from an invalid file
+TEST(MatrixTests, LoadInvalidFile)
+{
+    std::ifstream inFile;
+
+    // Attempt to load from a closed file
+    EXPECT_THROW(nn::Matrix matrix(inFile), std::runtime_error);
+}
+
+// Test loading from a file with invalid dimensions of matrix
+TEST(MatrixTests, LoadInvalidDimensions)
+{
+    // Create a file with invalid dimensions (negative values)
+    std::ofstream outFile("invalid_dimensions.bin", std::ios::binary);
+    ASSERT_TRUE(outFile.is_open());
+    int rows = -1, cols = -1;
+    outFile.write(reinterpret_cast<char *>(&rows), sizeof(rows));
+    outFile.write(reinterpret_cast<char *>(&cols), sizeof(cols));
+    outFile.close();
+
+    // Attempt to load the file
+    std::ifstream inFile("invalid_dimensions.bin", std::ios::binary);
+    ASSERT_TRUE(inFile.is_open());
+    EXPECT_THROW(nn::Matrix matrix(inFile), std::runtime_error);
+    inFile.close();
+
+    // Delete the file after the test
+    std::filesystem::remove("invalid_dimensions.bin");
 }
