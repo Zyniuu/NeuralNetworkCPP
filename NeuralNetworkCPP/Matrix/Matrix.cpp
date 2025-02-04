@@ -5,7 +5,7 @@
  */
 
 #include "Matrix.hpp"
-#include "../ThreadPool/ThreadPool.hpp"
+#include "../GlobalThreadPool/GlobalThreadPool.hpp"
 #include <iomanip>
 
 namespace nn
@@ -32,7 +32,10 @@ namespace nn
     Matrix::Matrix(const int rows, const int cols, std::function<double()> func)
         : m_rows(rows), m_cols(cols), m_data(rows * cols)
     {
-        ThreadPool::parallelFor(0, rows * cols, [&](int i) { 
+        // Use the global thread pool to parallelize the initialization.
+        auto &pool = getGlobalThreadPool();
+
+        pool.parallelFor(0, rows * cols, [this, &func](int i) {
             m_data[i] = func();
         });
     }
@@ -59,13 +62,16 @@ namespace nn
 
     Matrix Matrix::cwiseProduct(const Matrix &other)
     {
+        // Validate that the matrices have the same dimensions.
         if (m_rows != other.m_rows || m_cols != other.m_cols)
             throw std::invalid_argument("Matrix dimensions must match for element-wise multiplication.");
 
         Matrix result(m_rows, m_cols, 0.0);
+        auto &pool = getGlobalThreadPool();
 
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) { 
-            result.m_data[i] = m_data[i] * other.m_data[i]; 
+        // Parallelize the element-wise multiplication.
+        pool.parallelFor(0, m_rows * m_cols, [this, &other, &result](int i) {
+            result.m_data[i] = m_data[i] * other.m_data[i];
         });
 
         return result;
@@ -74,8 +80,10 @@ namespace nn
     Matrix Matrix::transpose()
     {
         Matrix result(m_cols, m_rows, 0.0);
+        auto &pool = getGlobalThreadPool();
 
-        ThreadPool::parallelFor(0, m_rows, [&](int i) {
+        // Parallelize the transposition.
+        pool.parallelFor(0, m_rows, [this, &result](int i) {
             for (int j = 0; j < m_cols; j++)
                 result[{j, i}] = (*this)[{i, j}];
         });
@@ -86,8 +94,10 @@ namespace nn
     Matrix Matrix::map(std::function<double(double)> func)
     {
         Matrix result(m_rows, m_cols, 0.0);
+        auto &pool = getGlobalThreadPool();
 
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
+        // Parallelize the mapping operation.
+        pool.parallelFor(0, m_rows * m_cols, [this, &result, &func](int i) {
             result.m_data[i] = func(m_data[i]);
         });
 
@@ -96,29 +106,40 @@ namespace nn
 
     Matrix &Matrix::operator=(const Matrix &other)
     {
+        // Check for self-assignment.
         if (this == &other)
             return *this;
+
+        // Copy the dimensions and data.
         m_rows = other.m_rows;
         m_cols = other.m_cols;
         m_data = other.m_data;
+
         return *this;
     }
 
     Matrix &Matrix::operator+=(const Matrix &other)
     {
+        // Validate that the matrices have the same dimensions.
         if (m_rows != other.m_rows || m_cols != other.m_cols)
             throw std::invalid_argument("Matrix dimensions must match for addition.");
         
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
+        auto &pool = getGlobalThreadPool();
+
+        // Parallelize the addition.
+        pool.parallelFor(0, m_rows * m_cols, [this, &other](int i) {
             m_data[i] += other.m_data[i];
         });
-
+        
         return *this;
     }
 
     Matrix &Matrix::operator+=(const double scalar)
     {
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
+        auto &pool = getGlobalThreadPool();
+
+        // Parallelize the addition.
+        pool.parallelFor(0, m_rows * m_cols, [this, scalar](int i) {
             m_data[i] += scalar;
         });
 
@@ -127,10 +148,14 @@ namespace nn
 
     Matrix &Matrix::operator-=(const Matrix &other)
     {
+        // Validate that the matrices have the same dimensions.
         if (m_rows != other.m_rows || m_cols != other.m_cols)
             throw std::invalid_argument("Matrix dimensions must match for subtraction.");
         
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
+        auto &pool = getGlobalThreadPool();
+
+        // Parallelize the subtraction.
+        pool.parallelFor(0, m_rows * m_cols, [this, &other](int i) {
             m_data[i] -= other.m_data[i];
         });
 
@@ -139,7 +164,10 @@ namespace nn
 
     Matrix &Matrix::operator-=(const double scalar)
     {
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
+        auto &pool = getGlobalThreadPool();
+
+        // Parallelize the subtraction.
+        pool.parallelFor(0, m_rows * m_cols, [this, scalar](int i) {
             m_data[i] -= scalar;
         });
 
@@ -148,12 +176,15 @@ namespace nn
 
     Matrix &Matrix::operator*=(const Matrix &other)
     {
+        // Validate that the matrices have compatible dimensions.
         if (m_cols != other.m_rows)
             throw std::invalid_argument("Invalid matrix multiplication: A(m x k) * B(k x n) requires A.cols == B.rows.");
 
         Matrix result(m_rows, other.m_cols, 0.0);
+        auto &pool = getGlobalThreadPool();
 
-        ThreadPool::parallelFor(0, m_rows, [&](int i) {
+        // Parallelize the multiplication.
+        pool.parallelFor(0, m_rows, [this, &result, &other](int i) {
             for (int j = 0; j < other.m_cols; j++)
             {
                 double sum = 0.0;
@@ -163,13 +194,17 @@ namespace nn
             }
         });
 
+        // Move the result into the current matrix.
         *this = std::move(result);
         return *this;
     }
 
     Matrix &Matrix::operator*=(const double scalar)
     {
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
+        auto &pool = getGlobalThreadPool();
+
+        // Parallelize the multiplication.
+        pool.parallelFor(0, m_rows * m_cols, [this, scalar](int i) {
             m_data[i] *= scalar;
         });
 
@@ -178,17 +213,21 @@ namespace nn
 
     Matrix &Matrix::operator/=(const Matrix &other)
     {
+        // Validate that the matrices have the same dimensions.
         if (m_rows != other.m_rows || m_cols != other.m_cols)
             throw std::invalid_argument("Matrix dimensions must match for division.");
         
-        // Check for division by zero before starting the loop
+        // Check for division by zero.
         for (const auto &val : other.m_data)
         {
             if (val == 0.0)
                 throw std::runtime_error("Division by zero is not allowed.");
         }
-        
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
+
+        auto &pool = getGlobalThreadPool();
+
+        // Parallelize the division.
+        pool.parallelFor(0, m_rows * m_cols, [this, &other](int i) {
             m_data[i] /= other.m_data[i];
         });
 
@@ -197,10 +236,14 @@ namespace nn
 
     Matrix &Matrix::operator/=(const double scalar)
     {
+        // Check for division by zero.
         if (scalar == 0)
             throw std::runtime_error("Division by zero is not allowed.");
         
-        ThreadPool::parallelFor(0, m_rows * m_cols, [&](int i) {
+        auto &pool = getGlobalThreadPool();
+
+        // Parallelize the division.
+        pool.parallelFor(0, m_rows * m_cols, [this, scalar](int i) {
             m_data[i] /= scalar;
         });
 
@@ -212,8 +255,10 @@ namespace nn
         const int cell_width = 10;
         const int precision = 6;
 
+        // Print the top border of the matrix.
         out << (char)218 << std::string(m.getCols() * (cell_width + 1), ' ') << (char)191 << "\n";
 
+        // Print each row of the matrix.
         for (int i = 0; i < m.getRows(); i++)
         {
             out << (char)179;
@@ -222,6 +267,7 @@ namespace nn
             out << (char)179 << "\n";
         }
 
+        // Print the bottom border of the matrix.
         out << (char)192 << std::string(m.getCols() * (cell_width + 1), ' ') << (char)217 << "\n";
 
         return out;
@@ -229,12 +275,15 @@ namespace nn
 
     Matrix operator*(const Matrix &left, const Matrix &right)
     {
+        // Validate that the matrices have compatible dimensions.
         if (left.m_cols != right.m_rows)
             throw std::invalid_argument("Invalid matrix multiplication: A(m x k) * B(k x n) requires A.cols == B.rows.");
         
         Matrix result(left.m_rows, right.m_cols, 0.0);
+        auto &pool = getGlobalThreadPool();
 
-        ThreadPool::parallelFor(0, left.m_rows, [&](int i) {
+        // Parallelize the multiplication.
+        pool.parallelFor(0, left.m_rows, [&result, &left, &right](int i) {
             for (int j = 0; j < right.m_cols; j++)
             {
                 double sum = 0.0;
@@ -312,9 +361,10 @@ namespace nn
             return false;
         
         std::atomic<bool> eq = true;
+        auto &pool = getGlobalThreadPool();
 
-        ThreadPool::parallelFor(0, left.m_rows * left.m_cols, [&](int i) {
-            if (left.m_data[i] != right.m_data[i]) 
+        pool.parallelFor(0, left.m_rows * left.m_cols, [&left, &right, &eq](int i) {
+            if (left.m_data[i] != right.m_data[i])
                 eq.store(false, std::memory_order_relaxed);
         });
 
