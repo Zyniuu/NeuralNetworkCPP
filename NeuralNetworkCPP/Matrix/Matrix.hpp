@@ -10,6 +10,7 @@
 #include <vector>
 #include <functional>
 #include <iostream>
+#include <fstream>
 
 namespace nn
 {
@@ -66,6 +67,14 @@ namespace nn
          */
         Matrix(const int rows, const int cols, std::function<double()> func);
 
+        /**
+         * @brief Constructs a matrix from a binary file.
+         * 
+         * @param file Input file stream (must be opened in binary mode).
+         * @throws std::runtime_error If the file is not open or reading fails.
+         */
+        Matrix(std::ifstream &file);
+
         /** @brief Destructor (default). */
         ~Matrix() = default;
 
@@ -77,6 +86,14 @@ namespace nn
 
         /** @brief Returns the matrix data as a vector. */
         std::vector<double> getData() const { return m_data; }
+
+        /**
+         * @brief Saves the matrix to a binary file.
+         *
+         * @param file Output file stream (must be opened in binary mode).
+         * @throws std::runtime_error If the file is not open or writing fails.
+         */
+        void save(std::ofstream &file) const;
 
         /** @brief Performs element-wise multiplication (Hadamard product). */
         Matrix cwiseProduct(const Matrix &other);
