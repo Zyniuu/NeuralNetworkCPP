@@ -18,7 +18,8 @@ include_directories(
     ../NeuralNetworkCPP/Initializers/XavierUniform
     ../NeuralNetworkCPP/Initializers/HeNormal
     ../NeuralNetworkCPP/Initializers/HeUniform
-    ../NeuralNetworkCPP/ThreadPool
+    ../NeuralNetworkCPP/GlobalThreadPool
+    ../NeuralNetworkCPP/GlobalThreadPool/Base
     ../NeuralNetworkCPP/Matrix
 )
 
@@ -39,7 +40,9 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Initializers/XavierUniform/XavierUniform.cpp
     ../NeuralNetworkCPP/Initializers/HeNormal/HeNormal.cpp
     ../NeuralNetworkCPP/Initializers/HeUniform/HeUniform.cpp
-    ../NeuralNetworkCPP/ThreadPool/ThreadPool.tpp
+    ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.tpp
+    ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.cpp
+    ../NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.cpp
     ../NeuralNetworkCPP/Matrix/Matrix.cpp
 )
 
