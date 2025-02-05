@@ -18,6 +18,10 @@ include_directories(
     ../NeuralNetworkCPP/Initializers/XavierUniform
     ../NeuralNetworkCPP/Initializers/HeNormal
     ../NeuralNetworkCPP/Initializers/HeUniform
+    ../NeuralNetworkCPP/GlobalThreadPool
+    ../NeuralNetworkCPP/GlobalThreadPool/Base
+    ../NeuralNetworkCPP/Matrix
+    ../NeuralNetworkCPP/Matrix/ColumnWiseProxy
 )
 
 # List of source files for the tests
@@ -26,6 +30,8 @@ set(TEST_SOURCES
     Initializers/XavierUniform/TestXavierUniform.cpp
     Initializers/HeNormal/TestHeNormal.cpp
     Initializers/HeUniform/TestHeUniform.cpp
+    ThreadPool/TestThreadPool.cpp
+    Matrix/TestMatrix.cpp
     tests.cpp
 )
 
@@ -35,6 +41,11 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Initializers/XavierUniform/XavierUniform.cpp
     ../NeuralNetworkCPP/Initializers/HeNormal/HeNormal.cpp
     ../NeuralNetworkCPP/Initializers/HeUniform/HeUniform.cpp
+    ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.tpp
+    ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.cpp
+    ../NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.cpp
+    ../NeuralNetworkCPP/Matrix/Matrix.cpp
+    ../NeuralNetworkCPP/Matrix/ColumnWiseProxy/ColumnWiseProxy.cpp
 )
 
 # Create the test executable

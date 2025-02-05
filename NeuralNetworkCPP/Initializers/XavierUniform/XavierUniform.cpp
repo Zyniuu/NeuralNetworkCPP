@@ -8,15 +8,20 @@
 
 namespace nn
 {
-    XavierUniform::XavierUniform(const int &inputs, const int &outputs)
+    XavierUniform::XavierUniform(const int inputs, const int outputs)
         : Initializer(inputs, outputs)
     {
-        double limit = std::sqrt(6.0 / (inputs + outputs));             // Calculate the limit based on Xavier initialization formula
-        m_dist = std::uniform_real_distribution<double>(-limit, limit); // Set the range for uniform distribution
+        // Compute the range limit for Xavier Uniform initialization.
+        // Formula: limit = sqrt(6.0 / (fan-in + fan-out)), where fan-in and fan-out are input and output neurons.
+        double limit = std::sqrt(6.0 / (inputs + outputs));
+
+        // Initialize the uniform distribution within the range [-limit, limit].
+        m_dist = std::uniform_real_distribution<double>(-limit, limit);
     }
 
     double XavierUniform::getRandomNum()
     {
+        // Generate a random number from the predefined uniform distribution.
         return m_dist(m_gen);
     }
 }
