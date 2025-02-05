@@ -11,9 +11,13 @@
 #include <functional>
 #include <iostream>
 #include <fstream>
+#include "ColumnWiseProxy/ColumnWiseProxy.hpp"
 
 namespace nn
 {
+    // Forward declaration of ColumnWiseProxy
+    class ColumnWiseProxy;
+
     /**
      * @class Matrix
      * @brief Represents a mathematical matrix with element-wise operations.
@@ -94,6 +98,13 @@ namespace nn
          * @throws std::runtime_error If the file is not open or writing fails.
          */
         void save(std::ofstream &file) const;
+
+        /**
+         * @brief Returns a ColumnWiseProxy to enable column-wise operations.
+         *
+         * @return A ColumnWiseProxy object bound to this matrix.
+         */
+        ColumnWiseProxy colwise();
 
         /** @brief Performs element-wise multiplication (Hadamard product). */
         Matrix cwiseProduct(const Matrix &other);
