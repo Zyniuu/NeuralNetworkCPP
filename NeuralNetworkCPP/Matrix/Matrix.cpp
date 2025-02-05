@@ -392,6 +392,19 @@ namespace nn
         return result;
     }
 
+    Matrix operator-(const double scalar, const Matrix &right)
+    {
+        Matrix result = right;
+        auto &pool = getGlobalThreadPool();
+
+        // Parallelize the subtraction.
+        pool.parallelFor(0, result.m_rows * result.m_cols, [&result, scalar](int i) {
+            result.m_data[i] = scalar - result.m_data[i];
+        });
+
+        return result;
+    }
+
     Matrix operator/(const Matrix &left, const Matrix &right)
     {
         Matrix result = left;

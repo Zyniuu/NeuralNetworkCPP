@@ -147,6 +147,7 @@ namespace nn
         friend Matrix operator+(const Matrix &left, const double scalar);
         friend Matrix operator-(const Matrix &left, const Matrix &right);
         friend Matrix operator-(const Matrix &left, const double scalar);
+        friend Matrix operator-(const double scalar, const Matrix &right);
         friend Matrix operator/(const Matrix &left, const Matrix &right);
         friend Matrix operator/(const Matrix &left, const double scalar);
 

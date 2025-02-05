@@ -1,6 +1,10 @@
 # Minimal version of CMake required
 cmake_minimum_required(VERSION 3.10)
 
+# C++ standard
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 # Project name
 project(NeuralNetworCPPTests)
 
@@ -22,6 +26,10 @@ include_directories(
     ../NeuralNetworkCPP/GlobalThreadPool/Base
     ../NeuralNetworkCPP/Matrix
     ../NeuralNetworkCPP/Matrix/ColumnWiseProxy
+    ../NeuralNetworkCPP/Losses/Common
+    ../NeuralNetworkCPP/Losses/MeanSquaredError
+    ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy
+    ../NeuralNetworkCPP/Losses/BinaryCrossEntropy
 )
 
 # List of source files for the tests
@@ -32,6 +40,9 @@ set(TEST_SOURCES
     Initializers/HeUniform/TestHeUniform.cpp
     ThreadPool/TestThreadPool.cpp
     Matrix/TestMatrix.cpp
+    Losses/MSE/TestMSE.cpp
+    Losses/CCE/TestCCE.cpp
+    Losses/BCE/TestBCE.cpp
     tests.cpp
 )
 
@@ -46,6 +57,9 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.cpp
     ../NeuralNetworkCPP/Matrix/Matrix.cpp
     ../NeuralNetworkCPP/Matrix/ColumnWiseProxy/ColumnWiseProxy.cpp
+    ../NeuralNetworkCPP/Losses/MeanSquaredError/MeanSquaredError.cpp
+    ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.cpp
+    ../NeuralNetworkCPP/Losses/BinaryCrossEntropy/BinaryCrossEntropy.cpp
 )
 
 # Create the test executable
