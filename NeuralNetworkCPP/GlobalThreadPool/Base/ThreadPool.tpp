@@ -21,7 +21,8 @@ namespace nn
 
         // Create a packaged_task to wrap the callable and its arguments.
         auto task = std::make_shared<std::packaged_task<returnType()>>(
-            std::bind(std::forward<Func>(func), std::forward<Args>(args)...));
+            std::bind(std::forward<Func>(func), std::forward<Args>(args)...)
+        );
 
         // Get a future to retrieve the result of the task.
         std::future<returnType> res = task->get_future();
