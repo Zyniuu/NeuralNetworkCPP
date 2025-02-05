@@ -451,3 +451,44 @@ TEST(MatrixTests, LoadInvalidDimensions)
     // Delete the file after the test
     std::filesystem::remove("invalid_dimensions.bin");
 }
+
+// Test column wise addition
+TEST(MatrixTests, ColumnWiseAddition)
+{
+    // Create a 2x2 matrix: {{1, 6}, {2, 7}}
+    nn::Matrix mat(2, 2, {1, 6, 2, 7});
+
+    // Create a column vector: {{0}, {1}}
+    nn::Matrix colVector(2, 1, {0, 1});
+
+    // Perform column-wise addition
+    nn::Matrix result = mat.colwise() + colVector;
+
+    // Verify the result: {{1, 6}, {3, 8}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 1);
+    EXPECT_DOUBLE_EQ(result(0, 1), 6);
+    EXPECT_DOUBLE_EQ(result(1, 0), 3);
+    EXPECT_DOUBLE_EQ(result(1, 1), 8);
+}
+
+// Test column wise operations when given invalid dimensions
+TEST(MatrixTests, InvalidDimensions)
+{
+    nn::Matrix mat(3, 2); // 3x2 matrix
+    nn::Matrix invalidVector(2, 1); // 2x1 vector (rows don't match)
+
+    // Attempt invalid column-wise addition
+    EXPECT_THROW(mat.colwise() + invalidVector, std::invalid_argument);
+}
+
+// Test column wise operations when column vector was not provided
+TEST(MatrixTests, NotAColumnVector)
+{
+    nn::Matrix mat(2, 2);
+    nn::Matrix invalidMatrix(2, 3); // Not a column vector
+
+    // Attempt invalid column-wise addition
+    EXPECT_THROW(mat.colwise() + invalidMatrix, std::invalid_argument);
+}

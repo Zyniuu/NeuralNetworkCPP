@@ -21,6 +21,7 @@ include_directories(
     ../NeuralNetworkCPP/GlobalThreadPool
     ../NeuralNetworkCPP/GlobalThreadPool/Base
     ../NeuralNetworkCPP/Matrix
+    ../NeuralNetworkCPP/Matrix/ColumnWiseProxy
 )
 
 # List of source files for the tests
@@ -44,6 +45,7 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.cpp
     ../NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.cpp
     ../NeuralNetworkCPP/Matrix/Matrix.cpp
+    ../NeuralNetworkCPP/Matrix/ColumnWiseProxy/ColumnWiseProxy.cpp
 )
 
 # Create the test executable

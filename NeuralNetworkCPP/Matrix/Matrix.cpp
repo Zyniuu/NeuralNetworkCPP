@@ -106,6 +106,11 @@ namespace nn
             throw std::runtime_error("Failed to write matrix data to file.");
     }
 
+    ColumnWiseProxy Matrix::colwise()
+    {
+        return ColumnWiseProxy(*this);
+    }
+
     Matrix Matrix::cwiseProduct(const Matrix &other)
     {
         // Validate that the matrices have the same dimensions.
