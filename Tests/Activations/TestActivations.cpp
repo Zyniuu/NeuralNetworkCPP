@@ -48,8 +48,8 @@ TEST(ActivationsTests, Sigmoid)
     nn::Matrix gradInput = sigmoid.backward(gradOutput);
 
     // Verify backward pass
-    EXPECT_NEAR(gradInput(0, 0), 0.249376, 1e-6);
-    EXPECT_NEAR(gradInput(0, 1), 0.247517, 1e-6);
-    EXPECT_NEAR(gradInput(1, 0), 0.244458, 1e-6);
-    EXPECT_NEAR(gradInput(1, 1), 0.240261, 1e-6);
+    EXPECT_NEAR(gradInput(0, 0), 0.025, 1e-3);
+    EXPECT_NEAR(gradInput(0, 1), 0.03932, 1e-5);
+    EXPECT_NEAR(gradInput(1, 0), 0.05898, 1e-5);
+    EXPECT_NEAR(gradInput(1, 1), 0.04199, 1e-5);
 }

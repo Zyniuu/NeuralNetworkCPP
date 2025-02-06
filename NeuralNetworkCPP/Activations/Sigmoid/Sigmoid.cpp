@@ -13,19 +13,28 @@ namespace nn
     {
         double expLimit = 700; // To avoid overflow/underflow in exp
 
-        return input.map([expLimit](double x) {
+        m_output = input.map([expLimit](double x) {
             // Clip input values to avoid overflow/underflow in exp
             return 1.0 / (1.0 + std::exp(std::max(-expLimit, std::min(-x, expLimit))));
         });
+
+        return m_output;
     }
 
     Matrix Sigmoid::backward(const Matrix &gradient)
     {
-        Matrix output = forward(gradient);
+        Matrix gradInput = gradient;
 
-        // Compute gradient of Sigmoid: output = Sigmoid(x) * (1 - Sigmoid(x))
-        return output.map([](double x) { 
-            return x * (1.0 - x); 
-        });
+        // Compute gradient of Sigmoid: gradInput = gradient * (output * (1 - output))
+        for (int i = 0; i < gradInput.getRows(); i++)
+        {
+            for (int j = 0; j < gradInput.getCols(); j++)
+            {
+                double output = m_output[{i, j}];
+                gradInput[{i, j}] *= output * (1.0 - output);
+            }
+        }
+
+        return gradInput;
     }
 }
