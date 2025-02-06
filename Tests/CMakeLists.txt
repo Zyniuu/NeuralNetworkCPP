@@ -34,6 +34,8 @@ include_directories(
     ../NeuralNetworkCPP/Optimizers/SGD
     ../NeuralNetworkCPP/Optimizers/RMSprop
     ../NeuralNetworkCPP/Optimizers/Adam
+    ../NeuralNetworkCPP/Activations/Common
+    ../NeuralNetworkCPP/Activations/ReLU
 )
 
 # List of source files for the tests
@@ -48,6 +50,7 @@ set(TEST_SOURCES
     Losses/CCE/TestCCE.cpp
     Losses/BCE/TestBCE.cpp
     Optimizers/TestOptimizers.cpp
+    Activations/TestActivations.cpp
     tests.cpp
 )
 
@@ -68,6 +71,7 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Optimizers/SGD/SGD.cpp
     ../NeuralNetworkCPP/Optimizers/RMSprop/RMSprop.cpp
     ../NeuralNetworkCPP/Optimizers/Adam/Adam.cpp
+    ../NeuralNetworkCPP/Activations/ReLU/ReLU.cpp
 )
 
 # Create the test executable
