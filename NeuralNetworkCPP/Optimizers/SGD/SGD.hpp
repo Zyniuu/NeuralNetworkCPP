@@ -22,11 +22,8 @@ namespace nn
     class SGD : public Optimizer
     {
     private:
-        double m_momentum; ///< Momentum factor (default: 0.9).
-
-        // Maps to store velocity matrices for weights and biases
-        std::unordered_map<Matrix *, Matrix> m_velocityWeights; ///< Velocity for weights.
-        std::unordered_map<Matrix *, Matrix> m_velocityBiases;  ///< Velocity for biases.
+        double m_momentum;                                 ///< Momentum factor (default: 0.9).
+        std::unordered_map<Matrix *, Matrix> m_velocities; ///< Velocities for weights and biases.
 
     public:
         /**

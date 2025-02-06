@@ -22,12 +22,9 @@ namespace nn
     class RMSprop : public Optimizer
     {
     private:
-        double m_gamma;   ///< Decay rate for the moving average of squared gradients.
-        double m_epsilon; ///< Small constant for numerical stability.
-
-        // Maps to store moving averages of squared gradients
-        std::unordered_map<Matrix *, Matrix> m_vWeights; ///< Moving average for weights.
-        std::unordered_map<Matrix *, Matrix> m_vBiases;  ///< Moving average for biases.
+        double m_gamma;                           ///< Decay rate for the moving average of squared gradients.
+        double m_epsilon;                         ///< Small constant for numerical stability.
+        std::unordered_map<Matrix *, Matrix> m_v; ///< Moving average for weights and biases.
 
     public:
         /**
