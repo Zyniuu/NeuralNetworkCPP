@@ -36,6 +36,7 @@ include_directories(
     ../NeuralNetworkCPP/Optimizers/Adam
     ../NeuralNetworkCPP/Activations/Common
     ../NeuralNetworkCPP/Activations/ReLU
+    ../NeuralNetworkCPP/Activations/Sigmoid
 )
 
 # List of source files for the tests
@@ -72,6 +73,7 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Optimizers/RMSprop/RMSprop.cpp
     ../NeuralNetworkCPP/Optimizers/Adam/Adam.cpp
     ../NeuralNetworkCPP/Activations/ReLU/ReLU.cpp
+    ../NeuralNetworkCPP/Activations/Sigmoid/Sigmoid.cpp
 )
 
 # Create the test executable

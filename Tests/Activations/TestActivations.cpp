@@ -6,6 +6,7 @@
 
 #include <gtest/gtest.h>
 #include "../../NeuralNetworkCPP/Activations/ReLU/ReLU.hpp"
+#include "../../NeuralNetworkCPP/Activations/Sigmoid/Sigmoid.hpp"
 
 TEST(ActivationsTests, ReLU)
 {
@@ -28,4 +29,27 @@ TEST(ActivationsTests, ReLU)
     EXPECT_DOUBLE_EQ(gradInput(0, 1), 1.0);
     EXPECT_DOUBLE_EQ(gradInput(1, 0), 0.0);
     EXPECT_DOUBLE_EQ(gradInput(1, 1), 0.0);
+}
+
+TEST(ActivationsTests, Sigmoid)
+{
+    nn::Sigmoid sigmoid;
+
+    nn::Matrix input(2, 2, {0.0, 1.0, -1.0, 2.0});
+    nn::Matrix output = sigmoid.forward(input);
+
+    // Verify forward pass
+    EXPECT_NEAR(output(0, 0), 0.5, 1e-1);
+    EXPECT_NEAR(output(0, 1), 0.731059, 1e-6);
+    EXPECT_NEAR(output(1, 0), 0.268941, 1e-6);
+    EXPECT_NEAR(output(1, 1), 0.880797, 1e-6);
+
+    nn::Matrix gradOutput(2, 2, {0.1, 0.2, 0.3, 0.4});
+    nn::Matrix gradInput = sigmoid.backward(gradOutput);
+
+    // Verify backward pass
+    EXPECT_NEAR(gradInput(0, 0), 0.249376, 1e-6);
+    EXPECT_NEAR(gradInput(0, 1), 0.247517, 1e-6);
+    EXPECT_NEAR(gradInput(1, 0), 0.244458, 1e-6);
+    EXPECT_NEAR(gradInput(1, 1), 0.240261, 1e-6);
 }

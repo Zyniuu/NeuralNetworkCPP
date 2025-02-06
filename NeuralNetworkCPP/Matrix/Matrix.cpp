@@ -142,7 +142,7 @@ namespace nn
         return result;
     }
 
-    Matrix Matrix::map(std::function<double(double)> func)
+    Matrix Matrix::map(std::function<double(double)> func) const
     {
         Matrix result(m_rows, m_cols, 0.0);
         auto &pool = getGlobalThreadPool();

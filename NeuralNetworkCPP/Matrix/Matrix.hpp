@@ -113,7 +113,7 @@ namespace nn
         Matrix transpose();
 
         /** @brief Applies a function to each matrix element. */
-        Matrix map(std::function<double(double)> func);
+        Matrix map(std::function<double(double)> func) const;
 
         Matrix &operator=(const Matrix &other);
 
