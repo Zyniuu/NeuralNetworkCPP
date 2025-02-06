@@ -32,7 +32,7 @@ namespace nn
         /**
          * @brief Constructs an SGD optimizer.
          *
-         * @param learningRate The learning rate.
+         * @param learningRate The learning rate (default: 0.001).
          * @param momentum The momentum factor (default: 0.9).
          */
         SGD(double learningRate = 0.001, double momentum = 0.9);

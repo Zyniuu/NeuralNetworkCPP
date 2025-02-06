@@ -32,6 +32,7 @@ include_directories(
     ../NeuralNetworkCPP/Losses/BinaryCrossEntropy
     ../NeuralNetworkCPP/Optimizers/Common
     ../NeuralNetworkCPP/Optimizers/SGD
+    ../NeuralNetworkCPP/Optimizers/RMSprop
 )
 
 # List of source files for the tests
@@ -64,6 +65,7 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.cpp
     ../NeuralNetworkCPP/Losses/BinaryCrossEntropy/BinaryCrossEntropy.cpp
     ../NeuralNetworkCPP/Optimizers/SGD/SGD.cpp
+    ../NeuralNetworkCPP/Optimizers/RMSprop/RMSprop.cpp
 )
 
 # Create the test executable
