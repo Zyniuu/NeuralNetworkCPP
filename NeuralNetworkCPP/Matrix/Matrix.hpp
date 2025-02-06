@@ -107,7 +107,7 @@ namespace nn
         ColumnWiseProxy colwise();
 
         /** @brief Performs element-wise multiplication (Hadamard product). */
-        Matrix cwiseProduct(const Matrix &other);
+        Matrix cwiseProduct(const Matrix &other) const;
 
         /** @brief Returns the transposed matrix. */
         Matrix transpose();

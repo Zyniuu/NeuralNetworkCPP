@@ -30,6 +30,10 @@ include_directories(
     ../NeuralNetworkCPP/Losses/MeanSquaredError
     ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy
     ../NeuralNetworkCPP/Losses/BinaryCrossEntropy
+    ../NeuralNetworkCPP/Optimizers/Common
+    ../NeuralNetworkCPP/Optimizers/SGD
+    ../NeuralNetworkCPP/Optimizers/RMSprop
+    ../NeuralNetworkCPP/Optimizers/Adam
 )
 
 # List of source files for the tests
@@ -43,6 +47,7 @@ set(TEST_SOURCES
     Losses/MSE/TestMSE.cpp
     Losses/CCE/TestCCE.cpp
     Losses/BCE/TestBCE.cpp
+    Optimizers/TestOptimizers.cpp
     tests.cpp
 )
 
@@ -60,6 +65,9 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Losses/MeanSquaredError/MeanSquaredError.cpp
     ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.cpp
     ../NeuralNetworkCPP/Losses/BinaryCrossEntropy/BinaryCrossEntropy.cpp
+    ../NeuralNetworkCPP/Optimizers/SGD/SGD.cpp
+    ../NeuralNetworkCPP/Optimizers/RMSprop/RMSprop.cpp
+    ../NeuralNetworkCPP/Optimizers/Adam/Adam.cpp
 )
 
 # Create the test executable

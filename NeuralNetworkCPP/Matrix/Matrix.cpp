@@ -111,7 +111,7 @@ namespace nn
         return ColumnWiseProxy(*this);
     }
 
-    Matrix Matrix::cwiseProduct(const Matrix &other)
+    Matrix Matrix::cwiseProduct(const Matrix &other) const
     {
         // Validate that the matrices have the same dimensions.
         if (m_rows != other.m_rows || m_cols != other.m_cols)
