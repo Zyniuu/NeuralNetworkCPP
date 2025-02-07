@@ -25,7 +25,7 @@ include_directories(
     ../NeuralNetworkCPP/GlobalThreadPool
     ../NeuralNetworkCPP/GlobalThreadPool/Base
     ../NeuralNetworkCPP/Matrix
-    ../NeuralNetworkCPP/Matrix/ColumnWiseProxy
+    ../NeuralNetworkCPP/Matrix/RowWiseProxy
     ../NeuralNetworkCPP/Losses/Common
     ../NeuralNetworkCPP/Losses/MeanSquaredError
     ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy
@@ -34,6 +34,10 @@ include_directories(
     ../NeuralNetworkCPP/Optimizers/SGD
     ../NeuralNetworkCPP/Optimizers/RMSprop
     ../NeuralNetworkCPP/Optimizers/Adam
+    ../NeuralNetworkCPP/Activations/Common
+    ../NeuralNetworkCPP/Activations/ReLU
+    ../NeuralNetworkCPP/Activations/Sigmoid
+    ../NeuralNetworkCPP/Activations/Softmax
 )
 
 # List of source files for the tests
@@ -48,6 +52,7 @@ set(TEST_SOURCES
     Losses/CCE/TestCCE.cpp
     Losses/BCE/TestBCE.cpp
     Optimizers/TestOptimizers.cpp
+    Activations/TestActivations.cpp
     tests.cpp
 )
 
@@ -61,13 +66,16 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.cpp
     ../NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.cpp
     ../NeuralNetworkCPP/Matrix/Matrix.cpp
-    ../NeuralNetworkCPP/Matrix/ColumnWiseProxy/ColumnWiseProxy.cpp
+    ../NeuralNetworkCPP/Matrix/RowWiseProxy/RowWiseProxy.cpp
     ../NeuralNetworkCPP/Losses/MeanSquaredError/MeanSquaredError.cpp
     ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.cpp
     ../NeuralNetworkCPP/Losses/BinaryCrossEntropy/BinaryCrossEntropy.cpp
     ../NeuralNetworkCPP/Optimizers/SGD/SGD.cpp
     ../NeuralNetworkCPP/Optimizers/RMSprop/RMSprop.cpp
     ../NeuralNetworkCPP/Optimizers/Adam/Adam.cpp
+    ../NeuralNetworkCPP/Activations/ReLU/ReLU.cpp
+    ../NeuralNetworkCPP/Activations/Sigmoid/Sigmoid.cpp
+    ../NeuralNetworkCPP/Activations/Softmax/Softmax.cpp
 )
 
 # Create the test executable

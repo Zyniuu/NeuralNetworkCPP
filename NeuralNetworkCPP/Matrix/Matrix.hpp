@@ -11,12 +11,12 @@
 #include <functional>
 #include <iostream>
 #include <fstream>
-#include "ColumnWiseProxy/ColumnWiseProxy.hpp"
+#include "RowWiseProxy/RowWiseProxy.hpp"
 
 namespace nn
 {
     // Forward declaration of ColumnWiseProxy
-    class ColumnWiseProxy;
+    class RowWiseProxy;
 
     /**
      * @class Matrix
@@ -73,7 +73,7 @@ namespace nn
 
         /**
          * @brief Constructs a matrix from a binary file.
-         * 
+         *
          * @param file Input file stream (must be opened in binary mode).
          * @throws std::runtime_error If the file is not open or reading fails.
          */
@@ -100,11 +100,25 @@ namespace nn
         void save(std::ofstream &file) const;
 
         /**
-         * @brief Returns a ColumnWiseProxy to enable column-wise operations.
+         * @brief Returns the maximum coefficient in the matrix.
          *
-         * @return A ColumnWiseProxy object bound to this matrix.
+         * @return The maximum coefficient in the matrix.
          */
-        ColumnWiseProxy colwise();
+        double maxCoeff() const;
+
+        /**
+         * @brief Returns the sum of all elements in the matrix.
+         *
+         * @return The sum of all elements in the matrix.
+         */
+        double sum() const;
+
+        /**
+         * @brief Returns a RowWiseProxy to enable row-wise operations.
+         *
+         * @return A RowWiseProxy object bound to this matrix.
+         */
+        RowWiseProxy rowWise();
 
         /** @brief Performs element-wise multiplication (Hadamard product). */
         Matrix cwiseProduct(const Matrix &other) const;
@@ -113,7 +127,7 @@ namespace nn
         Matrix transpose();
 
         /** @brief Applies a function to each matrix element. */
-        Matrix map(std::function<double(double)> func);
+        Matrix map(std::function<double(double)> func) const;
 
         Matrix &operator=(const Matrix &other);
 

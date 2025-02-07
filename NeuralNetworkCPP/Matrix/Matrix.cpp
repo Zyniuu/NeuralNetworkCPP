@@ -7,6 +7,8 @@
 #include "Matrix.hpp"
 #include "../GlobalThreadPool/GlobalThreadPool.hpp"
 #include <iomanip>
+#include <limits>
+#include <numeric>
 
 namespace nn
 {
@@ -106,9 +108,29 @@ namespace nn
             throw std::runtime_error("Failed to write matrix data to file.");
     }
 
-    ColumnWiseProxy Matrix::colwise()
+    double Matrix::maxCoeff() const
     {
-        return ColumnWiseProxy(*this);
+        // Initialize maximum value to the smallest possible double
+        double maxVal =std::numeric_limits<double>::lowest();
+
+        // Find the max value
+        for (int i = 0; i < m_rows * m_cols; i++)
+        {
+            if (m_data[i] > maxVal)
+                maxVal = m_data[i];
+        }
+
+        return maxVal;
+    }
+
+    double Matrix::sum() const
+    {
+        return std::accumulate(m_data.begin(), m_data.end(), 0.0);
+    }
+
+    RowWiseProxy Matrix::rowWise()
+    {
+        return RowWiseProxy(*this);
     }
 
     Matrix Matrix::cwiseProduct(const Matrix &other) const
@@ -142,7 +164,7 @@ namespace nn
         return result;
     }
 
-    Matrix Matrix::map(std::function<double(double)> func)
+    Matrix Matrix::map(std::function<double(double)> func) const
     {
         Matrix result(m_rows, m_cols, 0.0);
         auto &pool = getGlobalThreadPool();

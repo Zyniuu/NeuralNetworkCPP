@@ -51,6 +51,13 @@ namespace nn
         ~ThreadPool();
 
         /**
+         * @brief Retrieves the thread count.
+         *
+         * @return The thread count.
+         */
+        int getThreadCount() const;
+
+        /**
          * @brief Enqueues a task to be executed by the thread pool.
          *
          * @tparam Func The type of the callable object (function, lambda, etc.).

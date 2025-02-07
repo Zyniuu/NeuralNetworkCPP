@@ -15,8 +15,7 @@ namespace nn
             return x * x; 
         });
 
-        std::vector<double> data = error.getData();
-        return std::accumulate(data.begin(), data.end(), 0.0) / (predictions.getRows() * predictions.getCols());
+        return error.sum() / (predictions.getRows() * predictions.getCols());
     }
 
     Matrix MeanSquaredError::computeGradient(const Matrix &predictions, const Matrix &targets)
