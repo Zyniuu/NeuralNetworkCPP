@@ -37,6 +37,7 @@ include_directories(
     ../NeuralNetworkCPP/Activations/Common
     ../NeuralNetworkCPP/Activations/ReLU
     ../NeuralNetworkCPP/Activations/Sigmoid
+    ../NeuralNetworkCPP/Activations/Softmax
 )
 
 # List of source files for the tests
@@ -74,6 +75,7 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Optimizers/Adam/Adam.cpp
     ../NeuralNetworkCPP/Activations/ReLU/ReLU.cpp
     ../NeuralNetworkCPP/Activations/Sigmoid/Sigmoid.cpp
+    ../NeuralNetworkCPP/Activations/Softmax/Softmax.cpp
 )
 
 # Create the test executable

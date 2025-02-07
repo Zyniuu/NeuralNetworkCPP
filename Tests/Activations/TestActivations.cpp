@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 #include "../../NeuralNetworkCPP/Activations/ReLU/ReLU.hpp"
 #include "../../NeuralNetworkCPP/Activations/Sigmoid/Sigmoid.hpp"
+#include "../../NeuralNetworkCPP/Activations/Softmax/Softmax.hpp"
 
 TEST(ActivationsTests, ReLU)
 {
@@ -52,4 +53,31 @@ TEST(ActivationsTests, Sigmoid)
     EXPECT_NEAR(gradInput(0, 1), 0.03932, 1e-5);
     EXPECT_NEAR(gradInput(1, 0), 0.05898, 1e-5);
     EXPECT_NEAR(gradInput(1, 1), 0.04199, 1e-5);
+}
+
+TEST(ActivationsTests, Softmax)
+{
+    nn::Softmax softmax;
+
+    nn::Matrix input(2, 3, {1.0, 2.0, 3.0, 1.0, 2.0, 3.0});
+    nn::Matrix output = softmax.forward(input);
+
+    // Verify forward pass
+    EXPECT_NEAR(output(0, 0), 0.04501, 1e-5);
+    EXPECT_NEAR(output(0, 1), 0.12236, 1e-5);
+    EXPECT_NEAR(output(0, 2), 0.33262, 1e-5);
+    EXPECT_NEAR(output(1, 0), 0.04501, 1e-5);
+    EXPECT_NEAR(output(1, 1), 0.12236, 1e-5);
+    EXPECT_NEAR(output(1, 2), 0.33262, 1e-5);
+
+    nn::Matrix gradOutput(2, 3, {0.1, 0.2, 0.3, 0.1, 0.2, 0.3});
+    nn::Matrix gradInput = softmax.backward(gradOutput);
+
+    // Verify backward pass
+    EXPECT_NEAR(gradInput(0, 0), 0.00429, 1e-5);
+    EXPECT_NEAR(gradInput(0, 1), 0.02147, 1e-5);
+    EXPECT_NEAR(gradInput(0, 2), 0.06659, 1e-5);
+    EXPECT_NEAR(gradInput(1, 0), 0.00429, 1e-5);
+    EXPECT_NEAR(gradInput(1, 1), 0.02147, 1e-5);
+    EXPECT_NEAR(gradInput(1, 2), 0.06659, 1e-5);
 }
