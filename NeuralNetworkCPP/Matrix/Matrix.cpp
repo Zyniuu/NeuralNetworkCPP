@@ -64,7 +64,7 @@ namespace nn
 
         // Check if reading was successful
         if (!file.good())
-            throw std::runtime_error("Failed to read matrix from file.");
+            throw std::runtime_error("Failed to read matrix from the file.");
 
         // Move the data into the member variable
         m_data = std::move(temp);
@@ -105,7 +105,7 @@ namespace nn
 
         // Check if writing was successful
         if (!file.good())
-            throw std::runtime_error("Failed to write matrix data to file.");
+            throw std::runtime_error("Failed to write matrix data to the file.");
     }
 
     double Matrix::maxCoeff() const
