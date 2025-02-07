@@ -17,6 +17,7 @@ add_subdirectory(googletest)
 # Include directories for headers
 include_directories(
     googletest/include
+    ../NeuralNetworkCPP/Initializers
     ../NeuralNetworkCPP/Initializers/Common
     ../NeuralNetworkCPP/Initializers/XavierNormal
     ../NeuralNetworkCPP/Initializers/XavierUniform
@@ -34,10 +35,13 @@ include_directories(
     ../NeuralNetworkCPP/Optimizers/SGD
     ../NeuralNetworkCPP/Optimizers/RMSprop
     ../NeuralNetworkCPP/Optimizers/Adam
+    ../NeuralNetworkCPP/Activations
     ../NeuralNetworkCPP/Activations/Common
     ../NeuralNetworkCPP/Activations/ReLU
     ../NeuralNetworkCPP/Activations/Sigmoid
     ../NeuralNetworkCPP/Activations/Softmax
+    ../NeuralNetworkCPP/Layers/Common
+    ../NeuralNetworkCPP/Layers/DenseLayer
 )
 
 # List of source files for the tests
@@ -53,6 +57,7 @@ set(TEST_SOURCES
     Losses/BCE/TestBCE.cpp
     Optimizers/TestOptimizers.cpp
     Activations/TestActivations.cpp
+    Layers/TestLayers.cpp
     tests.cpp
 )
 
@@ -76,6 +81,7 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/Activations/ReLU/ReLU.cpp
     ../NeuralNetworkCPP/Activations/Sigmoid/Sigmoid.cpp
     ../NeuralNetworkCPP/Activations/Softmax/Softmax.cpp
+    ../NeuralNetworkCPP/Layers/DenseLayer/DenseLayer.cpp
 )
 
 # Create the test executable

@@ -25,11 +25,11 @@ namespace nn
         double m_beta1;   ///< Exponential decay rate for the first moment estimates.
         double m_beta2;   ///< Exponential decay rate for the second moment estimates.
         double m_epsilon; ///< Small constant for numerical stability.
-        int m_t;          ///< Time step (for bias correction).
 
         // Maps for first and second moment estimates
         std::unordered_map<Matrix *, Matrix> m_m; ///< First moment estimates for weights and biases
         std::unordered_map<Matrix *, Matrix> m_v; ///< Second moment estimates for weights and biases
+        std::unordered_map<Matrix *, int> m_t;    ///< Time step (for bias correction).
 
     public:
         /**

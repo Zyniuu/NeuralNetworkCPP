@@ -10,7 +10,7 @@
 namespace nn
 {
     Adam::Adam(double learningRate, double beta1, double beta2, double epsilon)
-        : Optimizer(learningRate), m_beta1(beta1), m_beta2(beta2), m_epsilon(epsilon), m_t(0) {}
+        : Optimizer(learningRate), m_beta1(beta1), m_beta2(beta2), m_epsilon(epsilon) {}
 
     void Adam::update(Matrix &weights, Matrix &biases, const Matrix &gradWeights, const Matrix &gradBiases)
     {
@@ -26,8 +26,12 @@ namespace nn
             m_v[&biases] = Matrix(biases.getRows(), biases.getCols(), 0.0);
         }
 
+        // Initialize time step if it doesn't exist
+        if (m_t.find(&weights) == m_t.end())
+            m_t[&weights] = 0;
+        
         // Increase time step
-        m_t++;
+        m_t[&weights]++;
 
         // Update first moment estimates: m_t = beta1 * m_{t-1} + (1 - beta1) * grad
         m_m[&weights] = m_beta1 * m_m[&weights] + (1.0 - m_beta1) * gradWeights;
@@ -38,12 +42,12 @@ namespace nn
         m_v[&biases] = m_beta2 * m_v[&biases] + (1.0 - m_beta2) * gradBiases.cwiseProduct(gradBiases);
 
         // Bias-corrected first moment estimates
-        double mHat = 1.0 / (1.0 - std::pow(m_beta1, m_t));
+        double mHat = 1.0 / (1.0 - std::pow(m_beta1, m_t[&weights]));
         Matrix mHatWeights = m_m[&weights] * mHat;
         Matrix mHatBiases = m_m[&biases] * mHat;
 
         // Bias-corrected second moment estimates
-        double vHat = 1.0 / (1.0 - std::pow(m_beta2, m_t));
+        double vHat = 1.0 / (1.0 - std::pow(m_beta2, m_t[&weights]));
         Matrix vHatWeights = m_v[&weights] * vHat;
         Matrix vHatBiases = m_v[&biases] * vHat;
 
