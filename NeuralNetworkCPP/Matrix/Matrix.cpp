@@ -128,9 +128,9 @@ namespace nn
         return std::accumulate(m_data.begin(), m_data.end(), 0.0);
     }
 
-    ColumnWiseProxy Matrix::colwise()
+    RowWiseProxy Matrix::rowWise()
     {
-        return ColumnWiseProxy(*this);
+        return RowWiseProxy(*this);
     }
 
     Matrix Matrix::cwiseProduct(const Matrix &other) const

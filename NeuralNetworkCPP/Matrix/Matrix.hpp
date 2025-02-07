@@ -11,12 +11,12 @@
 #include <functional>
 #include <iostream>
 #include <fstream>
-#include "ColumnWiseProxy/ColumnWiseProxy.hpp"
+#include "RowWiseProxy/RowWiseProxy.hpp"
 
 namespace nn
 {
     // Forward declaration of ColumnWiseProxy
-    class ColumnWiseProxy;
+    class RowWiseProxy;
 
     /**
      * @class Matrix
@@ -114,11 +114,11 @@ namespace nn
         double sum() const;
 
         /**
-         * @brief Returns a ColumnWiseProxy to enable column-wise operations.
+         * @brief Returns a RowWiseProxy to enable row-wise operations.
          *
-         * @return A ColumnWiseProxy object bound to this matrix.
+         * @return A RowWiseProxy object bound to this matrix.
          */
-        ColumnWiseProxy colwise();
+        RowWiseProxy rowWise();
 
         /** @brief Performs element-wise multiplication (Hadamard product). */
         Matrix cwiseProduct(const Matrix &other) const;

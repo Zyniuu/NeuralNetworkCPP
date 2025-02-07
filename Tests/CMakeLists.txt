@@ -25,7 +25,7 @@ include_directories(
     ../NeuralNetworkCPP/GlobalThreadPool
     ../NeuralNetworkCPP/GlobalThreadPool/Base
     ../NeuralNetworkCPP/Matrix
-    ../NeuralNetworkCPP/Matrix/ColumnWiseProxy
+    ../NeuralNetworkCPP/Matrix/RowWiseProxy
     ../NeuralNetworkCPP/Losses/Common
     ../NeuralNetworkCPP/Losses/MeanSquaredError
     ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy
@@ -66,7 +66,7 @@ set(NN_SOURCES
     ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.cpp
     ../NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.cpp
     ../NeuralNetworkCPP/Matrix/Matrix.cpp
-    ../NeuralNetworkCPP/Matrix/ColumnWiseProxy/ColumnWiseProxy.cpp
+    ../NeuralNetworkCPP/Matrix/RowWiseProxy/RowWiseProxy.cpp
     ../NeuralNetworkCPP/Losses/MeanSquaredError/MeanSquaredError.cpp
     ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.cpp
     ../NeuralNetworkCPP/Losses/BinaryCrossEntropy/BinaryCrossEntropy.cpp
