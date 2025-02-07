@@ -73,7 +73,7 @@ namespace nn
 
         /**
          * @brief Constructs a matrix from a binary file.
-         * 
+         *
          * @param file Input file stream (must be opened in binary mode).
          * @throws std::runtime_error If the file is not open or reading fails.
          */
@@ -98,6 +98,20 @@ namespace nn
          * @throws std::runtime_error If the file is not open or writing fails.
          */
         void save(std::ofstream &file) const;
+
+        /**
+         * @brief Returns the maximum coefficient in the matrix.
+         *
+         * @return The maximum coefficient in the matrix.
+         */
+        double maxCoeff() const;
+
+        /**
+         * @brief Returns the sum of all elements in the matrix.
+         *
+         * @return The sum of all elements in the matrix.
+         */
+        double sum() const;
 
         /**
          * @brief Returns a ColumnWiseProxy to enable column-wise operations.

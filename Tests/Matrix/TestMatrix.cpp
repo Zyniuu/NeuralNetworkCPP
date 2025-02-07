@@ -52,6 +52,40 @@ TEST(MatrixTests, MoveConstructor)
     EXPECT_EQ(moved(0, 0), 4.0);
 }
 
+// Test max coeff
+TEST(MatrixTests, MaxCoeff)
+{
+    nn::Matrix mat(3, 3, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0});
+
+    // Test with a small matrix
+    EXPECT_DOUBLE_EQ(mat.maxCoeff(), 9.0);
+
+    // Test with a large matrix
+    nn::Matrix largeMat(1000, 1000);
+    for (int i = 0; i < 1000; i++)
+    {
+        for (int j = 0; j < 1000; j++)
+        {
+            largeMat[{i, j}] = i * 1000 + j;
+        }
+    }
+    EXPECT_DOUBLE_EQ(largeMat.maxCoeff(), 999 * 1000 + 999);
+}
+
+// Test matrix sum
+TEST(MatrixTests, Sum)
+{
+    nn::Matrix mat(3, 3, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0});
+
+    // Test with a small matrix
+    EXPECT_DOUBLE_EQ(mat.sum(), 45.0);
+
+    // Test with a large matrix
+    nn::Matrix largeMat(1000, 1000, 1.0);
+
+    EXPECT_DOUBLE_EQ(largeMat.sum(), 1000000.0);
+}
+
 // Test element-wise addition
 TEST(MatrixTests, AdditionOperator)
 {

@@ -60,4 +60,9 @@ namespace nn
                 worker.join();
         }
     }
+
+    int ThreadPool::getThreadCount() const
+    {
+        return m_numThreads;
+    }
 }
