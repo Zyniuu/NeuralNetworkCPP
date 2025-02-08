@@ -10,7 +10,7 @@
 
 namespace nn
 {
-    DenseLayer::DenseLayer(const int inputSize, const int outputSize, e_initializers initializerID, e_activations activationID)
+    DenseLayer::DenseLayer(const int inputSize, const int outputSize, e_initializer initializerID, e_activation activationID)
     {
         // Validate input and output sizes
         if (inputSize <= 0 || outputSize <= 0)
@@ -98,7 +98,7 @@ namespace nn
             throw std::runtime_error("Failed to write layer data to the file.");
     }
 
-    void DenseLayer::initWeights(const int inputSize, const int outputSize, e_initializers initializerID)
+    void DenseLayer::initWeights(const int inputSize, const int outputSize, e_initializer initializerID)
     {
         // Create the appropriate initializer based on the provided ID
         std::unique_ptr<Initializer> init;
@@ -127,7 +127,7 @@ namespace nn
         m_biases = Matrix(1, outputSize, 0.0);
     }
 
-    void DenseLayer::initActivationFunction(e_activations activationID)
+    void DenseLayer::initActivationFunction(e_activation activationID)
     {
         // Initialize the activation function based on the provided ID
         switch (activationID)

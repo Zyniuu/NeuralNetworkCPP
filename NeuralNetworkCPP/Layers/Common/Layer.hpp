@@ -14,26 +14,19 @@
 namespace nn
 {
     /**
+     * @brief Enum with available layer types.
+     */
+    enum e_layerType { DENSE };
+
+    /**
      * @brief Enum with avaible initializers
      */
-    enum e_initializers
-    {
-        HE_NORMAL,
-        HE_UNIFORM,
-        XAVIER_NORMAL,
-        XAVIER_UNIFORM
-    };
+    enum e_initializer { HE_NORMAL, HE_UNIFORM, XAVIER_NORMAL, XAVIER_UNIFORM };
 
     /**
      * @brief Enum with avaible activation functions
      */
-    enum e_activations
-    {
-        RELU,
-        SIGMOID,
-        SOFTMAX,
-        NONE
-    };
+    enum e_activation { RELU, SIGMOID, SOFTMAX, NONE };
 
     /**
      * @class Layer
@@ -68,6 +61,13 @@ namespace nn
          * @param file Output file stream (must be opened in binary mode).
          */
         virtual void save(std::ofstream &file) const = 0;
+
+        /**
+         * @brief Returns the type of the layer.
+         *
+         * @return The layer type as an enum value.
+         */
+        virtual e_layerType getType() const = 0;
     };
 }
 

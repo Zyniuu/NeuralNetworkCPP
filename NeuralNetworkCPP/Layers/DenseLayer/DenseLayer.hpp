@@ -27,7 +27,7 @@ namespace nn
         Matrix m_biases;                          ///< Bias vector.
         Matrix m_input;                           ///< Input to the layer (stored for backward pass).
         std::unique_ptr<Activation> m_activation; ///< Optional activation function.
-        e_activations m_activationID;             ///< Activation ID used when saving layer to the file
+        e_activation m_activationID;              ///< Activation ID used when saving layer to the file
 
     public:
         /**
@@ -38,7 +38,7 @@ namespace nn
          * @param initializerID Weights initializer.
          * @param activationID Optional activation function.
          */
-        DenseLayer(const int inputSize, const int outputSize, e_initializers initializerID, e_activations activationID);
+        DenseLayer(const int inputSize, const int outputSize, e_initializer initializerID, e_activation activationID);
 
         /**
          * @brief Constructs a dense layer from the file.
@@ -73,6 +73,13 @@ namespace nn
          */
         void save(std::ofstream &file) const override;
 
+        /**
+         * @brief Returns the type of the layer.
+         *
+         * @return The layer type as an enum value.
+         */
+        e_layerType getType() const override { return DENSE; }
+
     private:
         /**
          * @brief Initializes the weights matrix using the specified initializer.
@@ -81,14 +88,14 @@ namespace nn
          * @param outputSize Number of output neurons.
          * @param initializerID Weights initializer.
          */
-        void initWeights(const int inputSize, const int outputSize, e_initializers initializerID);
+        void initWeights(const int inputSize, const int outputSize, e_initializer initializerID);
 
         /**
          * @brief Initializes the activation function based on the provided activation ID.
          *
          * @param activationID Activation function ID.
          */
-        void initActivationFunction(e_activations activationID);
+        void initActivationFunction(e_activation activationID);
     };
 }
 

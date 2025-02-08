@@ -10,6 +10,7 @@
 #include "Layers/Layers.hpp"
 #include "Optimizers/Optimizers.hpp"
 #include "Losses/Losses.hpp"
+#include <thread>
 
 namespace nn
 {
@@ -29,16 +30,19 @@ namespace nn
     public:
         /**
          * @brief Default constructor.
+         *
+         * @param numThreads Number of threads in the thread pool.
          */
-        NeuralNetworkCPP();
+        NeuralNetworkCPP(int numThreads = std::thread::hardware_concurrency());
 
         /**
          * @brief Constructs a model from a saved file.
          *
          * @param filename Path to the file containing the saved model.
+         * @param numThreads Number of threads in the thread pool.
          * @throws std::runtime_error If the file cannot be opened or is invalid.
          */
-        NeuralNetworkCPP(const std::string &filename);
+        NeuralNetworkCPP(const std::string &filename, int numThreads = std::thread::hardware_concurrency());
 
         /**
          * @brief Adds a layer to the network.
