@@ -29,6 +29,7 @@ set(NN_SOURCES
     Activations/Sigmoid/Sigmoid.cpp
     Activations/Softmax/Softmax.cpp
     Layers/DenseLayer/DenseLayer.cpp
+    NeuralNetworkCPP.cpp
 )
 
 # Create static library
