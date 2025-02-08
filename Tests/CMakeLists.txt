@@ -14,19 +14,8 @@ enable_testing()
 # Add Google Test directory
 add_subdirectory(googletest)
 
-# Include directories for headers
-include_directories(
-    googletest/include
-    ../NeuralNetworkCPP/Initializers
-    ../NeuralNetworkCPP/GlobalThreadPool
-    ../NeuralNetworkCPP/GlobalThreadPool/Base
-    ../NeuralNetworkCPP/Matrix
-    ../NeuralNetworkCPP/Matrix/RowWiseProxy
-    ../NeuralNetworkCPP/Losses
-    ../NeuralNetworkCPP/Optimizers
-    ../NeuralNetworkCPP/Activations
-    ../NeuralNetworkCPP/Layers
-)
+# Add Neural Network directory
+add_subdirectory(../NeuralNetworkCPP NeuralNetworkCPPBuild)
 
 # List of source files for the tests
 set(TEST_SOURCES
@@ -45,34 +34,11 @@ set(TEST_SOURCES
     tests.cpp
 )
 
-# List of source files of the neural network
-set(NN_SOURCES
-    ../NeuralNetworkCPP/Initializers/XavierNormal/XavierNormal.cpp
-    ../NeuralNetworkCPP/Initializers/XavierUniform/XavierUniform.cpp
-    ../NeuralNetworkCPP/Initializers/HeNormal/HeNormal.cpp
-    ../NeuralNetworkCPP/Initializers/HeUniform/HeUniform.cpp
-    ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.tpp
-    ../NeuralNetworkCPP/GlobalThreadPool/Base/ThreadPool.cpp
-    ../NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.cpp
-    ../NeuralNetworkCPP/Matrix/Matrix.cpp
-    ../NeuralNetworkCPP/Matrix/RowWiseProxy/RowWiseProxy.cpp
-    ../NeuralNetworkCPP/Losses/MeanSquaredError/MeanSquaredError.cpp
-    ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.cpp
-    ../NeuralNetworkCPP/Losses/BinaryCrossEntropy/BinaryCrossEntropy.cpp
-    ../NeuralNetworkCPP/Optimizers/SGD/SGD.cpp
-    ../NeuralNetworkCPP/Optimizers/RMSprop/RMSprop.cpp
-    ../NeuralNetworkCPP/Optimizers/Adam/Adam.cpp
-    ../NeuralNetworkCPP/Activations/ReLU/ReLU.cpp
-    ../NeuralNetworkCPP/Activations/Sigmoid/Sigmoid.cpp
-    ../NeuralNetworkCPP/Activations/Softmax/Softmax.cpp
-    ../NeuralNetworkCPP/Layers/DenseLayer/DenseLayer.cpp
-)
-
 # Create the test executable
-add_executable(${PROJECT_NAME} ${TEST_SOURCES} ${NN_SOURCES})
+add_executable(${PROJECT_NAME} ${TEST_SOURCES})
 
-# Link the test executable with Google Test and pthread
-target_link_libraries(${PROJECT_NAME} gtest)
+# Link the test executable with Google Test and Neural Network
+target_link_libraries(${PROJECT_NAME} gtest NeuralNetworCPP)
 
 # Add test target for running tests
 add_test(NAME AllTests COMMAND tests)
