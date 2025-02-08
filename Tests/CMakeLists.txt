@@ -18,30 +18,14 @@ add_subdirectory(googletest)
 include_directories(
     googletest/include
     ../NeuralNetworkCPP/Initializers
-    ../NeuralNetworkCPP/Initializers/Common
-    ../NeuralNetworkCPP/Initializers/XavierNormal
-    ../NeuralNetworkCPP/Initializers/XavierUniform
-    ../NeuralNetworkCPP/Initializers/HeNormal
-    ../NeuralNetworkCPP/Initializers/HeUniform
     ../NeuralNetworkCPP/GlobalThreadPool
     ../NeuralNetworkCPP/GlobalThreadPool/Base
     ../NeuralNetworkCPP/Matrix
     ../NeuralNetworkCPP/Matrix/RowWiseProxy
-    ../NeuralNetworkCPP/Losses/Common
-    ../NeuralNetworkCPP/Losses/MeanSquaredError
-    ../NeuralNetworkCPP/Losses/CategoricalCrossEntropy
-    ../NeuralNetworkCPP/Losses/BinaryCrossEntropy
-    ../NeuralNetworkCPP/Optimizers/Common
-    ../NeuralNetworkCPP/Optimizers/SGD
-    ../NeuralNetworkCPP/Optimizers/RMSprop
-    ../NeuralNetworkCPP/Optimizers/Adam
+    ../NeuralNetworkCPP/Losses
+    ../NeuralNetworkCPP/Optimizers
     ../NeuralNetworkCPP/Activations
-    ../NeuralNetworkCPP/Activations/Common
-    ../NeuralNetworkCPP/Activations/ReLU
-    ../NeuralNetworkCPP/Activations/Sigmoid
-    ../NeuralNetworkCPP/Activations/Softmax
-    ../NeuralNetworkCPP/Layers/Common
-    ../NeuralNetworkCPP/Layers/DenseLayer
+    ../NeuralNetworkCPP/Layers
 )
 
 # List of source files for the tests
