@@ -31,19 +31,6 @@ set(NN_SOURCES
     Layers/DenseLayer/DenseLayer.cpp
 )
 
-# Include directories for headers
-set(NN_HEADERS
-    Initializers
-    GlobalThreadPool
-    GlobalThreadPool/Base
-    Matrix
-    Matrix/RowWiseProxy
-    Losses
-    Optimizers
-    Activations
-    Layers
-)
-
 # Create static library
 add_library(${PROJECT_NAME} STATIC ${NN_SOURCES})
 
