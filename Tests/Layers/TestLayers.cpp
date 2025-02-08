@@ -5,8 +5,8 @@
  */
 
 #include <gtest/gtest.h>
-#include "../../NeuralNetworkCPP/Layers/DenseLayer/DenseLayer.hpp"
-#include "../../NeuralNetworkCPP/Optimizers/Adam/Adam.hpp"
+#include <NeuralNetworkCPP/Layers/DenseLayer/DenseLayer.hpp>
+#include <NeuralNetworkCPP/Optimizers/Adam/Adam.hpp>
 #include <filesystem>
 
 TEST(DenseLayerTests, ForwardPass)

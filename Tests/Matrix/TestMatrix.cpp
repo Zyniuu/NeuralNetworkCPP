@@ -6,11 +6,8 @@
 
 #include <gtest/gtest.h>
 #include <filesystem>
-#include "../../NeuralNetworkCPP/Matrix/Matrix.hpp"
-#include "../../NeuralNetworkCPP/Initializers/XavierUniform/XavierUniform.hpp"
-#include "../../NeuralNetworkCPP/Initializers/XavierNormal/XavierNormal.hpp"
-#include "../../NeuralNetworkCPP/Initializers/HeNormal/HeNormal.hpp"
-#include "../../NeuralNetworkCPP/Initializers/HeUniform/HeUniform.hpp"
+#include <NeuralNetworkCPP/Matrix/Matrix.hpp>
+#include <NeuralNetworkCPP/Initializers/Initializers.hpp>
 
 // Test constructor with default values
 TEST(MatrixTests, DefaultConstructor)

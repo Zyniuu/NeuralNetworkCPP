@@ -48,7 +48,9 @@ set(NN_HEADERS
 add_library(${PROJECT_NAME} STATIC ${NN_SOURCES})
 
 # Add header directories
-target_include_directories(${PROJECT_NAME} PUBLIC ${NN_HEADERS})
+target_include_directories(${PROJECT_NAME} PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
 
 # Set output directories
 set_target_properties(${PROJECT_NAME} PROPERTIES

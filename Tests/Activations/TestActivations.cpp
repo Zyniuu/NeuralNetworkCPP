@@ -5,9 +5,7 @@
  */
 
 #include <gtest/gtest.h>
-#include "../../NeuralNetworkCPP/Activations/ReLU/ReLU.hpp"
-#include "../../NeuralNetworkCPP/Activations/Sigmoid/Sigmoid.hpp"
-#include "../../NeuralNetworkCPP/Activations/Softmax/Softmax.hpp"
+#include <NeuralNetworkCPP/Activations/Activations.hpp>
 
 TEST(ActivationsTests, ReLU)
 {

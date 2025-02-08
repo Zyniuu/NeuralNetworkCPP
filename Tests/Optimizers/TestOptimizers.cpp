@@ -5,9 +5,7 @@
  */
 
 #include <gtest/gtest.h>
-#include "../../NeuralNetworkCPP/Optimizers/SGD/SGD.hpp"
-#include "../../NeuralNetworkCPP/Optimizers/RMSprop/RMSprop.hpp"
-#include "../../NeuralNetworkCPP/Optimizers/Adam/Adam.hpp"
+#include <NeuralNetworkCPP/Optimizers/Optimizers.hpp>
 
 TEST(OptimizerTests, SGDWithMomentum)
 {

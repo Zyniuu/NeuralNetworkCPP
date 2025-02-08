@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 #include <algorithm>
-#include "../../../NeuralNetworkCPP/Initializers/HeUniform/HeUniform.hpp"
+#include <NeuralNetworkCPP/Initializers/HeUniform/HeUniform.hpp>
 #include "../../TestUtils/TestUtils.hpp"
 
 // Test whether HeUniform generates values with correct mean and variance

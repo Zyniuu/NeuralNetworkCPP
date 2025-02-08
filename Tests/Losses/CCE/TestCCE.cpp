@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 #include <cmath>
-#include "../../../NeuralNetworkCPP/Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.hpp"
+#include <NeuralNetworkCPP/Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.hpp>
 
 // Test if CCE computes loss correctly
 TEST(CCETests, ComputeLoss)
