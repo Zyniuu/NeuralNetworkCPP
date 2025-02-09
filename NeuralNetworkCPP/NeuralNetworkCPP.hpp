@@ -10,6 +10,7 @@
 #include "Layers/Layers.hpp"
 #include "Optimizers/Optimizers.hpp"
 #include "Losses/Losses.hpp"
+#include "Logger/Logger.hpp"
 #include <thread>
 
 namespace nn
@@ -26,6 +27,7 @@ namespace nn
         std::vector<std::unique_ptr<Layer>> m_layers; ///< Vector of layers in the network.
         std::unique_ptr<Optimizer> m_optimizer;       ///< Optimizer for training.
         std::unique_ptr<Loss> m_loss;                 ///< Loss function for training.
+        std::unique_ptr<Logger> m_logger;             ///< Logger for logging training progress.
 
     public:
         /**
@@ -60,8 +62,9 @@ namespace nn
          *
          * @param optimizer The optimizer to use for training.
          * @param lossFunc The loss function to use for training.
+         * @param metrics The vector of metrics to display (default: {}).
          */
-        void compile(std::unique_ptr<Optimizer> optimizer, std::unique_ptr<Loss> lossFunc);
+        void compile(std::unique_ptr<Optimizer> optimizer, std::unique_ptr<Loss> lossFunc, std::vector<e_metric> metrics = {});
 
         /**
          * @brief Trains the model on the provided data.
@@ -71,13 +74,15 @@ namespace nn
          * @param epochs Number of training epochs.
          * @param batchSize Size of each training batch (default: 1).
          * @param validationSplit Fraction of the data to use for validation (default: 0.0).
+         * @param verbose If true the logs will be displayed (default: true).
          */
         void train(
             const std::vector<std::vector<double>> &xTrain,
             const std::vector<std::vector<double>> &yTrain,
             const int epochs,
             const int batchSize = 1,
-            const double validationSplit = 0.0
+            const double validationSplit = 0.0,
+            const bool verbose = true
         );
 
         /**

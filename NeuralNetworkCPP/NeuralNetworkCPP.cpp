@@ -85,10 +85,11 @@ namespace nn
         m_layers.push_back(std::move(layer));
     }
 
-    void NeuralNetworkCPP::compile(std::unique_ptr<Optimizer> optimizer, std::unique_ptr<Loss> lossFunc)
+    void NeuralNetworkCPP::compile(std::unique_ptr<Optimizer> optimizer, std::unique_ptr<Loss> lossFunc, std::vector<e_metric> metrics)
     {
         m_optimizer = std::move(optimizer);
         m_loss = std::move(lossFunc);
+        m_logger = std::make_unique<Logger>(metrics);
     }
 
     void NeuralNetworkCPP::train(
@@ -96,7 +97,8 @@ namespace nn
         const std::vector<std::vector<double>> &yTrain, 
         const int epochs, 
         const int batchSize, 
-        const double validationSplit
+        const double validationSplit,
+        const bool verbose
     )
     {
         // Copy the dataset
@@ -113,9 +115,19 @@ namespace nn
         std::vector<std::vector<double>> xTrainSplit = slice(xTrainCopy, numValidation, xTrainCopy.size());
         std::vector<std::vector<double>> yTrainSplit = slice(yTrainCopy, numValidation, yTrainCopy.size());
 
+        // Compute total number of batches
+        double totalBatches = static_cast<double>(xTrainSplit.size()) / static_cast<double>(batchSize);
+
+        if (verbose)
+            m_logger->logTrainingStart();
+
         // Training loop
         for (int epoch = 0; epoch < epochs; epoch++)
         {
+            if (verbose)
+                m_logger->logEpochStart(epoch, epochs);
+
+            int batchIndex = 0;
             double loss = 0.0;
 
             // Shuffle training data before each epoch
@@ -124,6 +136,11 @@ namespace nn
             // Process batches
             for (int i = 0; i < xTrainSplit.size(); i += batchSize)
             {
+                batchIndex++;
+
+                if (verbose)
+                    m_logger->logBatch(batchIndex, std::ceil(totalBatches));
+
                 // Make sure batch doesn't overflow
                 int end = std::min(static_cast<int>(xTrainSplit.size() - 1), i + batchSize);
 
@@ -136,7 +153,13 @@ namespace nn
 
             loss /= xTrainSplit.size();
             double accuracy = evaluate(xValSplit, yValSplit);
+
+            if (verbose)
+                m_logger->logEpochEnd(epochs, loss, accuracy);
         }
+
+        if (verbose)
+            m_logger->logTrainingEnd();
     }
 
     void NeuralNetworkCPP::save(const std::string &filename) const
