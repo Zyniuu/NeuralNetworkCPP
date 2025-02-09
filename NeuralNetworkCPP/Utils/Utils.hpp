@@ -35,6 +35,15 @@ namespace nn
      * @throws std::out_of_range If any index in `order` is out of bounds.
      */
     void reorderRows(std::vector<std::vector<double>> &data, const std::vector<int> &order);
+
+    /**
+     * @brief Shuffles the rows of the provided data and labels.
+     *
+     * @param data A 2D data vector to shuffle.
+     * @param labels A 2D labels vector to shuffle.
+     * @throws std::runtime_error If data and labels have different amount of rows.
+     */
+    void shuffleDataset(std::vector<std::vector<double>> &data, std::vector<std::vector<double>> &labels);
 }
 
 #endif

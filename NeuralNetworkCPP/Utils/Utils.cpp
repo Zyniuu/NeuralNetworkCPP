@@ -6,6 +6,9 @@
 
 #include "Utils.hpp"
 #include <stdexcept>
+#include <numeric>
+#include <random>
+#include <algorithm>
 
 namespace nn
 {
@@ -39,5 +42,23 @@ namespace nn
             // Place the row in the correct position
             data[i] = originalData[order[i]];
         }
+    }
+
+    void shuffleDataset(std::vector<std::vector<double>> &data, std::vector<std::vector<double>> &labels)
+    {
+        // Check if data and labels have the same number of rows
+        if (data.size() != labels.size())
+            throw std::runtime_error("Data vector and labels vector must have the same amount of rows.");
+        
+        // Create vector of shuffled indices
+        std::vector<int> indices(data.size());
+        std::iota(indices.begin(), indices.end(), 0);
+        
+        // Shuffle the indices vector
+        std::shuffle(indices.begin(), indices.end(), std::mt19937(std::random_device{}()));
+
+        // Reorder the rows of data and labels
+        reorderRows(data, indices);
+        reorderRows(labels, indices);
     }
 }

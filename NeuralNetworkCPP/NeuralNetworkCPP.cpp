@@ -6,6 +6,8 @@
 
 #include "NeuralNetworkCPP.hpp"
 #include "GlobalThreadPool/GlobalThreadPool.hpp"
+#include "Utils/Utils.hpp"
+#include <cmath>
 
 namespace nn
 {
@@ -44,6 +46,37 @@ namespace nn
         initGlobalThreadPool(numThreads);
     }
 
+    std::vector<double> NeuralNetworkCPP::predict(const std::vector<double> &input)
+    {
+        Matrix output = Matrix(1, input.size(), input);
+        output = forward(output);
+        return output.getData();
+    }
+
+    double NeuralNetworkCPP::evaluate(const std::vector<std::vector<double>> &xTest, const std::vector<std::vector<double>> &yTest)
+    {
+        int correct = 0;
+
+        for (int i = 0; i < xTest.size(); i++)
+        {
+            std::vector<double> output = predict(xTest[i]);
+
+            // If classification
+            if (output.size() > 1)
+            {
+                int maxOutputIndex = std::max_element(output.begin(), output.end()) - output.begin();
+                int maxTargetIndex = std::max_element(yTest[i].begin(), yTest[i].end()) - yTest[i].begin();
+
+                if (maxOutputIndex == maxTargetIndex)
+                    correct++;
+            }
+            else if (std::round(output[0]) == std::round(yTest[i][0]))
+                correct++;
+        }
+
+        return static_cast<double>(correct) / xTest.size();
+    }
+
     void NeuralNetworkCPP::addLayer(std::unique_ptr<Layer> layer)
     {
         m_layers.push_back(std::move(layer));
@@ -58,12 +91,56 @@ namespace nn
     void NeuralNetworkCPP::train(
         const std::vector<std::vector<double>> &xTrain, 
         const std::vector<std::vector<double>> &yTrain, 
-        int epochs, 
-        int batchSize, 
-        double validationSplit
+        const int epochs, 
+        const int batchSize, 
+        const double validationSplit
     )
     {
+        // Copy the dataset
+        std::vector<std::vector<double>> xTrainCopy = xTrain;
+        std::vector<std::vector<double>> yTrainCopy = yTrain;
 
+        // Shuffle the dataset
+        shuffleDataset(xTrainCopy, yTrainCopy);
+
+        // Split data into training and validation sets
+        int numValidation = xTrainCopy.size() * validationSplit;
+        std::vector<std::vector<double>> xValSplit = slice(xTrainCopy, 0, numValidation);
+        std::vector<std::vector<double>> yValSplit = slice(yTrainCopy, 0, numValidation);
+        std::vector<std::vector<double>> xTrainSplit = slice(xTrainCopy, numValidation, xTrainCopy.size());
+        std::vector<std::vector<double>> yTrainSplit = slice(yTrainCopy, numValidation, yTrainCopy.size());
+
+        // Training loop
+        for (int epoch = 0; epoch < epochs; epoch++)
+        {
+            // Shuffle training data before each epoch
+            shuffleDataset(xTrainSplit, yTrainSplit);
+
+            // Process batches
+            for (int i = 0; i < xTrainSplit.size(); i += batchSize)
+            {
+                // Make sure batch doesn't overflow
+                int end = std::min(static_cast<int>(xTrainSplit.size() - 1), i + batchSize);
+
+                std::vector<std::vector<double>> xBatch = slice(xTrainSplit, i, end);
+                std::vector<std::vector<double>> yBatch = slice(yTrainSplit, i, end);
+
+                // Mini batch training
+                for (int j = 0; j < xBatch.size(); j++)
+                {
+                    // Convert vectors to matrices
+                    Matrix input = Matrix(1, xBatch[j].size(), xBatch[j]);
+                    Matrix target = Matrix(1, yBatch[j].size(), yBatch[j]);
+
+                    // Forward pass
+                    Matrix output = forward(input);
+
+                    // Backward pass
+                    Matrix grad = m_loss->computeGradient(output, target);
+                    backward(grad);
+                }
+            }
+        }
     }
 
     void NeuralNetworkCPP::save(const std::string &filename) const

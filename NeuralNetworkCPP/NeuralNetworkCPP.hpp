@@ -44,6 +44,10 @@ namespace nn
          */
         NeuralNetworkCPP(const std::string &filename, const int numThreads = std::thread::hardware_concurrency());
 
+        std::vector<double> predict(const std::vector<double> &input);
+
+        double evaluate(const std::vector<std::vector<double>> &xTest, const std::vector<std::vector<double>> &yTest);
+
         /**
          * @brief Adds a layer to the network.
          *

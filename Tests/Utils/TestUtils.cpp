@@ -72,3 +72,41 @@ TEST(UtilsTests, ReorderInvalid)
     EXPECT_THROW(nn::reorderRows(data, invalidOrder1), std::out_of_range);
     EXPECT_THROW(nn::reorderRows(data, invalidOrder2), std::out_of_range);
 }
+
+TEST(UtilsTests, ShuffleValid)
+{
+    std::vector<std::vector<double>> data = {
+        {1.0, 2.0},
+        {3.0, 4.0}
+    };
+
+    std::vector<std::vector<double>> labels = {
+        {1.0},
+        {3.0}
+    };
+
+    std::vector<std::vector<double>> dataShuffled = data;
+    std::vector<std::vector<double>> labelsShuffled = labels;
+
+    nn::shuffleDataset(dataShuffled, labelsShuffled);
+
+    EXPECT_NE(data, dataShuffled);
+    EXPECT_NE(labels, labelsShuffled);
+}
+
+TEST(UtilsTests, ShuffleInvalid)
+{
+    std::vector<std::vector<double>> data = {
+        {1.0, 2.0},
+        {3.0, 4.0}
+    };
+
+    std::vector<std::vector<double>> labels = {
+        {1.0}
+    };
+
+    std::vector<std::vector<double>> dataShuffled = data;
+    std::vector<std::vector<double>> labelsShuffled = labels;
+
+    EXPECT_THROW(nn::shuffleDataset(dataShuffled, labelsShuffled), std::runtime_error);
+}
