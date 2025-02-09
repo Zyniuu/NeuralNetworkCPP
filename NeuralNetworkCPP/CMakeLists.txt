@@ -10,6 +10,7 @@ project(NeuralNetworCPP)
 
 # List of source files of the neural network
 set(NN_SOURCES
+    Utils/Utils.cpp
     Initializers/XavierNormal/XavierNormal.cpp
     Initializers/XavierUniform/XavierUniform.cpp
     Initializers/HeNormal/HeNormal.cpp

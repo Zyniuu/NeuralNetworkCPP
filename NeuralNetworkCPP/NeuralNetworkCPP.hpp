@@ -33,7 +33,7 @@ namespace nn
          *
          * @param numThreads Number of threads in the thread pool.
          */
-        NeuralNetworkCPP(int numThreads = std::thread::hardware_concurrency());
+        NeuralNetworkCPP(const int numThreads = std::thread::hardware_concurrency());
 
         /**
          * @brief Constructs a model from a saved file.
@@ -42,7 +42,7 @@ namespace nn
          * @param numThreads Number of threads in the thread pool.
          * @throws std::runtime_error If the file cannot be opened or is invalid.
          */
-        NeuralNetworkCPP(const std::string &filename, int numThreads = std::thread::hardware_concurrency());
+        NeuralNetworkCPP(const std::string &filename, const int numThreads = std::thread::hardware_concurrency());
 
         /**
          * @brief Adds a layer to the network.
@@ -65,15 +65,15 @@ namespace nn
          * @param xTrain Training data (vector of input vectors).
          * @param yTrain Training labels (vector of output vectors).
          * @param epochs Number of training epochs.
-         * @param batchSize Size of each training batch.
-         * @param validationSplit Fraction of the data to use for validation.
+         * @param batchSize Size of each training batch (default: 1).
+         * @param validationSplit Fraction of the data to use for validation (default: 1.0).
          */
         void train(
             const std::vector<std::vector<double>> &xTrain,
             const std::vector<std::vector<double>> &yTrain,
-            int epochs,
-            int batchSize,
-            double validationSplit
+            const int epochs,
+            const int batchSize = 1,
+            const double validationSplit = 1.0
         );
 
         /**
@@ -99,6 +99,15 @@ namespace nn
          * @param gradient The gradient of the loss with respect to the output.
          */
         void backward(const Matrix &gradient);
+
+        /**
+         * @brief Initializes the layer based on provided layer type
+         * 
+         * @param layerType Enum value of the layer type
+         * @param file Input file stream (must be opened in binary mode).
+         * @throws std::runtime_error If the layer type is incorrect.
+         */
+        void initLayer(e_layerType layerType, std::ifstream &file);
     };
 }
 

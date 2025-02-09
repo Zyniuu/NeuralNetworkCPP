@@ -8,7 +8,8 @@
 #define LOSSES_HPP
 
 /**
- * This file is for including all of the avaible loss functions
+ * @file Losses.hpp
+ * @brief This file is for including all of the avaible loss functions.
  */
 
 #include "BinaryCrossEntropy/BinaryCrossEntropy.hpp"

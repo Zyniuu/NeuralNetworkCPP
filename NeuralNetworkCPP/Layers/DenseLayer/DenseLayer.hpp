@@ -94,6 +94,7 @@ namespace nn
          * @brief Initializes the activation function based on the provided activation ID.
          *
          * @param activationID Activation function ID.
+         * @throws std::runtime_error If the provided function ID is incorrect.
          */
         void initActivationFunction(e_activation activationID);
     };

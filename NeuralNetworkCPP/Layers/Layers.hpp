@@ -8,7 +8,8 @@
 #define LAYERS_HPP
 
 /**
- * This file is for including all of the avaible layers
+ * @file Layers.hpp
+ * @brief This file is for including all of the avaible layers.
  */
 
 #include "DenseLayer/DenseLayer.hpp"

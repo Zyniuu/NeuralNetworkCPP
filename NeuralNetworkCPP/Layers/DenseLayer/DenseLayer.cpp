@@ -32,10 +32,6 @@ namespace nn
         // Read the activation function ID
         file.read(reinterpret_cast<char *>(&m_activationID), sizeof(m_activationID));
 
-        // Validate the activation function ID
-        if (m_activationID < RELU || m_activationID > NONE)
-            throw std::runtime_error("Invalid activation function ID.");
-
         // Initialize the activation function based on the ID
         initActivationFunction(m_activationID);
 
@@ -151,6 +147,9 @@ namespace nn
             m_activationID = NONE;
             m_activation = nullptr;
             break;
+        
+        default:
+            throw std::runtime_error("Invalid activation function ID.");
         }
     }
 }

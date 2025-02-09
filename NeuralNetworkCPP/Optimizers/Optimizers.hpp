@@ -8,7 +8,8 @@
 #define OPTIMIZERS_HPP
 
 /**
- * This file is for including all of the avaible optimizers
+ * @file Optimizers.hpp
+ * @brief This file is for including all of the avaible optimizers.
  */
 
 #include "Adam/Adam.hpp"
