@@ -13,6 +13,7 @@ namespace nn
 {
     NeuralNetworkCPP::NeuralNetworkCPP(const int numThreads)
     {
+        // Initialize the global thread pool with the specified number of threads
         initGlobalThreadPool(numThreads);
     }
 
@@ -48,45 +49,59 @@ namespace nn
 
     std::vector<double> NeuralNetworkCPP::predict(const std::vector<double> &input)
     {
+        // Convert the input vector to a matrix
         Matrix output = Matrix(1, input.size(), input);
+
+        // Perform forward propagation
         output = forward(output);
+
+        // Return the output as a vector
         return output.getData();
     }
 
     double NeuralNetworkCPP::evaluate(const std::vector<std::vector<double>> &xTest, const std::vector<std::vector<double>> &yTest)
     {
+        // Check if the test data is empty
         if (xTest.empty() || yTest.empty())
             return 0.0;
 
         int correct = 0;
 
+        // Iterate over the test data
         for (int i = 0; i < xTest.size(); i++)
         {
+            // Predict the output for the current input
             std::vector<double> output = predict(xTest[i]);
 
-            // If classification
+            // If classification (multiple outputs)
             if (output.size() > 1)
             {
+                // Find the index of the maximum output
                 int maxOutputIndex = std::max_element(output.begin(), output.end()) - output.begin();
                 int maxTargetIndex = std::max_element(yTest[i].begin(), yTest[i].end()) - yTest[i].begin();
 
+                // Check if the prediction is correct
                 if (maxOutputIndex == maxTargetIndex)
                     correct++;
             }
+            // If regression (single output)
             else if (std::round(output[0]) == std::round(yTest[i][0]))
                 correct++;
         }
 
+        // Return the accuracy
         return static_cast<double>(correct) / xTest.size();
     }
 
     void NeuralNetworkCPP::addLayer(std::unique_ptr<Layer> layer)
     {
+        // Add the layer to the network
         m_layers.push_back(std::move(layer));
     }
 
     void NeuralNetworkCPP::compile(std::unique_ptr<Optimizer> optimizer, std::unique_ptr<Loss> lossFunc, std::vector<e_metric> metrics)
     {
+        // Set the optimizer, loss function, and logger
         m_optimizer = std::move(optimizer);
         m_loss = std::move(lossFunc);
         m_logger = std::make_unique<Logger>(metrics);
@@ -118,12 +133,14 @@ namespace nn
         // Compute total number of batches
         double totalBatches = static_cast<double>(xTrainSplit.size()) / static_cast<double>(batchSize);
 
+        // Log training start
         if (verbose)
             m_logger->logTrainingStart();
 
         // Training loop
         for (int epoch = 0; epoch < epochs; epoch++)
         {
+            // Log epoch start
             if (verbose)
                 m_logger->logEpochStart(epoch, epochs);
 
@@ -138,26 +155,31 @@ namespace nn
             {
                 batchIndex++;
 
+                // Log batch progress
                 if (verbose)
                     m_logger->logBatch(batchIndex, std::ceil(totalBatches));
 
                 // Make sure batch doesn't overflow
                 int end = std::min(static_cast<int>(xTrainSplit.size() - 1), i + batchSize);
 
+                // Get the current batch
                 std::vector<std::vector<double>> xBatch = slice(xTrainSplit, i, end);
                 std::vector<std::vector<double>> yBatch = slice(yTrainSplit, i, end);
 
-                // Mini batch training
+                // Train on the current batch
                 trainOnBatch(xBatch, yBatch, loss);
             }
 
+            // Compute average loss and accuracy
             loss /= xTrainSplit.size();
             double accuracy = evaluate(xValSplit, yValSplit);
 
+            // Log epoch end
             if (verbose)
                 m_logger->logEpochEnd(epochs, loss, accuracy);
         }
 
+        // Log training end
         if (verbose)
             m_logger->logTrainingEnd();
     }
@@ -212,6 +234,7 @@ namespace nn
 
     void NeuralNetworkCPP::initLayer(e_layerType layerType, std::ifstream &file)
     {
+        // Initialize the layer based on the type
         switch (layerType)
         {
         case DENSE:
@@ -229,6 +252,7 @@ namespace nn
         double &loss
     )
     {
+        // Iterate over the batch
         for (int i = 0; i < xBatch.size(); i++)
         {
             // Convert vectors to matrices

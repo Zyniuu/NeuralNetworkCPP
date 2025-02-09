@@ -17,9 +17,9 @@ namespace nn
 {
     /**
      * @class NeuralNetworkCPP
-     * @brief A neural network model.
+     * @brief A neural network model that supports adding layers, compiling, training, and saving/loading.
      *
-     * It supports adding layers, compiling, training, and saving/loading.
+     * This class provides a high-level interface for building and training neural networks.
      */
     class NeuralNetworkCPP
     {
@@ -33,7 +33,7 @@ namespace nn
         /**
          * @brief Default constructor.
          *
-         * @param numThreads Number of threads in the thread pool.
+         * @param numThreads Number of threads in the thread pool (default: hardware concurrency).
          */
         NeuralNetworkCPP(const int numThreads = std::thread::hardware_concurrency());
 
@@ -41,13 +41,26 @@ namespace nn
          * @brief Constructs a model from a saved file.
          *
          * @param filename Path to the file containing the saved model.
-         * @param numThreads Number of threads in the thread pool.
+         * @param numThreads Number of threads in the thread pool (default: hardware concurrency).
          * @throws std::runtime_error If the file cannot be opened or is invalid.
          */
         NeuralNetworkCPP(const std::string &filename, const int numThreads = std::thread::hardware_concurrency());
 
+        /**
+         * @brief Predicts the output for a given input.
+         *
+         * @param input The input vector.
+         * @return The predicted output vector.
+         */
         std::vector<double> predict(const std::vector<double> &input);
 
+        /**
+         * @brief Evaluates the model on the provided test data.
+         *
+         * @param xTest Test data (vector of input vectors).
+         * @param yTest Test labels (vector of output vectors).
+         * @return The accuracy of the model on the test data.
+         */
         double evaluate(const std::vector<std::vector<double>> &xTest, const std::vector<std::vector<double>> &yTest);
 
         /**
@@ -74,7 +87,7 @@ namespace nn
          * @param epochs Number of training epochs.
          * @param batchSize Size of each training batch (default: 1).
          * @param validationSplit Fraction of the data to use for validation (default: 0.0).
-         * @param verbose If true the logs will be displayed (default: true).
+         * @param verbose If true, logs will be displayed (default: true).
          */
         void train(
             const std::vector<std::vector<double>> &xTrain,
@@ -110,14 +123,21 @@ namespace nn
         void backward(const Matrix &gradient);
 
         /**
-         * @brief Initializes the layer based on provided layer type
-         * 
-         * @param layerType Enum value of the layer type
+         * @brief Initializes a layer based on the provided layer type.
+         *
+         * @param layerType Enum value of the layer type.
          * @param file Input file stream (must be opened in binary mode).
-         * @throws std::runtime_error If the layer type is incorrect.
+         * @throws std::runtime_error If the layer type is invalid.
          */
         void initLayer(e_layerType layerType, std::ifstream &file);
 
+        /**
+         * @brief Trains the model on a single batch.
+         *
+         * @param xBatch Batch of input data.
+         * @param yBatch Batch of target data.
+         * @param loss Accumulated loss for the batch.
+         */
         void trainOnBatch(
             const std::vector<std::vector<double>> &xBatch, 
             const std::vector<std::vector<double>> &yBatch, 
