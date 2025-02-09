@@ -77,12 +77,26 @@ TEST(UtilsTests, ShuffleValid)
 {
     std::vector<std::vector<double>> data = {
         {1.0, 2.0},
-        {3.0, 4.0}
+        {3.0, 4.0},
+        {5.0, 6.0},
+        {7.0, 8.0},
+        {9.0, 10.0},
+        {11.0, 12.0},
+        {13.0, 14.0},
+        {15.0, 16.0},
+        {17.0, 18.0}
     };
 
     std::vector<std::vector<double>> labels = {
         {1.0},
-        {3.0}
+        {2.0},
+        {3.0},
+        {4.0},
+        {5.0},
+        {6.0},
+        {7.0},
+        {8.0},
+        {9.0}
     };
 
     std::vector<std::vector<double>> dataShuffled = data;
@@ -90,6 +104,7 @@ TEST(UtilsTests, ShuffleValid)
 
     nn::shuffleDataset(dataShuffled, labelsShuffled);
 
+    // Might not always pass
     EXPECT_NE(data, dataShuffled);
     EXPECT_NE(labels, labelsShuffled);
 }
