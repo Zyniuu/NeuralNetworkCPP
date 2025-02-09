@@ -70,14 +70,14 @@ namespace nn
          * @param yTrain Training labels (vector of output vectors).
          * @param epochs Number of training epochs.
          * @param batchSize Size of each training batch (default: 1).
-         * @param validationSplit Fraction of the data to use for validation (default: 1.0).
+         * @param validationSplit Fraction of the data to use for validation (default: 0.0).
          */
         void train(
             const std::vector<std::vector<double>> &xTrain,
             const std::vector<std::vector<double>> &yTrain,
             const int epochs,
             const int batchSize = 1,
-            const double validationSplit = 1.0
+            const double validationSplit = 0.0
         );
 
         /**
@@ -112,6 +112,12 @@ namespace nn
          * @throws std::runtime_error If the layer type is incorrect.
          */
         void initLayer(e_layerType layerType, std::ifstream &file);
+
+        void trainOnBatch(
+            const std::vector<std::vector<double>> &xBatch, 
+            const std::vector<std::vector<double>> &yBatch, 
+            double &loss
+        );
     };
 }
 

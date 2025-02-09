@@ -55,6 +55,9 @@ namespace nn
 
     double NeuralNetworkCPP::evaluate(const std::vector<std::vector<double>> &xTest, const std::vector<std::vector<double>> &yTest)
     {
+        if (xTest.empty() || yTest.empty())
+            return 0.0;
+
         int correct = 0;
 
         for (int i = 0; i < xTest.size(); i++)
@@ -113,6 +116,8 @@ namespace nn
         // Training loop
         for (int epoch = 0; epoch < epochs; epoch++)
         {
+            double loss = 0.0;
+
             // Shuffle training data before each epoch
             shuffleDataset(xTrainSplit, yTrainSplit);
 
@@ -126,20 +131,11 @@ namespace nn
                 std::vector<std::vector<double>> yBatch = slice(yTrainSplit, i, end);
 
                 // Mini batch training
-                for (int j = 0; j < xBatch.size(); j++)
-                {
-                    // Convert vectors to matrices
-                    Matrix input = Matrix(1, xBatch[j].size(), xBatch[j]);
-                    Matrix target = Matrix(1, yBatch[j].size(), yBatch[j]);
-
-                    // Forward pass
-                    Matrix output = forward(input);
-
-                    // Backward pass
-                    Matrix grad = m_loss->computeGradient(output, target);
-                    backward(grad);
-                }
+                trainOnBatch(xBatch, yBatch, loss);
             }
+
+            loss /= xTrainSplit.size();
+            double accuracy = evaluate(xValSplit, yValSplit);
         }
     }
 
@@ -201,6 +197,30 @@ namespace nn
         
         default:
             throw std::runtime_error("Invalid layer type.");
+        }
+    }
+
+    void NeuralNetworkCPP::trainOnBatch(
+        const std::vector<std::vector<double>> &xBatch, 
+        const std::vector<std::vector<double>> &yBatch, 
+        double &loss
+    )
+    {
+        for (int i = 0; i < xBatch.size(); i++)
+        {
+            // Convert vectors to matrices
+            Matrix input = Matrix(1, xBatch[i].size(), xBatch[i]);
+            Matrix target = Matrix(1, yBatch[i].size(), yBatch[i]);
+
+            // Forward pass
+            Matrix output = forward(input);
+
+            // Compute loss
+            loss += m_loss->computeLoss(output, target);
+
+            // Backward pass
+            Matrix grad = m_loss->computeGradient(output, target);
+            backward(grad);
         }
     }
 }
