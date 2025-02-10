@@ -127,8 +127,8 @@ namespace nn
         int numValidation = xTrainCopy.size() * validationSplit;
         std::vector<std::vector<double>> xValSplit = slice(xTrainCopy, 0, numValidation);
         std::vector<std::vector<double>> yValSplit = slice(yTrainCopy, 0, numValidation);
-        std::vector<std::vector<double>> xTrainSplit = slice(xTrainCopy, numValidation, xTrainCopy.size());
-        std::vector<std::vector<double>> yTrainSplit = slice(yTrainCopy, numValidation, yTrainCopy.size());
+        std::vector<std::vector<double>> xTrainSplit = slice(xTrainCopy, numValidation, xTrainCopy.size() - 1);
+        std::vector<std::vector<double>> yTrainSplit = slice(yTrainCopy, numValidation, yTrainCopy.size() - 1);
 
         // Compute total number of batches
         double totalBatches = static_cast<double>(xTrainSplit.size()) / static_cast<double>(batchSize);
@@ -142,7 +142,7 @@ namespace nn
         {
             // Log epoch start
             if (verbose)
-                m_logger->logEpochStart(epoch, epochs);
+                m_logger->logEpochStart(epoch + 1, epochs);
 
             int batchIndex = 0;
             double loss = 0.0;

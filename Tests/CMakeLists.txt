@@ -32,6 +32,7 @@ set(TEST_SOURCES
     Optimizers/TestOptimizers.cpp
     Activations/TestActivations.cpp
     Layers/TestLayers.cpp
+    Model/TestModel.cpp
     tests.cpp
 )
 
