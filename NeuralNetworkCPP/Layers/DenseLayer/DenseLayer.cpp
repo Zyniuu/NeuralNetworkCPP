@@ -63,10 +63,8 @@ namespace nn
     Matrix DenseLayer::backward(const Matrix &gradient, Optimizer &optimizer)
     {
         // Compute the gradient with respect to the output
-        Matrix gradOutput = m_output;
-        if (m_activation)
-            gradOutput = m_activation->backward(gradOutput);
-        gradOutput = gradOutput.cwiseProduct(gradient);
+        Matrix gradOutput = m_activation ? m_activation->backward(m_output) : Matrix(m_output.getRows(), m_output.getCols(), 1.0);
+        gradOutput = gradient.cwiseProduct(gradOutput);
 
         // Compute the gradient with respect to the weights
         Matrix gradWeights = m_input.transpose() * gradOutput;
