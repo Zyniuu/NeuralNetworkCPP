@@ -23,18 +23,7 @@ namespace nn
 
     Matrix Sigmoid::backward(const Matrix &gradient)
     {
-        Matrix gradInput = gradient;
-
-        // Compute gradient of Sigmoid: gradInput = gradient * (output * (1 - output))
-        for (int i = 0; i < gradInput.getRows(); i++)
-        {
-            for (int j = 0; j < gradInput.getCols(); j++)
-            {
-                double output = m_output[{i, j}];
-                gradInput[{i, j}] *= output * (1.0 - output);
-            }
-        }
-
-        return gradInput;
+        // Compute gradient of Sigmoid: gradient * (output * (1 - output))
+        return gradient.cwiseProduct(m_output.cwiseProduct(1.0 - m_output));
     }
 }

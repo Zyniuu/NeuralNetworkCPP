@@ -48,11 +48,12 @@ namespace nn
     {
         // Store the input for use in the backward pass
         m_input = input;
-
+        
         // Compute the linear transformation: output = input * weights + biases
-        Matrix output = input * m_weights + m_biases;
+        m_output = input * m_weights + m_biases;
 
         // Apply the activation function if it exists
+        Matrix output = m_output;
         if (m_activation)
             output = m_activation->forward(output);
 
@@ -61,19 +62,23 @@ namespace nn
 
     Matrix DenseLayer::backward(const Matrix &gradient, Optimizer &optimizer)
     {
-        // Compute the gradient with respect to the activation function
-        Matrix gradInput = gradient;
+        // Compute the gradient with respect to the output
+        Matrix gradOutput = m_output;
         if (m_activation)
-            gradInput = m_activation->backward(gradInput);
+            gradOutput = m_activation->backward(gradOutput);
+        gradOutput = gradOutput.cwiseProduct(gradient);
 
         // Compute the gradient with respect to the weights
-        Matrix gradWeights = m_input.transpose() * gradInput;
-
-        // Update weights and biases using the optimizer
-        optimizer.update(m_weights, m_biases, gradWeights, gradInput);
+        Matrix gradWeights = m_input.transpose() * gradOutput;
 
         // Compute the gradient with respect to the input
-        return gradInput * m_weights.transpose();
+        Matrix gradInput = gradOutput * m_weights.transpose();
+
+        // Update weights and biases using the optimizer
+        optimizer.update(m_weights, m_biases, gradWeights, gradOutput);
+
+        // Return the gradient with respect to the input
+        return gradInput;
     }
 
     void DenseLayer::save(std::ofstream &file) const

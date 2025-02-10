@@ -26,6 +26,7 @@ namespace nn
         Matrix m_weights;                         ///< Weight matrix.
         Matrix m_biases;                          ///< Bias vector.
         Matrix m_input;                           ///< Input to the layer (stored for backward pass).
+        Matrix m_output;                          ///< Output of the layer (stored for backward pass).
         std::unique_ptr<Activation> m_activation; ///< Optional activation function.
         e_activation m_activationID;              ///< Activation ID used when saving layer to the file
 

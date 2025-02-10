@@ -15,7 +15,7 @@ namespace nn
             return x * x; 
         });
 
-        return error.sum() / (predictions.getRows() * predictions.getCols());
+        return error.sum() / (error.getRows() * error.getCols());
     }
 
     Matrix MeanSquaredError::computeGradient(const Matrix &predictions, const Matrix &targets)

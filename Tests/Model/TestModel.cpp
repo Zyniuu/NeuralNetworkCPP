@@ -82,10 +82,10 @@ TEST(ModelTests, Train)
         {0.0}
     };
 
-    model.train(xData, yData, 100);
+    model.train(xData, yData, 10, 4, 0.0, true);
 
-    EXPECT_EQ(std::round(model.predict({0.0, 0.0})[0]), 0);
-    EXPECT_EQ(std::round(model.predict({0.0, 1.0})[0]), 1);
-    EXPECT_EQ(std::round(model.predict({1.0, 0.0})[0]), 1);
-    EXPECT_EQ(std::round(model.predict({1.0, 1.0})[0]), 0);
+    EXPECT_EQ(model.predict({0.0, 0.0})[0], 0);
+    EXPECT_EQ(model.predict({0.0, 1.0})[0], 1);
+    EXPECT_EQ(model.predict({1.0, 0.0})[0], 1);
+    EXPECT_EQ(model.predict({1.0, 1.0})[0], 0);
 }
