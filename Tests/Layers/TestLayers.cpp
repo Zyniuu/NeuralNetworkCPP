@@ -13,12 +13,12 @@ TEST(DenseLayerTests, ForwardPass)
 {
     nn::DenseLayer denseLayer(2, 3, nn::HE_NORMAL, nn::RELU);
 
-    nn::Matrix input(1, 2, {1.0, 2.0});
+    nn::Matrix input(2, 1, {1.0, 2.0});
     nn::Matrix output = denseLayer.forward(input);
 
     // Verify output dimensions
-    EXPECT_EQ(output.getRows(), 1);
-    EXPECT_EQ(output.getCols(), 3);
+    EXPECT_EQ(output.getRows(), 3);
+    EXPECT_EQ(output.getCols(), 1);
 
     // Verify that ReLU was applied (output should be non-negative)
     for (int i = 0; i < output.getRows(); i++)
@@ -33,7 +33,7 @@ TEST(DenseLayerTests, ForwardPass)
 TEST(DenseLayerTests, BackwardPass)
 {
     nn::DenseLayer layer(3, 1, nn::HE_NORMAL, nn::RELU);
-    nn::Matrix input(1, 3, {1.0, 2.0, 3.0});
+    nn::Matrix input(3, 1, {1.0, 2.0, 3.0});
     nn::Matrix output = layer.forward(input);
 
     nn::Matrix gradient(1, 1, {0.5});
@@ -41,8 +41,8 @@ TEST(DenseLayerTests, BackwardPass)
     nn::Matrix gradInput = layer.backward(gradient, optimizer);
 
     // Check gradient dimensions
-    ASSERT_EQ(gradInput.getRows(), 1);
-    ASSERT_EQ(gradInput.getCols(), 3);
+    ASSERT_EQ(gradInput.getRows(), 3);
+    ASSERT_EQ(gradInput.getCols(), 1);
 }
 
 TEST(DenseLayerTests, SaveAndLoad)
@@ -60,7 +60,7 @@ TEST(DenseLayerTests, SaveAndLoad)
     inFile.close();
 
     // Verify that the loaded layer produces the same output
-    nn::Matrix input(1, 3, {1.0, 2.0, 3.0});
+    nn::Matrix input(3, 1, {1.0, 2.0, 3.0});
     nn::Matrix originalOutput = layer.forward(input);
     nn::Matrix loadedOutput = loadedLayer.forward(input);
 

@@ -50,7 +50,7 @@ namespace nn
     std::vector<double> NeuralNetworkCPP::predict(const std::vector<double> &input)
     {
         // Convert the input vector to a matrix
-        Matrix output = Matrix(1, input.size(), input);
+        Matrix output = Matrix(input.size(), 1, input);
 
         // Perform forward propagation
         output = forward(output);
@@ -256,8 +256,8 @@ namespace nn
         for (int i = 0; i < xBatch.size(); i++)
         {
             // Convert vectors to matrices
-            Matrix input = Matrix(1, xBatch[i].size(), xBatch[i]);
-            Matrix target = Matrix(1, yBatch[i].size(), yBatch[i]);
+            Matrix input = Matrix(xBatch[i].size(), 1, xBatch[i]);
+            Matrix target = Matrix(yBatch[i].size(), 1, yBatch[i]);
 
             // Forward pass
             Matrix output = forward(input);

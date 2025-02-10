@@ -50,7 +50,7 @@ namespace nn
         m_input = input;
         
         // Compute the linear transformation: output = input * weights + biases
-        m_output = input * m_weights + m_biases;
+        m_output = m_weights * m_input + m_biases;
 
         // Apply the activation function if it exists
         Matrix output = m_output;
@@ -67,10 +67,10 @@ namespace nn
         gradOutput = gradient.cwiseProduct(gradOutput);
 
         // Compute the gradient with respect to the weights
-        Matrix gradWeights = m_input.transpose() * gradOutput;
+        Matrix gradWeights = gradOutput * m_input.transpose();
 
         // Compute the gradient with respect to the input
-        Matrix gradInput = gradOutput * m_weights.transpose();
+        Matrix gradInput = m_weights.transpose() * gradOutput;
 
         // Update weights and biases using the optimizer
         optimizer.update(m_weights, m_biases, gradWeights, gradOutput);
@@ -105,25 +105,25 @@ namespace nn
         switch (initializerID)
         {
         case HE_NORMAL:
-            init = std::make_unique<HeNormal>(inputSize, outputSize);
+            init = std::make_unique<HeNormal>(outputSize, inputSize);
             break;
 
         case HE_UNIFORM:
-            init = std::make_unique<HeUniform>(inputSize, outputSize);
+            init = std::make_unique<HeUniform>(outputSize, inputSize);
             break;
 
         case XAVIER_NORMAL:
-            init = std::make_unique<XavierNormal>(inputSize, outputSize);
+            init = std::make_unique<XavierNormal>(outputSize, inputSize);
             break;
 
         case XAVIER_UNIFORM:
-            init = std::make_unique<XavierUniform>(inputSize, outputSize);
+            init = std::make_unique<XavierUniform>(outputSize, inputSize);
             break;
         }
 
         // Initialize weights using the initializer and biases to zero
-        m_weights = Matrix(inputSize, outputSize, [&init]() { return init->getRandomNum(); });
-        m_biases = Matrix(1, outputSize, 0.0);
+        m_weights = Matrix(outputSize, inputSize, [&init]() { return init->getRandomNum(); });
+        m_biases = Matrix(outputSize, 1, 0.0);
     }
 
     void DenseLayer::initActivationFunction(e_activation activationID)
