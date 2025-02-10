@@ -34,7 +34,7 @@ TEST(UtilsTests, SliceInvalidRange)
     };
 
     EXPECT_THROW(nn::slice(data, -1, 1), std::out_of_range);
-    EXPECT_THROW(nn::slice(data, 0, 2), std::out_of_range);
+    EXPECT_THROW(nn::slice(data, 0, 3), std::out_of_range);
     EXPECT_THROW(nn::slice(data, 2, 1), std::out_of_range);
 }
 

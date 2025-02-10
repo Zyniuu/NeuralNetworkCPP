@@ -15,7 +15,7 @@ namespace nn
     std::vector<std::vector<double>> slice(const std::vector<std::vector<double>> &data, const int start, const int end)
     {
         // Check if indices are within bounds
-        if (start < 0 || end >= data.size() || start > end)
+        if (start < 0 || end > data.size() || start > end)
             throw std::out_of_range("Invalid start or end index for slicing.");
 
         // Create a new vector containing the sliced data
