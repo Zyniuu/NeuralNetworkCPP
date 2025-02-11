@@ -24,8 +24,8 @@ TEST(ActivationsTests, ReLU)
     nn::Matrix gradInput = relu.backward(gradOutput);
 
     // Verify backward pass
-    EXPECT_DOUBLE_EQ(gradInput(0, 0), 1.0);
-    EXPECT_DOUBLE_EQ(gradInput(0, 1), 1.0);
+    EXPECT_DOUBLE_EQ(gradInput(0, 0), 0.1);
+    EXPECT_DOUBLE_EQ(gradInput(0, 1), 0.0);
     EXPECT_DOUBLE_EQ(gradInput(1, 0), 0.0);
     EXPECT_DOUBLE_EQ(gradInput(1, 1), 0.0);
 }

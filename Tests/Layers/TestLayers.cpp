@@ -33,12 +33,13 @@ TEST(DenseLayerTests, ForwardPass)
 TEST(DenseLayerTests, BackwardPass)
 {
     nn::DenseLayer layer(3, 1, nn::HE_NORMAL, nn::RELU);
+    layer.resetGradients();
+
     nn::Matrix input(3, 1, {1.0, 2.0, 3.0});
     nn::Matrix output = layer.forward(input);
 
     nn::Matrix gradient(1, 1, {0.5});
-    nn::Adam optimizer{};
-    nn::Matrix gradInput = layer.backward(gradient, optimizer);
+    nn::Matrix gradInput = layer.backward(gradient);
 
     // Check gradient dimensions
     ASSERT_EQ(gradInput.getRows(), 3);

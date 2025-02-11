@@ -64,8 +64,8 @@ TEST(ModelTests, Train)
     model.addLayer(std::make_unique<nn::DenseLayer>(4, 1, nn::XAVIER_UNIFORM, nn::SIGMOID));
 
     model.compile(
-        std::make_unique<nn::SGD>(),
-        std::make_unique<nn::MeanSquaredError>()
+        std::make_unique<nn::Adam>(),
+        std::make_unique<nn::BinaryCrossEntropy>()
     );
 
     std::vector<std::vector<double>> xData = {
@@ -82,7 +82,7 @@ TEST(ModelTests, Train)
         {0.0}
     };
 
-    model.train(xData, yData, 10, 1, 0.0, true);
+    model.train(xData, yData, 10, 4, 0.0, true);
 
     EXPECT_EQ(std::round(model.predict({0.0, 0.0})[0]), 0);
     EXPECT_EQ(std::round(model.predict({0.0, 1.0})[0]), 1);

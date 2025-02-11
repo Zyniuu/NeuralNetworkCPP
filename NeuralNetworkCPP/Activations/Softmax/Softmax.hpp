@@ -19,9 +19,6 @@ namespace nn
      */
     class Softmax : public Activation
     {
-    private:
-        Matrix m_output; ///< Stores the output of the forward pass for use in the backward pas
-
     public:
         /**
          * @brief Applies the Softmax function to the input matrix.

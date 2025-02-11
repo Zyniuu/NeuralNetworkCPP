@@ -228,7 +228,7 @@ namespace nn
         Matrix grad = gradient;
         for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
         {
-            grad = (*it)->backward(grad, *m_optimizer);
+            grad = (*it)->backward(grad);
         }
     }
 
@@ -252,7 +252,11 @@ namespace nn
         double &loss
     )
     {
-        // Iterate over the batch
+        // Reset gradients for all layers
+        for (auto &layer : m_layers)
+            layer->resetGradients();
+
+        // Forward and backward passes (accumulating gradients)
         for (int i = 0; i < xBatch.size(); i++)
         {
             // Convert vectors to matrices
@@ -261,13 +265,15 @@ namespace nn
 
             // Forward pass
             Matrix output = forward(input);
-
-            // Compute loss
             loss += m_loss->computeLoss(output, target);
 
             // Backward pass
             Matrix grad = m_loss->computeGradient(output, target);
             backward(grad);
         }
+
+        // Average gradients and update weights
+        for (auto &layer : m_layers)
+            layer->applyGradient(*m_optimizer, xBatch.size());
     }
 }

@@ -60,23 +60,34 @@ namespace nn
         return output;
     }
 
-    Matrix DenseLayer::backward(const Matrix &gradient, Optimizer &optimizer)
+    Matrix DenseLayer::backward(const Matrix &gradient)
     {
         // Compute the gradient with respect to the output
         Matrix gradOutput = m_activation ? m_activation->backward(m_output) : Matrix(m_output.getRows(), m_output.getCols(), 1.0);
         gradOutput = gradient.cwiseProduct(gradOutput);
 
-        // Compute the gradient with respect to the weights
-        Matrix gradWeights = gradOutput * m_input.transpose();
+        // Accumulate gradients
+        m_gradWeights += gradOutput * m_input.transpose();
+        m_gradBiases += gradOutput;
 
         // Compute the gradient with respect to the input
-        Matrix gradInput = m_weights.transpose() * gradOutput;
+        return m_weights.transpose() * gradOutput;
+    }
 
-        // Update weights and biases using the optimizer
-        optimizer.update(m_weights, m_biases, gradWeights, gradOutput);
+    void DenseLayer::resetGradients()
+    {
+        m_gradWeights = Matrix(m_weights.getRows(), m_weights.getCols(), 0.0);
+        m_gradBiases = Matrix(m_biases.getRows(), m_biases.getCols(), 0.0);
+    }
 
-        // Return the gradient with respect to the input
-        return gradInput;
+    void DenseLayer::applyGradient(Optimizer &optimizer, const int batchSize)
+    {
+        // Average gradients over the batch
+        m_gradWeights /= batchSize;
+        m_gradBiases /= batchSize;
+
+        // Update weights and biases
+        optimizer.update(m_weights, m_biases, m_gradWeights, m_gradBiases);
     }
 
     void DenseLayer::save(std::ofstream &file) const
