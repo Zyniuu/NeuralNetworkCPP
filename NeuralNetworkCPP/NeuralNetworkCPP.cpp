@@ -160,7 +160,7 @@ namespace nn
                     m_logger->logBatch(batchIndex, std::ceil(totalBatches));
 
                 // Make sure batch doesn't overflow
-                int end = std::min(static_cast<int>(xTrainSplit.size() - 1), i + batchSize);
+                int end = std::min(static_cast<int>(xTrainSplit.size()), i + batchSize);
 
                 // Get the current batch
                 std::vector<std::vector<double>> xBatch = slice(xTrainSplit, i, end);

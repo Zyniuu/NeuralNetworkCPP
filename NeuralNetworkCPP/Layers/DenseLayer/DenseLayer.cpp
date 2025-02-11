@@ -134,7 +134,7 @@ namespace nn
 
         // Initialize weights using the initializer and biases to zero
         m_weights = Matrix(outputSize, inputSize, [&init]() { return init->getRandomNum(); });
-        m_biases = Matrix(outputSize, 1, 0.0);
+        m_biases = Matrix(outputSize, 1, 0.01);
     }
 
     void DenseLayer::initActivationFunction(e_activation activationID)

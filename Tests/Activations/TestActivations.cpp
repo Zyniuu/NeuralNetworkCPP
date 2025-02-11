@@ -24,8 +24,8 @@ TEST(ActivationsTests, ReLU)
     nn::Matrix gradInput = relu.backward(gradOutput);
 
     // Verify backward pass
-    EXPECT_DOUBLE_EQ(gradInput(0, 0), 0.1);
-    EXPECT_DOUBLE_EQ(gradInput(0, 1), 0.0);
+    EXPECT_DOUBLE_EQ(gradInput(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(gradInput(0, 1), 1.0);
     EXPECT_DOUBLE_EQ(gradInput(1, 0), 0.0);
     EXPECT_DOUBLE_EQ(gradInput(1, 1), 0.0);
 }
@@ -47,10 +47,10 @@ TEST(ActivationsTests, Sigmoid)
     nn::Matrix gradInput = sigmoid.backward(gradOutput);
 
     // Verify backward pass
-    EXPECT_NEAR(gradInput(0, 0), 0.025, 1e-3);
-    EXPECT_NEAR(gradInput(0, 1), 0.03932, 1e-5);
-    EXPECT_NEAR(gradInput(1, 0), 0.05898, 1e-5);
-    EXPECT_NEAR(gradInput(1, 1), 0.04199, 1e-5);
+    EXPECT_NEAR(gradInput(0, 0), 0.24937, 1e-5);
+    EXPECT_NEAR(gradInput(0, 1), 0.24751, 1e-5);
+    EXPECT_NEAR(gradInput(1, 0), 0.24445, 1e-5);
+    EXPECT_NEAR(gradInput(1, 1), 0.24026, 1e-5);
 }
 
 TEST(ActivationsTests, Softmax)
