@@ -50,7 +50,7 @@ namespace nn
     std::vector<double> NeuralNetworkCPP::predict(const std::vector<double> &input)
     {
         // Convert the input vector to a matrix
-        Matrix output = Matrix(1, input.size(), input);
+        Matrix output = Matrix(input.size(), 1, input);
 
         // Perform forward propagation
         output = forward(output);
@@ -160,7 +160,7 @@ namespace nn
                     m_logger->logBatch(batchIndex, std::ceil(totalBatches));
 
                 // Make sure batch doesn't overflow
-                int end = std::min(static_cast<int>(xTrainSplit.size() - 1), i + batchSize);
+                int end = std::min(static_cast<int>(xTrainSplit.size()), i + batchSize);
 
                 // Get the current batch
                 std::vector<std::vector<double>> xBatch = slice(xTrainSplit, i, end);
@@ -228,7 +228,7 @@ namespace nn
         Matrix grad = gradient;
         for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
         {
-            grad = (*it)->backward(grad, *m_optimizer);
+            grad = (*it)->backward(grad);
         }
     }
 
@@ -252,22 +252,28 @@ namespace nn
         double &loss
     )
     {
-        // Iterate over the batch
+        // Reset gradients for all layers
+        for (auto &layer : m_layers)
+            layer->resetGradients();
+
+        // Forward and backward passes (accumulating gradients)
         for (int i = 0; i < xBatch.size(); i++)
         {
             // Convert vectors to matrices
-            Matrix input = Matrix(1, xBatch[i].size(), xBatch[i]);
-            Matrix target = Matrix(1, yBatch[i].size(), yBatch[i]);
+            Matrix input = Matrix(xBatch[i].size(), 1, xBatch[i]);
+            Matrix target = Matrix(yBatch[i].size(), 1, yBatch[i]);
 
             // Forward pass
             Matrix output = forward(input);
-
-            // Compute loss
             loss += m_loss->computeLoss(output, target);
 
             // Backward pass
             Matrix grad = m_loss->computeGradient(output, target);
             backward(grad);
         }
+
+        // Average gradients and update weights
+        for (auto &layer : m_layers)
+            layer->applyGradient(*m_optimizer, xBatch.size());
     }
 }

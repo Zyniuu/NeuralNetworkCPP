@@ -16,7 +16,6 @@ namespace nn
 
     Matrix ReLU::backward(const Matrix &gradient)
     {
-        // Compute gradient of ReLU: output = (input > 0 ? 1 : 0)
         return gradient.map([](double x) { return (x > 0) ? 1.0 : 0.0; });
     }
 }

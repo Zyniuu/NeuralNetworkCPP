@@ -50,7 +50,7 @@ namespace nn
         m_input = input;
         
         // Compute the linear transformation: output = input * weights + biases
-        m_output = input * m_weights + m_biases;
+        m_output = m_weights * m_input + m_biases;
 
         // Apply the activation function if it exists
         Matrix output = m_output;
@@ -60,23 +60,34 @@ namespace nn
         return output;
     }
 
-    Matrix DenseLayer::backward(const Matrix &gradient, Optimizer &optimizer)
+    Matrix DenseLayer::backward(const Matrix &gradient)
     {
         // Compute the gradient with respect to the output
         Matrix gradOutput = m_activation ? m_activation->backward(m_output) : Matrix(m_output.getRows(), m_output.getCols(), 1.0);
         gradOutput = gradient.cwiseProduct(gradOutput);
 
-        // Compute the gradient with respect to the weights
-        Matrix gradWeights = m_input.transpose() * gradOutput;
+        // Accumulate gradients
+        m_gradWeights += gradOutput * m_input.transpose();
+        m_gradBiases += gradOutput;
 
         // Compute the gradient with respect to the input
-        Matrix gradInput = gradOutput * m_weights.transpose();
+        return m_weights.transpose() * gradOutput;
+    }
 
-        // Update weights and biases using the optimizer
-        optimizer.update(m_weights, m_biases, gradWeights, gradOutput);
+    void DenseLayer::resetGradients()
+    {
+        m_gradWeights = Matrix(m_weights.getRows(), m_weights.getCols(), 0.0);
+        m_gradBiases = Matrix(m_biases.getRows(), m_biases.getCols(), 0.0);
+    }
 
-        // Return the gradient with respect to the input
-        return gradInput;
+    void DenseLayer::applyGradient(Optimizer &optimizer, const int batchSize)
+    {
+        // Average gradients over the batch
+        m_gradWeights /= batchSize;
+        m_gradBiases /= batchSize;
+
+        // Update weights and biases
+        optimizer.update(m_weights, m_biases, m_gradWeights, m_gradBiases);
     }
 
     void DenseLayer::save(std::ofstream &file) const
@@ -105,25 +116,25 @@ namespace nn
         switch (initializerID)
         {
         case HE_NORMAL:
-            init = std::make_unique<HeNormal>(inputSize, outputSize);
+            init = std::make_unique<HeNormal>(outputSize, inputSize);
             break;
 
         case HE_UNIFORM:
-            init = std::make_unique<HeUniform>(inputSize, outputSize);
+            init = std::make_unique<HeUniform>(outputSize, inputSize);
             break;
 
         case XAVIER_NORMAL:
-            init = std::make_unique<XavierNormal>(inputSize, outputSize);
+            init = std::make_unique<XavierNormal>(outputSize, inputSize);
             break;
 
         case XAVIER_UNIFORM:
-            init = std::make_unique<XavierUniform>(inputSize, outputSize);
+            init = std::make_unique<XavierUniform>(outputSize, inputSize);
             break;
         }
 
         // Initialize weights using the initializer and biases to zero
-        m_weights = Matrix(inputSize, outputSize, [&init]() { return init->getRandomNum(); });
-        m_biases = Matrix(1, outputSize, 0.0);
+        m_weights = Matrix(outputSize, inputSize, [&init]() { return init->getRandomNum(); });
+        m_biases = Matrix(outputSize, 1, 0.01);
     }
 
     void DenseLayer::initActivationFunction(e_activation activationID)

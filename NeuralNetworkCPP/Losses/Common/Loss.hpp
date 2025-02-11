@@ -19,6 +19,9 @@ namespace nn
      */
     class Loss
     {
+    protected:
+        double m_epsilon = 1e-15; ///< Small number for numerical stability
+
     public:
         /**
          * @brief Computes the loss between predictions and targets.

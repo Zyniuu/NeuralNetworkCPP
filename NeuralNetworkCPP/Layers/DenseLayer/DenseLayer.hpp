@@ -26,6 +26,8 @@ namespace nn
         Matrix m_weights;                         ///< Weight matrix.
         Matrix m_biases;                          ///< Bias vector.
         Matrix m_input;                           ///< Input to the layer (stored for backward pass).
+        Matrix m_gradWeights;                     ///< Accumulated weights gradient.
+        Matrix m_gradBiases;                      ///< Accumulated biases gradient.
         Matrix m_output;                          ///< Output of the layer (stored for backward pass).
         std::unique_ptr<Activation> m_activation; ///< Optional activation function.
         e_activation m_activationID;              ///< Activation ID used when saving layer to the file
@@ -61,10 +63,22 @@ namespace nn
          * @brief Performs backward propagation.
          *
          * @param gradient The gradient of the loss with respect to the output.
-         * @param optimizer The optimizer to use for weights and biases updates.
          * @return The gradient of the loss with respect to the input.
          */
-        Matrix backward(const Matrix &gradient, Optimizer &optimizer) override;
+        Matrix backward(const Matrix &gradient) override;
+
+        /**
+         * @brief Resets the accumulated gradients of the layer.
+         */
+        void resetGradients() override;
+
+        /**
+         * @brief Applies accumulated gradients to the layer.
+         * 
+         * @param optimizer The optimizer to use for weights and biases updates.
+         * @param batchSize Size of the batch from witch gradients were accumulated.
+         */
+        void applyGradient(Optimizer &optimizer, const int batchSize) override;
 
         /**
          * @brief Saves the layer's state to a binary file.
