@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 #include <cmath>
-#include "../../../NeuralNetworkCPP/Losses/BinaryCrossEntropy/BinaryCrossEntropy.hpp"
+#include <NeuralNetworkCPP/Losses/BinaryCrossEntropy/BinaryCrossEntropy.hpp>
 
 // Test if BCE computes loss correctly
 TEST(BCETests, ComputeLoss)

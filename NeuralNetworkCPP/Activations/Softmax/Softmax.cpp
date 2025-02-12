@@ -24,16 +24,7 @@ namespace nn
 
     Matrix Softmax::backward(const Matrix &gradient)
     {
-        // Compute gradient of softmax
-        Matrix gradInput = gradient;
-        for (int i = 0; i < gradient.getRows(); i++)
-        {
-            for (int j = 0; j < gradient.getCols(); j++)
-            {
-                double output = m_output[{i, j}];
-                gradInput[{i, j}] *= output * (1.0 - output);
-            }
-        }
-        return gradInput;
+        // Compute the gradient of softmax
+        return gradient.cwiseProduct(m_output.cwiseProduct(1.0 - m_output));
     }
 }

@@ -5,7 +5,7 @@
  */
 
 #include <gtest/gtest.h>
-#include "../../NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.hpp"
+#include <NeuralNetworkCPP/GlobalThreadPool/GlobalThreadPool.hpp>
 
 // Test if threading is working correctly
 TEST(ThreadPoolTests, ParallelSum)

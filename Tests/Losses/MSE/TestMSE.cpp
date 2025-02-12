@@ -5,7 +5,7 @@
  */
 
 #include <gtest/gtest.h>
-#include "../../../NeuralNetworkCPP/Losses/MeanSquaredError/MeanSquaredError.hpp"
+#include <NeuralNetworkCPP/Losses/MeanSquaredError/MeanSquaredError.hpp>
 
 // Test if MSE computes loss correctly
 TEST(MSETests, ComputeLoss)

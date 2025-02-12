@@ -20,10 +20,10 @@ namespace nn
             m_velocities[&biases] = Matrix(biases.getRows(), biases.getCols(), 0.0);
 
         // Update velocity for weights: v_t = momentum * v_{t-1} + learingRate * gradWeights
-        m_velocities[&weights] = m_momentum * m_velocities[&weights] + m_learningRate * gradWeights;
+        m_velocities[&weights] = (m_momentum * m_velocities[&weights]) + (m_learningRate * gradWeights);
 
         // Update velocity for biases: v_t = momentum * v_{t-1} + learingRate * gradBiases
-        m_velocities[&biases] = m_momentum * m_velocities[&biases] + m_learningRate * gradBiases;
+        m_velocities[&biases] = (m_momentum * m_velocities[&biases]) + (m_learningRate * gradBiases);
 
         // Update weights and biases
         weights -= m_velocities[&weights];

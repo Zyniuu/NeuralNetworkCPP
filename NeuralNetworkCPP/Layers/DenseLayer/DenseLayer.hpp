@@ -26,8 +26,11 @@ namespace nn
         Matrix m_weights;                         ///< Weight matrix.
         Matrix m_biases;                          ///< Bias vector.
         Matrix m_input;                           ///< Input to the layer (stored for backward pass).
+        Matrix m_gradWeights;                     ///< Accumulated weights gradient.
+        Matrix m_gradBiases;                      ///< Accumulated biases gradient.
+        Matrix m_output;                          ///< Output of the layer (stored for backward pass).
         std::unique_ptr<Activation> m_activation; ///< Optional activation function.
-        e_activations m_activationID;             ///< Activation ID used when saving layer to the file
+        e_activation m_activationID;              ///< Activation ID used when saving layer to the file
 
     public:
         /**
@@ -38,7 +41,7 @@ namespace nn
          * @param initializerID Weights initializer.
          * @param activationID Optional activation function.
          */
-        DenseLayer(const int inputSize, const int outputSize, e_initializers initializerID, e_activations activationID);
+        DenseLayer(const int inputSize, const int outputSize, e_initializer initializerID, e_activation activationID);
 
         /**
          * @brief Constructs a dense layer from the file.
@@ -60,10 +63,22 @@ namespace nn
          * @brief Performs backward propagation.
          *
          * @param gradient The gradient of the loss with respect to the output.
-         * @param optimizer The optimizer to use for weights and biases updates.
          * @return The gradient of the loss with respect to the input.
          */
-        Matrix backward(const Matrix &gradient, Optimizer &optimizer) override;
+        Matrix backward(const Matrix &gradient) override;
+
+        /**
+         * @brief Resets the accumulated gradients of the layer.
+         */
+        void resetGradients() override;
+
+        /**
+         * @brief Applies accumulated gradients to the layer.
+         * 
+         * @param optimizer The optimizer to use for weights and biases updates.
+         * @param batchSize Size of the batch from witch gradients were accumulated.
+         */
+        void applyGradient(Optimizer &optimizer, const int batchSize) override;
 
         /**
          * @brief Saves the layer's state to a binary file.
@@ -73,6 +88,13 @@ namespace nn
          */
         void save(std::ofstream &file) const override;
 
+        /**
+         * @brief Returns the type of the layer.
+         *
+         * @return The layer type as an enum value.
+         */
+        e_layerType getType() const override { return DENSE; }
+
     private:
         /**
          * @brief Initializes the weights matrix using the specified initializer.
@@ -81,14 +103,15 @@ namespace nn
          * @param outputSize Number of output neurons.
          * @param initializerID Weights initializer.
          */
-        void initWeights(const int inputSize, const int outputSize, e_initializers initializerID);
+        void initWeights(const int inputSize, const int outputSize, e_initializer initializerID);
 
         /**
          * @brief Initializes the activation function based on the provided activation ID.
          *
          * @param activationID Activation function ID.
+         * @throws std::runtime_error If the provided function ID is incorrect.
          */
-        void initActivationFunction(e_activations activationID);
+        void initActivationFunction(e_activation activationID);
     };
 }
 

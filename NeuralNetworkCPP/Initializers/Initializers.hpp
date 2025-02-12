@@ -8,7 +8,8 @@
 #define INITIALIZERS_HPP
 
 /**
- * This file is for including all of the avaible initializers
+ * @file Initializers.hpp
+ * @brief This file is for including all of the avaible initializers.
  */
 
 #include "HeNormal/HeNormal.hpp"

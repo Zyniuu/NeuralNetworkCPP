@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 #include <algorithm>
-#include "../../../NeuralNetworkCPP/Initializers/HeNormal/HeNormal.hpp"
+#include <NeuralNetworkCPP/Initializers/HeNormal/HeNormal.hpp>
 #include "../../TestUtils/TestUtils.hpp"
 
 // Test whether HeNormal generates values with correct distribution

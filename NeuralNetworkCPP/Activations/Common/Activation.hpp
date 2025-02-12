@@ -17,6 +17,9 @@ namespace nn
      */
     class Activation
     {
+    protected:
+        Matrix m_output; ///< Stores the output of the forward pass for use in the backward pass.
+
     public:
         /**
          * @brief Applies the activation function to the input.

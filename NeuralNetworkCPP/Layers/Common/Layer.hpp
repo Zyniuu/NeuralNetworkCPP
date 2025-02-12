@@ -14,26 +14,19 @@
 namespace nn
 {
     /**
+     * @brief Enum with available layer types.
+     */
+    enum e_layerType { DENSE };
+
+    /**
      * @brief Enum with avaible initializers
      */
-    enum e_initializers
-    {
-        HE_NORMAL,
-        HE_UNIFORM,
-        XAVIER_NORMAL,
-        XAVIER_UNIFORM
-    };
+    enum e_initializer { HE_NORMAL, HE_UNIFORM, XAVIER_NORMAL, XAVIER_UNIFORM };
 
     /**
      * @brief Enum with avaible activation functions
      */
-    enum e_activations
-    {
-        RELU,
-        SIGMOID,
-        SOFTMAX,
-        NONE
-    };
+    enum e_activation { RELU, SIGMOID, SOFTMAX, NONE };
 
     /**
      * @class Layer
@@ -57,10 +50,22 @@ namespace nn
          * @brief Performs backward propagation.
          *
          * @param gradient The gradient of the loss with respect to the output.
-         * @param optimizer The optimizer to use for weights and biases updates.
          * @return The gradient of the loss with respect to the input.
          */
-        virtual Matrix backward(const Matrix &gradient, Optimizer &optimizer) = 0;
+        virtual Matrix backward(const Matrix &gradient) = 0;
+
+        /**
+         * @brief Resets the accumulated gradients of the layer.
+         */
+        virtual void resetGradients() = 0;
+
+        /**
+         * @brief Applies accumulated gradients to the layer.
+         * 
+         * @param optimizer The optimizer to use for weights and biases updates.
+         * @param batchSize Size of the batch from witch gradients were accumulated.
+         */
+        virtual void applyGradient(Optimizer &optimizer, const int batchSize) = 0;
 
         /**
          * @brief Saves the layer's state to a binary file.
@@ -68,6 +73,13 @@ namespace nn
          * @param file Output file stream (must be opened in binary mode).
          */
         virtual void save(std::ofstream &file) const = 0;
+
+        /**
+         * @brief Returns the type of the layer.
+         *
+         * @return The layer type as an enum value.
+         */
+        virtual e_layerType getType() const = 0;
     };
 }
 
