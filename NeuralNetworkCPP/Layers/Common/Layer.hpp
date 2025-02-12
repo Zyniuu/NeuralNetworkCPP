@@ -16,7 +16,7 @@ namespace nn
     /**
      * @brief Enum with available layer types.
      */
-    enum e_layerType { DENSE };
+    enum e_layerType { DENSE, BATCH_NORM };
 
     /**
      * @brief Enum with avaible initializers
