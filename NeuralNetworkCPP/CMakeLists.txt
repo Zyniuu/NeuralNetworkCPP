@@ -31,6 +31,7 @@ set(NN_SOURCES
     Activations/Sigmoid/Sigmoid.cpp
     Activations/Softmax/Softmax.cpp
     Layers/DenseLayer/DenseLayer.cpp
+    Layers/BatchNormalization/BatchNormalization.cpp
     NeuralNetworkCPP.cpp
 )
 

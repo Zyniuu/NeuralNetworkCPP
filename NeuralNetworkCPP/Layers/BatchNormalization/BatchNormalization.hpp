@@ -23,15 +23,14 @@ namespace nn
     private:
         Matrix m_gamma;       ///< Scale parameter (learnable).
         Matrix m_beta;        ///< Shift parameter (learnable).
-        Matrix m_runningMean; ///< Running mean (used during inference).
-        Matrix m_runningVar;  ///< Running variance (used during inference).
-        Matrix m_input;       ///< Input to the layer (stored for backward pass).
         Matrix m_normalized;  ///< Normalized input (stored for backward pass).
         Matrix m_gradGamma;   ///< Accumulated gradient for gamma.
         Matrix m_gradBeta;    ///< Accumulated gradient for beta.
+        double m_runningMean; ///< Running mean (used during inference).
+        double m_runningVar;  ///< Running variance (used during inference).
         double m_epsilon;     ///< Small constant for numerical stability.
         double m_momentum;    ///< Momentum for updating running mean and variance.
-        bool m_isTraining;      ///< Flag to indicate whether the layer is in training mode.
+        bool m_isTraining;    ///< Flag to indicate whether the layer is in training mode.
 
     public:
         /**
@@ -101,14 +100,6 @@ namespace nn
          * @param isTraining True for training, false for inference.
          */
         void setTrainingMode(const bool isTrainging) { m_isTraining = isTrainging; };
-
-    private:
-        /**
-         * @brief Initializes gamma and beta.
-         *
-         * @param numFeatures Number of features (input dimensions).
-         */
-        void initParameters(const int numFeatures);
     };
 }
 

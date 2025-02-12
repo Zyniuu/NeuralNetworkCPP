@@ -13,5 +13,6 @@
  */
 
 #include "DenseLayer/DenseLayer.hpp"
+#include "BatchNormalization/BatchNormalization.hpp"
 
 #endif

@@ -49,11 +49,35 @@ namespace nn
 
     std::vector<double> NeuralNetworkCPP::predict(const std::vector<double> &input)
     {
+        // Set all BatchNormalization layers to inference mode
+        for (const auto &layer : m_layers)
+        {
+            if (layer->getType() == BATCH_NORM)
+            {
+                // Safely cast the Layer pointer to a BatchNormalization pointer
+                BatchNormalization *bnLayer = dynamic_cast<BatchNormalization *>(layer.get());
+                if (bnLayer)
+                    bnLayer->setTrainingMode(false);
+            }
+        }
+
         // Convert the input vector to a matrix
         Matrix output = Matrix(input.size(), 1, input);
 
         // Perform forward propagation
         output = forward(output);
+
+        // Set all BatchNormalization layers back to training mode
+        for (const auto &layer : m_layers)
+        {
+            if (layer->getType() == BATCH_NORM)
+            {
+                // Safely cast the Layer pointer to a BatchNormalization pointer
+                BatchNormalization *bnLayer = dynamic_cast<BatchNormalization *>(layer.get());
+                if (bnLayer)
+                    bnLayer->setTrainingMode(true);
+            }
+        }
 
         // Return the output as a vector
         return output.getData();
@@ -239,6 +263,10 @@ namespace nn
         {
         case DENSE:
             m_layers.push_back(std::make_unique<DenseLayer>(file));
+            break;
+        
+        case BATCH_NORM:
+            m_layers.push_back(std::make_unique<BatchNormalization>(file));
             break;
         
         default:
