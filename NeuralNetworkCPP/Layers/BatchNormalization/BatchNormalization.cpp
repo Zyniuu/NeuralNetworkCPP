@@ -39,37 +39,28 @@ namespace nn
 
     Matrix BatchNormalization::forward(const Matrix &input)
     {
+        // Store the input
+        m_input = input;
+
         if (m_isTraining)
         {
             // Training mode: use batch statistics
             // Calculate mean and standard deviation
-            double mean = input.sum() / input.getRows();
-            double stddev = input.map([mean](double x) { return std::pow(x - mean, 2); }).sum() / input.getRows();
+            m_mean = input.sum() / input.getRows();
+            m_stddev = input.map([this](double x) { return std::pow(x - m_mean, 2); }).sum() / input.getRows();
 
             // Update running mean and variance
-            m_runningMean = m_momentum * m_runningMean + (1.0 - m_momentum) * mean;
-            m_runningVar = m_momentum * m_runningVar + (1.0 - m_momentum) * stddev;
-            
+            m_runningMean = m_momentum * m_runningMean + (1.0 - m_momentum) * m_mean;
+            m_runningVar = m_momentum * m_runningVar + (1.0 - m_momentum) * m_stddev;
+
             // Normalize the input
-            m_normalized = (input - mean) / std::sqrt(stddev + m_epsilon);
+            m_normalized = (m_input - m_mean) / std::sqrt(m_stddev + m_epsilon);
         }
         else
         {
             // Inference mode: use running statistics
-            m_normalized = (input - m_runningMean) / std::sqrt(m_runningVar + m_epsilon);
+            m_normalized = (m_input - m_runningMean) / std::sqrt(m_runningVar + m_epsilon);
         }
-
-        // std::cout << "Input:" << std::endl;
-        // std::cout << input << std::endl;
-        // std::cout << "m_gamma:" << std::endl;
-        // std::cout << m_gamma << std::endl;
-        // std::cout << "m_beta:" << std::endl;
-        // std::cout << m_beta << std::endl;
-        // std::cout << "m_normalized:" << std::endl;
-        // std::cout << m_normalized << std::endl;
-        // std::cout << "Scale and shift:" << std::endl;
-        // std::cout << (m_gamma.cwiseProduct(m_normalized) + m_beta) << std::endl;
-        // getchar();
 
         // Scale and shift
         return m_gamma.cwiseProduct(m_normalized) + m_beta;
@@ -81,9 +72,19 @@ namespace nn
         m_gradGamma += gradient.cwiseProduct(m_normalized);
         m_gradBeta += gradient;
 
+        int m = m_input.getRows();
+        double t = 1.0 / std::sqrt(m_stddev + m_epsilon); // 1 / sigma
+        Matrix diff = m_input - m_mean;                   // (x_i - mu)
+        Matrix gradDiff = gradient.cwiseProduct(diff);    // (dL/dy_i) * (x_i - mu)
+
+        // Sum of gradients and gradient differences
+        double sumGrad = gradient.sum();     // sum(dL/dy_j)
+        double sumGradDiff = gradDiff.sum(); // sum((dL/dy_j) * (x_j - mu))
+
         // Compute input gradient
-        Matrix gradNormalized = gradient.cwiseProduct(m_gamma);
-        return gradNormalized / std::sqrt(m_runningVar + m_epsilon);
+        Matrix gradInput = (m_gamma * t / m).cwiseProduct(m * gradient - sumGrad - (t * t) * diff * sumGradDiff);
+
+        return gradInput;
     }
 
     void BatchNormalization::resetGradients()

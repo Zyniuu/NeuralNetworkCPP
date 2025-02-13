@@ -21,11 +21,14 @@ namespace nn
     class BatchNormalization : public Layer
     {
     private:
+        Matrix m_input;       ///< Layer input
         Matrix m_gamma;       ///< Scale parameter (learnable).
         Matrix m_beta;        ///< Shift parameter (learnable).
-        Matrix m_normalized;  ///< Normalized input (stored for backward pass).
+        Matrix m_normalized;  ///< Normalized input.
         Matrix m_gradGamma;   ///< Accumulated gradient for gamma.
         Matrix m_gradBeta;    ///< Accumulated gradient for beta.
+        double m_mean;        ///< Mean of the input
+        double m_stddev;      ///< Standard deviation of the input
         double m_runningMean; ///< Running mean (used during inference).
         double m_runningVar;  ///< Running variance (used during inference).
         double m_epsilon;     ///< Small constant for numerical stability.
@@ -37,10 +40,10 @@ namespace nn
          * @brief Constructs a BatchNormalization layer.
          *
          * @param numFeatures Number of features (input dimensions).
-         * @param epsilon Small constant for numerical stability.
-         * @param momentum Momentum for updating running mean and variance.
+         * @param momentum Momentum for updating running mean and variance (default: 0.99).
+         * @param epsilon Small constant for numerical stability (default: 1e-15).
          */
-        BatchNormalization(const int numFeatures, const double epsilon = 1e-15, const double momentum = 0.9);
+        BatchNormalization(const int numFeatures, const double momentum = 0.99, const double epsilon = 1e-15);
 
         /**
          * @brief Constructs a BatchNormalization layer from a file.
