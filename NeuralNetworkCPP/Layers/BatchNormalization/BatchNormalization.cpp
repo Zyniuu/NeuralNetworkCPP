@@ -23,6 +23,9 @@ namespace nn
         // Check if the file is open and readable
         if (!file.is_open())
             throw std::runtime_error("File is not open for reading");
+        
+        // Read momentum
+        file.read(reinterpret_cast<char *>(&m_momentum), sizeof(m_momentum));
 
         // Read running mean and running variance
         file.read(reinterpret_cast<char *>(&m_runningMean), sizeof(m_runningMean));
@@ -35,6 +38,8 @@ namespace nn
         // Check if reading was successful
         if (!file.good())
             throw std::runtime_error("Failed to read layer from the file.");
+        
+        resetGradients();
     }
 
     Matrix BatchNormalization::forward(const Matrix &input)
@@ -108,6 +113,9 @@ namespace nn
         // Check if the file is open and writable
         if (!file.is_open())
             throw std::runtime_error("File is not open for writing.");
+
+        // Save momentum
+        file.write(reinterpret_cast<const char *>(&m_momentum), sizeof(m_momentum));
 
         // Save running mean and running variance
         file.write(reinterpret_cast<const char *>(&m_runningMean), sizeof(m_runningMean));
