@@ -61,10 +61,11 @@ TEST(ModelTests, Train)
 {
     nn::NeuralNetworkCPP model;
     model.addLayer(std::make_unique<nn::DenseLayer>(2, 4, nn::HE_NORMAL, nn::RELU));
+    model.addLayer(std::make_unique<nn::BatchNormalization>(4));
     model.addLayer(std::make_unique<nn::DenseLayer>(4, 1, nn::XAVIER_UNIFORM, nn::SIGMOID));
 
     model.compile(
-        std::make_unique<nn::SGD>(0.1),
+        std::make_unique<nn::Adam>(0.01),
         std::make_unique<nn::BinaryCrossEntropy>()
     );
 
@@ -82,7 +83,7 @@ TEST(ModelTests, Train)
         {0.0}
     };
 
-    model.train(xData, yData, 1000, 4, 0.0, false);
+    model.train(xData, yData, 500, 4, 0.0, false);
 
     EXPECT_EQ(std::round(model.predict({0.0, 0.0})[0]), 0);
     EXPECT_EQ(std::round(model.predict({0.0, 1.0})[0]), 1);
