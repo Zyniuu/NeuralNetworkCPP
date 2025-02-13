@@ -9,8 +9,8 @@
 
 namespace nn
 {
-    BatchNormalization::BatchNormalization(const int numFeatures, const double epsilon, const double momentum)
-        : m_epsilon(epsilon), m_momentum(momentum), m_isTraining(true), m_runningMean(0.0), m_runningVar(1.0)
+    BatchNormalization::BatchNormalization(const int numFeatures, const double momentum, const double epsilon)
+        : m_momentum(momentum), m_epsilon(epsilon), m_isTraining(true), m_runningMean(0.0), m_runningVar(1.0)
     {
         m_gamma = Matrix(numFeatures, 1, 1.0);
         m_beta = Matrix(numFeatures, 1, 0.0);
@@ -54,12 +54,12 @@ namespace nn
             m_runningVar = m_momentum * m_runningVar + (1.0 - m_momentum) * m_stddev;
 
             // Normalize the input
-            m_normalized = (m_input - m_mean) / std::sqrt(m_stddev + m_epsilon);
+            m_normalized = (input - m_mean) / std::sqrt(m_stddev + m_epsilon);
         }
         else
         {
             // Inference mode: use running statistics
-            m_normalized = (m_input - m_runningMean) / std::sqrt(m_runningVar + m_epsilon);
+            m_normalized = (input - m_runningMean) / std::sqrt(m_runningVar + m_epsilon);
         }
 
         // Scale and shift
