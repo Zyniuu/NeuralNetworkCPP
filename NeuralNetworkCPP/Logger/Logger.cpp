@@ -20,7 +20,7 @@ namespace nn
         m_trainStart = std::chrono::steady_clock::now();
     }
 
-    void Logger::logTrainingEnd()
+    void Logger::logTrainingEnd(const bool isEarlyStopped)
     {
         // Convert training duration on hours, minutes, seconds and milliseconds
         auto duration = std::chrono::steady_clock::now() - m_trainStart;
@@ -30,7 +30,11 @@ namespace nn
         auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
 
         // Print the total training time
-        std::cout << "\nTraining time: ";
+        if (isEarlyStopped)
+            std::cout << "\n[  STOPPED ] Training stopped early: patience limit reached." << std::endl;
+        else
+            std::cout << "\n[ FINISHED ] Training done." << std::endl;
+        std::cout << "[     TIME ] ";
         std::cout << hours << " hours ";
         std::cout << minutes << " minutes ";
         std::cout << seconds << " seconds ";
