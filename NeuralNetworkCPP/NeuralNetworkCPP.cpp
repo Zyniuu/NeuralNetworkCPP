@@ -131,15 +131,20 @@ namespace nn
         m_logger = std::make_unique<Logger>(metrics);
     }
 
-    void NeuralNetworkCPP::train(
-        const std::vector<std::vector<double>> &xTrain, 
-        const std::vector<std::vector<double>> &yTrain, 
-        const int epochs, 
-        const int batchSize, 
+    bool NeuralNetworkCPP::train(
+        const std::vector<std::vector<double>> &xTrain,
+        const std::vector<std::vector<double>> &yTrain,
+        const int epochs,
+        const int batchSize,
         const double validationSplit,
+        const int patience,
+        const double minDelta,
         const bool verbose
     )
     {
+        double bestLoss = std::numeric_limits<double>::max();
+        int waitCounter = 0;
+
         // Copy the dataset
         std::vector<std::vector<double>> xTrainCopy = xTrain;
         std::vector<std::vector<double>> yTrainCopy = yTrain;
@@ -167,7 +172,7 @@ namespace nn
             // Log epoch start
             if (verbose)
                 m_logger->logEpochStart(epoch + 1, epochs);
-
+            
             int batchIndex = 0;
             double loss = 0.0;
 
@@ -201,11 +206,31 @@ namespace nn
             // Log epoch end
             if (verbose)
                 m_logger->logEpochEnd(epochs, loss, accuracy);
+            
+            // Early stopping check
+            if (loss < bestLoss - minDelta)
+            {
+                bestLoss = loss;
+                waitCounter = 0;
+            }
+            else
+            {
+                waitCounter++;
+                if (waitCounter >= patience)
+                {
+                    // Log early stop
+                    if (verbose)
+                        m_logger->logTrainingEnd(true);
+                    return false; // Stop training
+                }
+            }
         }
 
         // Log training end
         if (verbose)
-            m_logger->logTrainingEnd();
+            m_logger->logTrainingEnd(false);
+        
+        return true;
     }
 
     void NeuralNetworkCPP::save(const std::string &filename) const

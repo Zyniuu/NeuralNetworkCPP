@@ -45,8 +45,10 @@ namespace nn
 
         /**
          * @brief Stops the training timer and logs the end of training.
+         * 
+         * @param isEarlyStopped Flag for displaying end of training or early stopped message.
          */
-        void logTrainingEnd();
+        void logTrainingEnd(const bool isEarlyStopped);
 
         /**
          * @brief Logs the start of an epoch.

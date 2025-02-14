@@ -87,14 +87,19 @@ namespace nn
          * @param epochs Number of training epochs.
          * @param batchSize Size of each training batch (default: 1).
          * @param validationSplit Fraction of the data to use for validation (default: 0.0).
+         * @param patience Number of epochs to wait for improvement (default: 10).
+         * @param minDelta Minimum improvement to reset patience (default: 0.0001).
          * @param verbose If true, logs will be displayed (default: true).
+         * @return True if the training has been completed, false if stopped early
          */
-        void train(
+        bool train(
             const std::vector<std::vector<double>> &xTrain,
             const std::vector<std::vector<double>> &yTrain,
             const int epochs,
             const int batchSize = 1,
             const double validationSplit = 0.0,
+            const int patience = 10,
+            const double minDelta = 0.0001,
             const bool verbose = true
         );
 

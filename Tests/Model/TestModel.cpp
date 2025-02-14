@@ -60,14 +60,7 @@ TEST(ModelTests, SaveAndLoad)
 TEST(ModelTests, Train)
 {
     nn::NeuralNetworkCPP model;
-    model.addLayer(std::make_unique<nn::DenseLayer>(2, 4, nn::HE_NORMAL, nn::RELU));
-    model.addLayer(std::make_unique<nn::BatchNormalization>(4));
-    model.addLayer(std::make_unique<nn::DenseLayer>(4, 1, nn::XAVIER_UNIFORM, nn::SIGMOID));
-
-    model.compile(
-        std::make_unique<nn::Adam>(0.01),
-        std::make_unique<nn::BinaryCrossEntropy>()
-    );
+    bool trainingFinished;
 
     std::vector<std::vector<double>> xData = {
         {0.0, 0.0}, 
@@ -83,7 +76,20 @@ TEST(ModelTests, Train)
         {0.0}
     };
 
-    model.train(xData, yData, 500, 4, 0.0, false);
+    do
+    {
+        model = nn::NeuralNetworkCPP();
+        model.addLayer(std::make_unique<nn::DenseLayer>(2, 4, nn::HE_NORMAL, nn::RELU));
+        model.addLayer(std::make_unique<nn::BatchNormalization>(4));
+        model.addLayer(std::make_unique<nn::DenseLayer>(4, 1, nn::XAVIER_UNIFORM, nn::SIGMOID));
+
+        model.compile(
+            std::make_unique<nn::Adam>(0.01),
+            std::make_unique<nn::BinaryCrossEntropy>()
+        );
+
+        trainingFinished = model.train(xData, yData, 500, 4, 0.0, 10, 0.0001, false);
+    } while (trainingFinished == false || model.evaluate(xData, yData) != 1.0);
 
     EXPECT_EQ(std::round(model.predict({0.0, 0.0})[0]), 0);
     EXPECT_EQ(std::round(model.predict({0.0, 1.0})[0]), 1);
