@@ -12,7 +12,7 @@ namespace nn
 {
     MinMaxScaler::MinMaxScaler(const double featureRangeMin, const double featureRangeMax)
         : m_featureRangeMin(featureRangeMin), m_featureRangeMax(featureRangeMax) {}
-    
+
     void MinMaxScaler::fit(const std::vector<std::vector<double>> &data)
     {
         if (data.empty() || data[0].empty())
@@ -45,7 +45,7 @@ namespace nn
         for (auto &row : normalizedData)
             for (int i = 0; i < row.size(); i++)
                 row[i] = (row[i] - m_min[i]) / (m_max[i] - m_min[i]) * (m_featureRangeMax - m_featureRangeMin) + m_featureRangeMin;
-        
+
         return normalizedData;
     }
 
