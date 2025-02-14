@@ -22,11 +22,19 @@ namespace nn
 
     void Logger::logTrainingEnd(const bool isEarlyStopped)
     {
-        // Convert training duration on hours, minutes, seconds and milliseconds
+        // Get the total training duration
         auto duration = std::chrono::steady_clock::now() - m_trainStart;
+
+        // Convert the duration to hours, minutes, seconds, and milliseconds
         auto hours = std::chrono::duration_cast<std::chrono::hours>(duration).count();
+        duration -= std::chrono::hours(hours); // Subtract hours to get the remaining time
+
         auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration).count();
+        duration -= std::chrono::minutes(minutes); // Subtract minutes to get the remaining time
+
         auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+        duration -= std::chrono::seconds(seconds); // Subtract seconds to get the remaining time
+
         auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
 
         // Print the total training time
@@ -64,7 +72,7 @@ namespace nn
         // Process the metrics
         for (const auto &metric : m_metrics)
             logMetric(metric, accuracy);
-        
+
         std::cout << std::endl;
     }
 
@@ -72,7 +80,7 @@ namespace nn
     {
         // Determine how much to fill the progress bar
         int progress = (static_cast<double>(currentBatch) / static_cast<double>(totalBatches)) * static_cast<double>(m_progressBarLength);
-        
+
         // Print the current batch number
         std::cout << '\r' << currentBatch << "/" << totalBatches;
 
