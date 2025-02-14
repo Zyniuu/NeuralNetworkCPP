@@ -184,3 +184,49 @@ TEST(ScalersTests, StandardScalerEmptyData)
     // Attempt to fit and transform (should throw an exception)
     EXPECT_THROW(scaler.fitTransform(data), std::runtime_error);
 }
+
+TEST(ScalersTests, MinMaxScalerFitTransform)
+{
+    // Create a MinMaxScaler object
+    nn::MinMaxScaler scaler(0.0, 1.0);
+
+    // Input data
+    std::vector<std::vector<double>> data = {
+        {-1.0, 2.0},
+        {-0.5, 6.0},
+        {0.0, 10.0},
+        {1.0, 18.0}
+    };
+
+    // Fit and transform the data
+    auto normalizedData = scaler.fitTransform(data);
+
+    // Expected normalized data
+    std::vector<std::vector<double>> expectedData = {
+        {0.0, 0.0},
+        {0.25, 0.25},
+        {0.5, 0.5},
+        {1.0, 1.0}
+    };
+
+    // Check if the normalized data matches the expected data
+    for (size_t i = 0; i < normalizedData.size(); ++i)
+    {
+        for (size_t j = 0; j < normalizedData[i].size(); ++j)
+        {
+            EXPECT_EQ(normalizedData[i][j], expectedData[i][j]);
+        }
+    }
+}
+
+TEST(ScalersTests, MinMaxScalerEmptyData)
+{
+    // Create a MinMaxScaler object
+    nn::MinMaxScaler scaler;
+
+    // Empty input data
+    std::vector<std::vector<double>> data;
+
+    // Attempt to fit and transform (should throw an exception)
+    EXPECT_THROW(scaler.fitTransform(data), std::runtime_error);
+}
