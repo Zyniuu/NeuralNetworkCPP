@@ -39,7 +39,8 @@ int main()
     // - Use Binary Cross-Entropy as the loss function
     model.compile(
         std::make_unique<nn::Adam>(0.01),
-        std::make_unique<nn::BinaryCrossEntropy>());
+        std::make_unique<nn::BinaryCrossEntropy>()
+    );
 
     // Train the model:
     // - Training data: xData (inputs) and yData (targets)
