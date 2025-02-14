@@ -60,7 +60,6 @@ TEST(ModelTests, SaveAndLoad)
 TEST(ModelTests, Train)
 {
     nn::NeuralNetworkCPP model;
-    bool trainingFinished;
 
     std::vector<std::vector<double>> xData = {
         {0.0, 0.0}, 
