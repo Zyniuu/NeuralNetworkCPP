@@ -11,6 +11,7 @@ project(NeuralNetworCPP)
 # List of source files of the neural network
 set(NN_SOURCES
     Utils/Utils.cpp
+    DataPreprocessing/CSVReader/CSVReader.cpp
     Logger/Logger.cpp
     Initializers/XavierNormal/XavierNormal.cpp
     Initializers/XavierUniform/XavierUniform.cpp
