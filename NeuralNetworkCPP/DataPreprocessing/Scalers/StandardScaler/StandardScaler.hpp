@@ -35,7 +35,7 @@ namespace nn
          * @param data The input data as a vector of vectors of doubles.
          * @return std::vector<std::vector<double>> The normalized data.
          */
-        void transform(const std::vector<std::vector<double>> &data) override;
+        std::vector<std::vector<double>> transform(const std::vector<std::vector<double>> &data) override;
 
         /**
          * @brief Fits the scaler to the data and then transforms the data.
@@ -43,7 +43,7 @@ namespace nn
          * @param data The input data as a vector of vectors of doubles.
          * @return std::vector<std::vector<double>> The normalized data.
          */
-        void fitTransform(const std::vector<std::vector<double>> &data) override;
+        std::vector<std::vector<double>> fitTransform(const std::vector<std::vector<double>> &data) override;
     };
 }
 

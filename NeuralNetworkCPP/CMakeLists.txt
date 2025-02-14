@@ -12,6 +12,7 @@ project(NeuralNetworCPP)
 set(NN_SOURCES
     Utils/Utils.cpp
     DataPreprocessing/CSVReader/CSVReader.cpp
+    DataPreprocessing/Scalers/StandardScaler/StandardScaler.cpp
     Logger/Logger.cpp
     Initializers/XavierNormal/XavierNormal.cpp
     Initializers/XavierUniform/XavierUniform.cpp
