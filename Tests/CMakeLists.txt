@@ -20,6 +20,7 @@ add_subdirectory(../NeuralNetworkCPP NeuralNetworkCPPBuild)
 # List of source files for the tests
 set(TEST_SOURCES
     Utils/TestUtils.cpp
+    Preprocessing/TestPreprocessing.cpp
     Initializers/XavierNormal/TestXavierNormal.cpp
     Initializers/XavierUniform/TestXavierUniform.cpp
     Initializers/HeNormal/TestHeNormal.cpp
