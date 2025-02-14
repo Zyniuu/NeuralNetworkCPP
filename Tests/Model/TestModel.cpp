@@ -88,8 +88,8 @@ TEST(ModelTests, Train)
             std::make_unique<nn::BinaryCrossEntropy>()
         );
 
-        trainingFinished = model.train(xData, yData, 500, 4, 0.0, 10, 0.0001, false);
-    } while (trainingFinished == false || model.evaluate(xData, yData) != 1.0);
+        model.train(xData, yData, 500, 4, 0.0, 10, 0.0001, false);
+    } while (model.evaluate(xData, yData) != 1.0);
 
     EXPECT_EQ(std::round(model.predict({0.0, 0.0})[0]), 0);
     EXPECT_EQ(std::round(model.predict({0.0, 1.0})[0]), 1);
