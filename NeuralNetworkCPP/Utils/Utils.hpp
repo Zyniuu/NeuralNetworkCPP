@@ -44,6 +44,15 @@ namespace nn
      * @throws std::runtime_error If data and labels have different amount of rows.
      */
     void shuffleDataset(std::vector<std::vector<double>> &data, std::vector<std::vector<double>> &labels);
+
+    /**
+     * @brief Converts a vector of class labels into one-hot encoded vectors.
+     *
+     * @param data The input data as a vector of vectors of doubles (class labels).
+     * @param numClasses The number of classes. If 0, it is determined automatically.
+     * @return std::vector<std::vector<double>> The one-hot encoded data.
+     */
+    std::vector<std::vector<double>> to_categorical(const std::vector<std::vector<double>> &data, int numClasses = 0);
 }
 
 #endif
