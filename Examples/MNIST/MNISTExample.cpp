@@ -32,7 +32,7 @@ int main()
 
     model.compile(
         std::make_unique<nn::Adam>(),
-        std::make_unique<nn::MeanSquaredError>(),
+        std::make_unique<nn::CategoricalCrossEntropy>(),
         { nn::ACCURACY_LOG }
     );
 
