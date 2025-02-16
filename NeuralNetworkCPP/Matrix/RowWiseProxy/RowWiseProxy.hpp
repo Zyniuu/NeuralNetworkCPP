@@ -35,14 +35,14 @@ namespace nn
         RowWiseProxy(Matrix &matrix);
 
         /**
-         * @brief Adds a row vector to each row of the matrix.
+         * @brief Subtracts a row vector from each row of the matrix.
          *
          * @param other A row vector (Matrix with 1 row).
-         * @return A new Matrix after the row-wise addition.
+         * @return A new Matrix after the row-wise subtraction.
          * @throws std::invalid_argument If `other` is not a row vector or its column count
          *                               does not match the original matrix.
          */
-        friend Matrix operator+(const RowWiseProxy &left, Matrix &right);
+        friend Matrix operator-(const RowWiseProxy &left, Matrix &right);
     };
 }
 

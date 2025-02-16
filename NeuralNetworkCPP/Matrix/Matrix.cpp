@@ -133,6 +133,11 @@ namespace nn
         return RowWiseProxy(*this);
     }
 
+    ColWiseProxy Matrix::colWise()
+    {
+        return ColWiseProxy(*this);
+    }
+
     Matrix Matrix::cwiseProduct(const Matrix &other) const
     {
         // Validate that the matrices have the same dimensions.
@@ -175,6 +180,22 @@ namespace nn
         });
 
         return result;
+    }
+
+    Matrix Matrix::identity(int size)
+    {
+        // Validate the input size
+        if (size <= 0)
+            throw std::invalid_argument("Size of identity matrix must be greater then 0.");
+        
+        // Create a matrix of the specified size initialized to 0
+        Matrix id(size, size, 0.0);
+
+        // Set the diagonal elements to 1
+        for (int i = 0; i < size; i++)
+            id(i, i)= 1.0;
+        
+        return id;
     }
 
     Matrix &Matrix::operator=(const Matrix &other)

@@ -24,6 +24,7 @@ set(NN_SOURCES
     GlobalThreadPool/GlobalThreadPool.cpp
     Matrix/Matrix.cpp
     Matrix/RowWiseProxy/RowWiseProxy.cpp
+    Matrix/ColWiseProxy/ColWiseProxy.cpp
     Losses/MeanSquaredError/MeanSquaredError.cpp
     Losses/CategoricalCrossEntropy/CategoricalCrossEntropy.cpp
     Losses/BinaryCrossEntropy/BinaryCrossEntropy.cpp

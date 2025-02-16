@@ -483,8 +483,8 @@ TEST(MatrixTests, LoadInvalidDimensions)
     std::filesystem::remove("invalid_dimensions.bin");
 }
 
-// Test row wise addition
-TEST(MatrixTests, RowWiseAddition)
+// Test row wise subtraction
+TEST(MatrixTests, RowWiseSubtraction)
 {
     // Create a 2x2 matrix: {{1, 6}, {2, 7}}
     nn::Matrix mat(2, 2, {1, 6, 2, 7});
@@ -492,26 +492,26 @@ TEST(MatrixTests, RowWiseAddition)
     // Create a row vector: {{0, 1}}
     nn::Matrix rowVector(1, 2, {0, 1});
 
-    // Perform row-wise addition
-    nn::Matrix result = mat.rowWise() + rowVector;
+    // Perform row-wise subtraction
+    nn::Matrix result = mat.rowWise() - rowVector;
 
     // Verify the result: {{1, 7}, {2, 8}}
     EXPECT_EQ(result.getRows(), 2);
     EXPECT_EQ(result.getCols(), 2);
     EXPECT_DOUBLE_EQ(result(0, 0), 1);
-    EXPECT_DOUBLE_EQ(result(0, 1), 7);
+    EXPECT_DOUBLE_EQ(result(0, 1), 5);
     EXPECT_DOUBLE_EQ(result(1, 0), 2);
-    EXPECT_DOUBLE_EQ(result(1, 1), 8);
+    EXPECT_DOUBLE_EQ(result(1, 1), 6);
 }
 
 // Test row wise operations when given invalid dimensions
-TEST(MatrixTests, InvalidDimensions)
+TEST(MatrixTests, RowWiseInvalidDimensions)
 {
     nn::Matrix mat(3, 2); // 3x2 matrix
     nn::Matrix invalidVector(1, 3); // 1x3 vector (columns don't match)
 
     // Attempt invalid column-wise addition
-    EXPECT_THROW(mat.rowWise() + invalidVector, std::invalid_argument);
+    EXPECT_THROW(mat.rowWise() - invalidVector, std::invalid_argument);
 }
 
 // Test row wise operations when row vector was not provided
@@ -521,5 +521,60 @@ TEST(MatrixTests, NotARowVector)
     nn::Matrix invalidMatrix(2, 3); // Not a row vector
 
     // Attempt invalid column-wise addition
-    EXPECT_THROW(mat.rowWise() + invalidMatrix, std::invalid_argument);
+    EXPECT_THROW(mat.rowWise() - invalidMatrix, std::invalid_argument);
+}
+
+// Test column-wise multiplication
+TEST(MatrixTests, ColWiseMultiplication)
+{
+    // Create a 2x2 matrix: {{1, 6}, {2, 7}}
+    nn::Matrix mat(2, 2, {1, 6, 2, 7});
+
+    // Create a column vector: {{1}, {2}}
+    nn::Matrix colVector(2, 1, {1, 2});
+
+    // Perform column-wise multiplication
+    nn::Matrix result = mat.colWise() * colVector;
+
+    // Verify the result: {{1, 6}, {4, 14}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 1);
+    EXPECT_DOUBLE_EQ(result(0, 1), 6);
+    EXPECT_DOUBLE_EQ(result(1, 0), 4);
+    EXPECT_DOUBLE_EQ(result(1, 1), 14);
+}
+
+// Test column-wise operations when given invalid dimensions
+TEST(MatrixTests, ColWiseInvalidDimensions)
+{
+    nn::Matrix mat(2, 3); // 2x3 matrix
+    nn::Matrix invalidVector(3, 1); // 3x1 vector (rows don't match)
+
+    // Attempt invalid column-wise multiplication
+    EXPECT_THROW(mat.colWise() * invalidVector, std::invalid_argument);
+}
+
+// Test column-wise operations when column vector was not provided
+TEST(MatrixTests, NotAColVector)
+{
+    nn::Matrix mat(2, 2);
+    nn::Matrix invalidMatrix(2, 3); // Not a column vector
+
+    // Attempt invalid column-wise multiplication
+    EXPECT_THROW(mat.colWise() * invalidMatrix, std::invalid_argument);
+}
+
+TEST(MatrixTests, IdentityMatrix)
+{
+    nn::Matrix id = nn::Matrix::identity(3);
+
+    std::vector<double> expected = {1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0};
+
+    EXPECT_EQ(expected, id.getData());
+}
+
+TEST(MatrixTests, IdentityMatrixInvalidSize)
+{
+    EXPECT_THROW(nn::Matrix::identity(0), std::invalid_argument);
 }

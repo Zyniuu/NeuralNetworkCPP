@@ -24,6 +24,8 @@ namespace nn
 
     Matrix Softmax::backward(const Matrix &gradient)
     {
+        // Create identity matrix
+        // Matrix id = Matrix::identity(m_output.getRows());
         // Compute the gradient of softmax
         return gradient.cwiseProduct(m_output.cwiseProduct(1.0 - m_output));
     }
