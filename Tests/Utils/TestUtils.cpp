@@ -125,3 +125,57 @@ TEST(UtilsTests, ShuffleInvalid)
 
     EXPECT_THROW(nn::shuffleDataset(dataShuffled, labelsShuffled), std::runtime_error);
 }
+
+TEST(UtilsTests, ToCategorical)
+{
+    std::vector<std::vector<double>> labels = {
+        {0.0},
+        {1.0},
+        {2.0},
+        {3.0}
+    };
+
+    std::vector<std::vector<double>> expectedOneHotEncoding = {
+        {1.0, 0.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},
+        {0.0, 0.0, 0.0, 1.0}
+    };
+
+    std::vector<std::vector<double>> output = nn::to_categorical(labels);
+
+    EXPECT_EQ(expectedOneHotEncoding, output);
+}
+
+TEST(UtilsTests, ToCategoricalWIthNumOfClasses)
+{
+    std::vector<std::vector<double>> labels = {
+        {0.0},
+        {1.0},
+        {2.0},
+        {3.0}
+    };
+
+    std::vector<std::vector<double>> expectedOneHotEncoding = {
+        {1.0, 0.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},
+        {0.0, 0.0, 0.0, 1.0}
+    };
+
+    std::vector<std::vector<double>> output = nn::to_categorical(labels, 4);
+
+    EXPECT_EQ(expectedOneHotEncoding, output);
+}
+
+TEST(UtilsTests, ToCategoricalWIthWrongNumOfClasses)
+{
+    std::vector<std::vector<double>> labels = {
+        {0.0},
+        {1.0},
+        {2.0},
+        {3.0}
+    };
+
+    EXPECT_THROW(nn::to_categorical(labels, 3), std::runtime_error);
+}

@@ -34,48 +34,40 @@ TEST(ActivationsTests, Sigmoid)
 {
     nn::Sigmoid sigmoid;
 
-    nn::Matrix input(2, 2, {0.0, 1.0, -1.0, 2.0});
+    nn::Matrix input(3, 1, {1.0, 2.0, -1.0});
     nn::Matrix output = sigmoid.forward(input);
 
     // Verify forward pass
-    EXPECT_NEAR(output(0, 0), 0.5, 1e-1);
-    EXPECT_NEAR(output(0, 1), 0.731059, 1e-6);
-    EXPECT_NEAR(output(1, 0), 0.268941, 1e-6);
-    EXPECT_NEAR(output(1, 1), 0.880797, 1e-6);
+    EXPECT_NEAR(output(0, 0), 0.73105, 1e-5);
+    EXPECT_NEAR(output(1, 0), 0.88079, 1e-5);
+    EXPECT_NEAR(output(2, 0), 0.26894, 1e-5);
 
-    nn::Matrix gradOutput(2, 2, {0.1, 0.2, 0.3, 0.4});
+    nn::Matrix gradOutput(3, 1, {0.1, 0.2, 0.3});
     nn::Matrix gradInput = sigmoid.backward(gradOutput);
 
     // Verify backward pass
-    EXPECT_NEAR(gradInput(0, 0), 0.24937, 1e-5);
-    EXPECT_NEAR(gradInput(0, 1), 0.24751, 1e-5);
-    EXPECT_NEAR(gradInput(1, 0), 0.24445, 1e-5);
-    EXPECT_NEAR(gradInput(1, 1), 0.24026, 1e-5);
+    EXPECT_NEAR(gradInput(0, 0), 0.19661, 1e-5);
+    EXPECT_NEAR(gradInput(1, 0), 0.10499, 1e-5);
+    EXPECT_NEAR(gradInput(2, 0), 0.19661, 1e-5);
 }
 
 TEST(ActivationsTests, Softmax)
 {
     nn::Softmax softmax;
 
-    nn::Matrix input(2, 3, {1.0, 2.0, 3.0, 1.0, 2.0, 3.0});
+    nn::Matrix input(3, 1, {1.0, 2.0, -1.0});
     nn::Matrix output = softmax.forward(input);
 
     // Verify forward pass
-    EXPECT_NEAR(output(0, 0), 0.04501, 1e-5);
-    EXPECT_NEAR(output(0, 1), 0.12236, 1e-5);
-    EXPECT_NEAR(output(0, 2), 0.33262, 1e-5);
-    EXPECT_NEAR(output(1, 0), 0.04501, 1e-5);
-    EXPECT_NEAR(output(1, 1), 0.12236, 1e-5);
-    EXPECT_NEAR(output(1, 2), 0.33262, 1e-5);
+    EXPECT_NEAR(output(0, 0), 0.25949, 1e-5);
+    EXPECT_NEAR(output(1, 0), 0.70538, 1e-5);
+    EXPECT_NEAR(output(2, 0), 0.03511, 1e-5);
 
-    nn::Matrix gradOutput(2, 3, {0.1, 0.2, 0.3, 0.1, 0.2, 0.3});
+    nn::Matrix gradOutput(3, 1, {0.1, 0.2, 0.3});
     nn::Matrix gradInput = softmax.backward(gradOutput);
 
     // Verify backward pass
-    EXPECT_NEAR(gradInput(0, 0), 0.00429, 1e-5);
-    EXPECT_NEAR(gradInput(0, 1), 0.02147, 1e-5);
-    EXPECT_NEAR(gradInput(0, 2), 0.06659, 1e-5);
-    EXPECT_NEAR(gradInput(1, 0), 0.00429, 1e-5);
-    EXPECT_NEAR(gradInput(1, 1), 0.02147, 1e-5);
-    EXPECT_NEAR(gradInput(1, 2), 0.06659, 1e-5);
+    EXPECT_NEAR(gradInput(0, 0), 0.19215, 1e-5);
+    EXPECT_NEAR(gradInput(1, 0), 0.20781, 1e-5);
+    EXPECT_NEAR(gradInput(2, 0), 0.03388, 1e-5);
 }

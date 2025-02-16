@@ -12,10 +12,12 @@
 #include <iostream>
 #include <fstream>
 #include "RowWiseProxy/RowWiseProxy.hpp"
+#include "ColWiseProxy/ColWiseProxy.hpp"
 
 namespace nn
 {
-    // Forward declaration of ColumnWiseProxy
+    // Forward declaration of ColWiseProxy and RowWiseProxy
+    class ColWiseProxy;
     class RowWiseProxy;
 
     /**
@@ -120,6 +122,13 @@ namespace nn
          */
         RowWiseProxy rowWise();
 
+        /**
+         * @brief Returns a ColWiseProxy to enable column-wise operations.
+         *
+         * @return A ColWiseProxy object bound to this matrix.
+         */
+        ColWiseProxy colWise();
+
         /** @brief Performs element-wise multiplication (Hadamard product). */
         Matrix cwiseProduct(const Matrix &other) const;
 
@@ -128,6 +137,14 @@ namespace nn
 
         /** @brief Applies a function to each matrix element. */
         Matrix map(std::function<double(double)> func) const;
+
+        /**
+         * @brief Creates an identity matrix of the specified size.
+         *
+         * @param size The number of rows and columns in the identity matrix.
+         * @return Matrix The identity matrix.
+         */
+        static Matrix identity(int size);
 
         Matrix &operator=(const Matrix &other);
 

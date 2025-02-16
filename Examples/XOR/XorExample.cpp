@@ -27,10 +27,7 @@ int main()
     // Create a neural network model
     nn::NeuralNetworkCPP model;
 
-    // Add layers to the model:
-    // 1. Input layer: 2 neurons (for the 2 input features)
-    // 2. Hidden layer: 8 neurons with ReLU activation and He Normal initialization
-    // 3. Output layer: 1 neuron with Sigmoid activation and Xavier Uniform initialization
+    // Add layers to the model
     model.addLayer(std::make_unique<nn::DenseLayer>(2, 8, nn::HE_NORMAL, nn::RELU));
     model.addLayer(std::make_unique<nn::DenseLayer>(8, 1, nn::XAVIER_UNIFORM, nn::SIGMOID));
 
@@ -45,11 +42,11 @@ int main()
     // Train the model:
     // - Training data: xData (inputs) and yData (targets)
     // - Number of epochs: 1000
-    // - Batch size: 4 (since there are 4 samples)
+    // - Batch size: 4 (since there are only 4 samples)
     // - Validation split: 0.0 (no validation data)
-    // - Patience: 10 (wait for max 10 epochs for network to improve)
+    // - Patience: 10 (wait for max 10 epochs for the network to improve)
     // - minDelta: 0.00001 (this is minimum improvement of the error for the patience to reset)
-    // - Verbose: Print training progress
+    // - Verbose: Print the training progress
     model.train(xData, yData, 1000, 4, 0.0, 10, 0.00001, true);
 
     // Make predictions using the trained model

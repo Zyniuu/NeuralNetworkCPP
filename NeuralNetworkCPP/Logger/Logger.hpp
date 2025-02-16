@@ -61,11 +61,11 @@ namespace nn
         /**
          * @brief Logs the end of an epoch.
          *
-         * @param totalEpochs Total number of epochs.
+         * @param totalBatches Total number of baches.
          * @param loss Computed loss between predictions and targets.
          * @param accuracy Computed accuracy on validation set.
          */
-        void logEpochEnd(const int totalEpochs, const double loss, const double accuracy);
+        void logEpochEnd(const int totalBatches, const double loss, const double accuracy);
 
         /**
          * @brief Logs the progress of a batch.

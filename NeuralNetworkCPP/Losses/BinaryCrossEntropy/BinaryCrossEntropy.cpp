@@ -17,7 +17,7 @@ namespace nn
         Matrix logPred = predictions.map([this](double x) { return std::log(x + m_epsilon); });
         Matrix logOneMinusPred = (1 - predictions).map([this](double x) { return std::log(x + m_epsilon); });
 
-        return ((targets.cwiseProduct(logPred) + (1 - targets).cwiseProduct(logOneMinusPred)).sum() * -1) / targets.getRows();
+        return ((targets.cwiseProduct(logPred) + (1 - targets).cwiseProduct(logOneMinusPred)).sum() * -1) / (targets.getRows() * targets.getCols());
     }
 
     Matrix BinaryCrossEntropy::computeGradient(const Matrix &predictions, const Matrix &targets)

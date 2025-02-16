@@ -25,6 +25,6 @@ namespace nn
     Matrix Softmax::backward(const Matrix &gradient)
     {
         // Compute the gradient of softmax
-        return gradient.cwiseProduct(m_output.cwiseProduct(1.0 - m_output));
+        return m_output.map([](double x) { return x * (1 - x); });
     }
 }

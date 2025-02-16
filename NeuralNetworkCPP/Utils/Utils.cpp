@@ -61,4 +61,43 @@ namespace nn
         reorderRows(data, indices);
         reorderRows(labels, indices);
     }
+
+    std::vector<std::vector<double>> to_categorical(const std::vector<std::vector<double>> &data, int numClasses)
+    {
+        if (data.empty())
+            throw std::runtime_error("Input data is empty.");
+        
+        // Find the maximum class label if numClasses is 0
+        if (numClasses == 0)
+        {
+            double maxLabel = 0.0;
+            for (const auto &row : data)
+            {
+                for (double label : row)
+                {
+                    if (label > maxLabel)
+                        maxLabel = label;
+                }
+            }
+            numClasses = static_cast<int>(maxLabel) + 1;
+        }
+
+        // Create one-hot encoded vectors
+        std::vector<std::vector<double>> oneHotData;
+        for (const auto &row : data)
+        {
+            for (double label : row)
+            {
+                // Create a one hot vector for the current label
+                std::vector<double> oneHot(numClasses, 0.0);
+                int classIndex = static_cast<int>(label);
+                if (classIndex >= numClasses || classIndex < 0)
+                    throw std::runtime_error("Class label is out of range.");
+                oneHot[classIndex] = 1.0;
+                oneHotData.push_back(oneHot);
+            }
+        }
+
+        return oneHotData;
+    }
 }

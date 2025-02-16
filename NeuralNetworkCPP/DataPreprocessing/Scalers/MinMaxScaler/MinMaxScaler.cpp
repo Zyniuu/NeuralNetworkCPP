@@ -43,8 +43,15 @@ namespace nn
         std::vector<std::vector<double>> normalizedData = data;
 
         for (auto &row : normalizedData)
+        {
             for (int i = 0; i < row.size(); i++)
-                row[i] = (row[i] - m_min[i]) / (m_max[i] - m_min[i]) * (m_featureRangeMax - m_featureRangeMin) + m_featureRangeMin;
+            {
+                if (m_max[i] == m_min[i])
+                    row[i] = m_featureRangeMin;
+                else
+                    row[i] = (row[i] - m_min[i]) / (m_max[i] - m_min[i]) * (m_featureRangeMax - m_featureRangeMin) + m_featureRangeMin;
+            }
+        }
 
         return normalizedData;
     }

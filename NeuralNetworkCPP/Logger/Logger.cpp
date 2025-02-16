@@ -58,7 +58,7 @@ namespace nn
         std::cout << "Epoch " << currentEpoch << "/" << totalEpochs << std::endl;
     }
 
-    void Logger::logEpochEnd(const int totalEpochs, const double loss, const double accuracy)
+    void Logger::logEpochEnd(const int totalBatches, const double loss, const double accuracy)
     {
         // Convert epoch duration on seconds and milliseconds
         auto duration = std::chrono::steady_clock::now() - m_epochStart;
@@ -66,7 +66,7 @@ namespace nn
         auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
 
         // Print epoch duration in seconds and step duration in milliseconds
-        std::cout << " - " << seconds << "s " << (milliseconds / totalEpochs) << "ms/step";
+        std::cout << " - " << seconds << "s " << (milliseconds / totalBatches) << "ms/step";
         std::cout << " - loss: " << std::setw(6) << loss;
 
         // Process the metrics

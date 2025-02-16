@@ -205,7 +205,7 @@ namespace nn
 
             // Log epoch end
             if (verbose)
-                m_logger->logEpochEnd(epochs, loss, accuracy);
+                m_logger->logEpochEnd(std::ceil(totalBatches), loss, accuracy);
             
             // Early stopping check
             if (loss < bestLoss - minDelta)
