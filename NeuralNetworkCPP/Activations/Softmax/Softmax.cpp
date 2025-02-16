@@ -24,9 +24,11 @@ namespace nn
 
     Matrix Softmax::backward(const Matrix &gradient)
     {
+        // return m_output.map([](double x) { return x * (1 - x); });
         // Create identity matrix
-        // Matrix id = Matrix::identity(m_output.getRows());
+        Matrix id = Matrix::identity(m_output.getRows());
+        Matrix outputTansposed = m_output.transpose();
         // Compute the gradient of softmax
-        return gradient.cwiseProduct(m_output.cwiseProduct(1.0 - m_output));
+        return ((id.rowWise() - outputTansposed).colWise() * m_output) * gradient;
     }
 }

@@ -57,25 +57,19 @@ TEST(ActivationsTests, Softmax)
 {
     nn::Softmax softmax;
 
-    nn::Matrix input(2, 3, {1.0, 2.0, 3.0, 1.0, 2.0, 3.0});
+    nn::Matrix input(3, 1, {1.0, 2.0, 3.0});
     nn::Matrix output = softmax.forward(input);
 
     // Verify forward pass
-    EXPECT_NEAR(output(0, 0), 0.04501, 1e-5);
-    EXPECT_NEAR(output(0, 1), 0.12236, 1e-5);
-    EXPECT_NEAR(output(0, 2), 0.33262, 1e-5);
-    EXPECT_NEAR(output(1, 0), 0.04501, 1e-5);
-    EXPECT_NEAR(output(1, 1), 0.12236, 1e-5);
-    EXPECT_NEAR(output(1, 2), 0.33262, 1e-5);
+    EXPECT_NEAR(output(0, 0), 0.09003, 1e-5);
+    EXPECT_NEAR(output(1, 0), 0.24472, 1e-5);
+    EXPECT_NEAR(output(2, 0), 0.66524, 1e-5);
 
-    nn::Matrix gradOutput(2, 3, {0.1, 0.2, 0.3, 0.1, 0.2, 0.3});
+    nn::Matrix gradOutput(3, 1, {0.1, 0.2, 0.3});
     nn::Matrix gradInput = softmax.backward(gradOutput);
 
     // Verify backward pass
-    EXPECT_NEAR(gradInput(0, 0), 0.00429, 1e-5);
-    EXPECT_NEAR(gradInput(0, 1), 0.02147, 1e-5);
-    EXPECT_NEAR(gradInput(0, 2), 0.06659, 1e-5);
-    EXPECT_NEAR(gradInput(1, 0), 0.00429, 1e-5);
-    EXPECT_NEAR(gradInput(1, 1), 0.02147, 1e-5);
-    EXPECT_NEAR(gradInput(1, 2), 0.06659, 1e-5);
+    EXPECT_NEAR(gradInput(0, 0), -0.01418, 1e-5);
+    EXPECT_NEAR(gradInput(1, 0), -0.01407, 1e-5);
+    EXPECT_NEAR(gradInput(2, 0), 0.02825, 1e-5);
 }
