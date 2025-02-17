@@ -31,6 +31,18 @@ namespace nn
             throw std::invalid_argument("Data size does not match matrix dimensions.");
     }
 
+    Matrix::Matrix(const std::vector<std::vector<double>> &data)
+        : m_rows(data.size()), m_cols(data[0].size()), m_data(data.size() * data[0].size(), 0.0)
+    {
+        // Use the global thread pool to parallelize the initialization.
+        auto &pool = getGlobalThreadPool();
+
+        pool.parallelFor(0, m_rows, [this, &data](int row) {
+            for (int col = 0; col < m_cols; col++)
+                (*this)[{row, col}] = data[row][col];
+        });
+    }
+
     Matrix::Matrix(const int rows, const int cols, std::function<double()> func)
         : m_rows(rows), m_cols(cols), m_data(rows * cols)
     {
