@@ -310,20 +310,19 @@ namespace nn
             layer->resetGradients();
 
         // Forward and backward passes (accumulating gradients)
-        for (int i = 0; i < xBatch.size(); i++)
-        {
-            // Convert vectors to matrices
-            Matrix input = Matrix(xBatch[i].size(), 1, xBatch[i]);
-            Matrix target = Matrix(yBatch[i].size(), 1, yBatch[i]);
+        // Convert the batch of inputs and targets into matrices
+        Matrix inputBatch = nn::Matrix(xBatch).transpose(); // Each column is a sample
+        Matrix targetBatch = nn::Matrix(yBatch).transpose(); // Each column is a target
 
-            // Forward pass
-            Matrix output = forward(input);
-            loss += m_loss->computeLoss(output, target);
+        // Forward pass for the entire batch
+        Matrix outputBatch = forward(inputBatch);
 
-            // Backward pass
-            Matrix grad = m_loss->computeGradient(output, target);
-            backward(grad);
-        }
+        // Compute the loss for the entire batch
+        loss += m_loss->computeLoss(outputBatch, targetBatch);
+
+        // Backward pass for the entire batch
+        Matrix gradBatch = m_loss->computeGradient(outputBatch, targetBatch);
+        backward(gradBatch);
 
         // Average gradients and update weights
         for (auto &layer : m_layers)

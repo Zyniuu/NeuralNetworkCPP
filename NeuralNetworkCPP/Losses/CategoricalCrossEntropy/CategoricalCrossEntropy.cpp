@@ -17,7 +17,7 @@ namespace nn
         // Add small number to avoid log(0)
         Matrix logPred = predictions.map([this](double x) { return std::log(x + m_epsilon); });
 
-        return ((targets.cwiseProduct(logPred)).sum() * -1) / (targets.getRows() * targets.getCols());
+        return ((targets.cwiseProduct(logPred)).sum() * -1) / targets.getCols();
     }
 
     Matrix CategoricalCrossEntropy::computeGradient(const Matrix &predictions, const Matrix &targets)

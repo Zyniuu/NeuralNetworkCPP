@@ -11,13 +11,19 @@ namespace nn
 {
     Matrix Softmax::forward(const Matrix &input)
     {
+        Matrix tmp = input;
+        RowWiseProxy rowWiseInput = tmp.rowWise();
+        Matrix maxCoeffs = tmp.colWise().maxCoeff();
+
         // Shift input values by subtracting the maximum value to avoid overflow in exp
         // and then apply softmax
-        Matrix expVals = (input - input.maxCoeff()).map([](double x) {
+        Matrix expVals = (rowWiseInput - maxCoeffs).map([](double x) {
             return std::exp(x);
         });
 
-        m_output = expVals / expVals.sum();
+        RowWiseProxy rowWiseExpVals = expVals.rowWise();
+        Matrix colWiseSum = expVals.colWise().sum();
+        m_output = rowWiseExpVals / colWiseSum;
 
         return m_output;
     }

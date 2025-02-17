@@ -33,6 +33,20 @@
           * @param matrix The matrix to perform column-wise operations on.
           */
          ColWiseProxy(Matrix &matrix);
+
+        /**
+         * @brief Returns a row vector with maximum coefficient of each column.
+         *
+         * @return The row vector with maximum coefficient of each column.
+         */
+         Matrix maxCoeff() const;
+
+        /**
+         * @brief Sums elements in each column.
+         * 
+         * @return Row matrix with summed up columns.
+         */
+         Matrix sum() const;
  
          /**
           * @brief Multiplies a column vector by every column of a matrix.
@@ -43,6 +57,16 @@
           *                               does not match the original matrix.
           */
          friend Matrix operator*(const ColWiseProxy &left, Matrix &right);
+
+         /**
+          * @brief Adds a column vector to every column of a matrix.
+          *
+          * @param other A column vector (Matrix with 1 column).
+          * @return A new Matrix after the column-wise addition.
+          * @throws std::invalid_argument If `other` is not a column vector or its row count
+          *                               does not match the original matrix.
+          */
+         friend Matrix operator+(const ColWiseProxy &left, Matrix &right);
      };
  }
  
