@@ -49,6 +49,25 @@ TEST(MatrixTests, MoveConstructor)
     EXPECT_EQ(moved(0, 0), 4.0);
 }
 
+TEST(MatrixTests, ConstructFromVectorOfVectors)
+{
+    nn::Matrix mat({
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7.0, 8.0, 9.0}
+    });
+
+    EXPECT_DOUBLE_EQ(mat(0, 0), 1.0);
+    EXPECT_DOUBLE_EQ(mat(0, 1), 2.0);
+    EXPECT_DOUBLE_EQ(mat(0, 2), 3.0);
+    EXPECT_DOUBLE_EQ(mat(1, 0), 4.0);
+    EXPECT_DOUBLE_EQ(mat(1, 1), 5.0);
+    EXPECT_DOUBLE_EQ(mat(1, 2), 6.0);
+    EXPECT_DOUBLE_EQ(mat(2, 0), 7.0);
+    EXPECT_DOUBLE_EQ(mat(2, 1), 8.0);
+    EXPECT_DOUBLE_EQ(mat(2, 2), 9.0);
+}
+
 // Test max coeff
 TEST(MatrixTests, MaxCoeff)
 {
@@ -69,6 +88,15 @@ TEST(MatrixTests, MaxCoeff)
     EXPECT_DOUBLE_EQ(largeMat.maxCoeff(), 999 * 1000 + 999);
 }
 
+// Test max coeff column-wise
+TEST(MatrixTests, MaxCoeffColWise)
+{
+    nn::Matrix mat(3, 3, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0});
+    nn::Matrix expected(1, 3, {7.0, 8.0, 9.0});
+
+    EXPECT_EQ(mat.colWise().maxCoeff(), expected);
+}
+
 // Test matrix sum
 TEST(MatrixTests, Sum)
 {
@@ -81,6 +109,34 @@ TEST(MatrixTests, Sum)
     nn::Matrix largeMat(1000, 1000, 1.0);
 
     EXPECT_DOUBLE_EQ(largeMat.sum(), 1000000.0);
+}
+
+// Test matrix row-wise sum
+TEST(MatrixTests, RowWiseSum)
+{
+    nn::Matrix mat({
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7.0, 8.0, 9.0}
+    });
+
+    nn::Matrix expectedOutput(3, 1, {6.0, 15.0, 24.0});
+
+    EXPECT_EQ(mat.rowWise().sum(), expectedOutput);
+}
+
+// Test matrix column-wise sum
+TEST(MatrixTests, ColWiseSum)
+{
+    nn::Matrix mat({
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7.0, 8.0, 9.0}
+    });
+
+    nn::Matrix expectedOutput(1, 3, {12.0, 15.0, 18.0});
+
+    EXPECT_EQ(mat.colWise().sum(), expectedOutput);
 }
 
 // Test element-wise addition
@@ -504,6 +560,27 @@ TEST(MatrixTests, RowWiseSubtraction)
     EXPECT_DOUBLE_EQ(result(1, 1), 6);
 }
 
+// Test row wise division
+TEST(MatrixTests, RowWiseDivision)
+{
+    // Create a 2x2 matrix: {{2, 4}, {6, 12}}
+    nn::Matrix mat(2, 2, {2, 4, 6, 12});
+
+    // Create a row vector: {{2, 4}}
+    nn::Matrix rowVector(1, 2, {2, 4});
+
+    // Perform row-wise division
+    nn::Matrix result = mat.rowWise() / rowVector;
+
+    // Verify the result: {{1, 1}, {3, 3}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 1);
+    EXPECT_DOUBLE_EQ(result(0, 1), 1);
+    EXPECT_DOUBLE_EQ(result(1, 0), 3);
+    EXPECT_DOUBLE_EQ(result(1, 1), 3);
+}
+
 // Test row wise operations when given invalid dimensions
 TEST(MatrixTests, RowWiseInvalidDimensions)
 {
@@ -543,6 +620,69 @@ TEST(MatrixTests, ColWiseMultiplication)
     EXPECT_DOUBLE_EQ(result(0, 1), 6);
     EXPECT_DOUBLE_EQ(result(1, 0), 4);
     EXPECT_DOUBLE_EQ(result(1, 1), 14);
+}
+
+// Test column-wise division
+TEST(MatrixTests, ColWiseDivision)
+{
+    // Create a 2x2 matrix: {{1, 6}, {2, 8}}
+    nn::Matrix mat(2, 2, {1, 6, 2, 8});
+
+    // Create a column vector: {{1}, {2}}
+    nn::Matrix colVector(2, 1, {1, 2});
+
+    // Perform column-wise division
+    nn::Matrix result = mat.colWise() / colVector;
+
+    // Verify the result: {{1, 6}, {1, 4}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 1);
+    EXPECT_DOUBLE_EQ(result(0, 1), 6);
+    EXPECT_DOUBLE_EQ(result(1, 0), 1);
+    EXPECT_DOUBLE_EQ(result(1, 1), 4);
+}
+
+// Test column-wise addition
+TEST(MatrixTests, ColWiseAddition)
+{
+    // Create a 2x2 matrix: {{1, 6}, {2, 8}}
+    nn::Matrix mat(2, 2, {1, 6, 2, 8});
+
+    // Create a column vector: {{1}, {2}}
+    nn::Matrix colVector(2, 1, {1, 2});
+
+    // Perform column-wise division
+    nn::Matrix result = mat.colWise() + colVector;
+
+    // Verify the result: {{2, 7}, {4, 10}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 2);
+    EXPECT_DOUBLE_EQ(result(0, 1), 7);
+    EXPECT_DOUBLE_EQ(result(1, 0), 4);
+    EXPECT_DOUBLE_EQ(result(1, 1), 10);
+}
+
+// Test column-wise subtraction
+TEST(MatrixTests, ColWiseSubtraction)
+{
+    // Create a 2x2 matrix: {{1, 6}, {2, 8}}
+    nn::Matrix mat(2, 2, {1, 6, 2, 8});
+
+    // Create a column vector: {{1}, {2}}
+    nn::Matrix colVector(2, 1, {1, 2});
+
+    // Perform column-wise division
+    nn::Matrix result = mat.colWise() - colVector;
+
+    // Verify the result: {{0, 5}, {0, 6}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 0);
+    EXPECT_DOUBLE_EQ(result(0, 1), 5);
+    EXPECT_DOUBLE_EQ(result(1, 0), 0);
+    EXPECT_DOUBLE_EQ(result(1, 1), 6);
 }
 
 // Test column-wise operations when given invalid dimensions

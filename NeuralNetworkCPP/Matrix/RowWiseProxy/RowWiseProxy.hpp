@@ -24,7 +24,7 @@ namespace nn
     class RowWiseProxy
     {
     private:
-        Matrix &m_matrix; ///< Reference to the original matrix.
+        const Matrix &m_matrix; ///< Reference to the original matrix.
 
     public:
         /**
@@ -32,7 +32,14 @@ namespace nn
          *
          * @param matrix The matrix to perform row-wise operations on.
          */
-        RowWiseProxy(Matrix &matrix);
+        RowWiseProxy(const Matrix &matrix);
+
+        /**
+         * @brief Sums elements in each row.
+         * 
+         * @return Column matrix with summed up rows.
+         */
+        Matrix sum() const;
 
         /**
          * @brief Subtracts a row vector from each row of the matrix.
@@ -42,7 +49,17 @@ namespace nn
          * @throws std::invalid_argument If `other` is not a row vector or its column count
          *                               does not match the original matrix.
          */
-        friend Matrix operator-(const RowWiseProxy &left, Matrix &right);
+        friend Matrix operator-(const RowWiseProxy &left, const Matrix &right);
+
+        /**
+         * @brief Divides a row vector by each row of the matrix.
+         *
+         * @param other A row vector (Matrix with 1 row).
+         * @return A new Matrix after the row-wise division.
+         * @throws std::invalid_argument If `other` is not a row vector or its column count
+         *                               does not match the original matrix.
+         */
+        friend Matrix operator/(const RowWiseProxy &left, const Matrix &right);
     };
 }
 

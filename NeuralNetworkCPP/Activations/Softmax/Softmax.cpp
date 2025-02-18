@@ -13,11 +13,11 @@ namespace nn
     {
         // Shift input values by subtracting the maximum value to avoid overflow in exp
         // and then apply softmax
-        Matrix expVals = (input - input.maxCoeff()).map([](double x) {
+        Matrix expVals = (input.rowWise() - input.colWise().maxCoeff()).map([](double x) {
             return std::exp(x);
         });
 
-        m_output = expVals / expVals.sum();
+        m_output = expVals.rowWise() / expVals.colWise().sum();
 
         return m_output;
     }

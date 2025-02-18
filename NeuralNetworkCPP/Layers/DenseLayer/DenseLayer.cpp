@@ -48,9 +48,9 @@ namespace nn
     {
         // Store the input for use in the backward pass
         m_input = input;
-        
+
         // Compute the linear transformation: output = input * weights + biases
-        m_output = m_weights * m_input + m_biases;
+        m_output = (m_weights * m_input).colWise() + m_biases;
 
         // Apply the activation function if it exists
         Matrix output = m_output;
@@ -68,7 +68,7 @@ namespace nn
 
         // Accumulate gradients
         m_gradWeights += gradOutput * m_input.transpose();
-        m_gradBiases += gradOutput;
+        m_gradBiases += gradOutput.rowWise().sum();
 
         // Compute the gradient with respect to the input
         return m_weights.transpose() * gradOutput;

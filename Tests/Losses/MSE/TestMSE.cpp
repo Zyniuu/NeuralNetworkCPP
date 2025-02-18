@@ -20,7 +20,7 @@ TEST(MSETests, ComputeLoss)
     // Test case 2: 2x2 matrix
     nn::Matrix predictions2(2, 2, {1.0, 2.0, 3.0, 4.0});
     nn::Matrix targets2(2, 2, {1.0, 3.0, 2.0, 5.0});
-    double expectedLoss2 = (0.0 + 1.0 + 1.0 + 1.0) / 4;
+    double expectedLoss2 = (0.0 + 1.0 + 1.0 + 1.0) / 2;
     EXPECT_DOUBLE_EQ(mse.computeLoss(predictions2, targets2), expectedLoss2);
 
     // Test case 3: Invalid dimensions

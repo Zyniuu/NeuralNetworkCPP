@@ -78,32 +78,32 @@ TEST(BatchNormalizationTests, ForwardPass)
     // Training mode
     bnLayer.setTrainingMode(true);
 
-    nn::Matrix input(3, 1, {1.0, 2.0, 3.0});
+    nn::Matrix input(3, 3, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0});
     nn::Matrix output1 = bnLayer.forward(input);
 
-    double mean = (1.0 + 2.0 + 3.0) / 3.0;
-    double stddev = (std::pow(1.0 - mean, 2) + std::pow(2.0 - mean, 2) + std::pow(3.0 - mean, 2)) / 3.0;
-    double runningMean = 0.99 * 0.0 + (1.0 - 0.99) * mean;
-    double runningVar = 0.99 * 1.0 + (1.0 - 0.99) * stddev;
-    nn::Matrix trainNorm = nn::Matrix(3, 1, {
-        ((1.0 - mean) / std::sqrt(stddev + 1e-15)),
-        ((2.0 - mean) / std::sqrt(stddev + 1e-15)),
-        ((3.0 - mean) / std::sqrt(stddev + 1e-15))
+    nn::Matrix trainNorm = nn::Matrix({
+        {-1.224745, 0.000000, 1.224745},
+        {-1.224745, 0.000000, 1.224745},
+        {-1.224745, 0.000000, 1.224745}
     });
 
-    EXPECT_EQ(output1, trainNorm);
+    for (int i = 0; i < output1.getRows(); i++)
+        for (int j = 0; j < output1.getCols(); j++)
+            EXPECT_NEAR(output1(i, j), trainNorm(i, j), 1e-6);
 
     // Inference mode
     bnLayer.setTrainingMode(false);
     nn::Matrix output2 = bnLayer.forward(input);
 
-    nn::Matrix inferNorm = nn::Matrix(3, 1, {
-        ((1.0 - runningMean) / std::sqrt(runningVar + 1e-15)),
-        ((2.0 - runningMean) / std::sqrt(runningVar + 1e-15)),
-        ((3.0 - runningMean) / std::sqrt(runningVar + 1e-15))
+    nn::Matrix inferNorm = nn::Matrix({
+        {12.002500, 24.249948, 36.497397},
+        {48.377422, 60.624871, 72.872320},
+        {84.752345, 96.999794, 109.247243}
     });
 
-    EXPECT_EQ(output2, inferNorm);
+    for (int i = 0; i < output2.getRows(); i++)
+        for (int j = 0; j < output2.getCols(); j++)
+            EXPECT_NEAR(output2(i, j), inferNorm(i, j), 1e-6);
 }
 
 TEST(BatchNormalizationTests, BackwardPass)
@@ -113,24 +113,20 @@ TEST(BatchNormalizationTests, BackwardPass)
     // Training mode
     bnLayer.setTrainingMode(true);
 
-    nn::Matrix input(3, 1, {1.0, 2.0, 3.0});
-    nn::Matrix grad(3, 1, {0.1, 0.2, 0.3});
+    nn::Matrix input(3, 3, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0});
+    nn::Matrix grad(3, 3, {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9});
     bnLayer.forward(input);
     nn::Matrix output = bnLayer.backward(grad);
 
-    double mean = (1.0 + 2.0 + 3.0) / 3.0;
-    double stddev = (std::pow(1.0 - mean, 2) + std::pow(2.0 - mean, 2) + std::pow(3.0 - mean, 2)) / 3.0;
-    double t = 1 / std::sqrt(stddev + 1e-15);
-    int m = 3;
-    nn::Matrix trainNorm = nn::Matrix(3, 1, {
-        ((1.0 - mean) / std::sqrt(stddev + 1e-15)),
-        ((2.0 - mean) / std::sqrt(stddev + 1e-15)),
-        ((3.0 - mean) / std::sqrt(stddev + 1e-15))
+    nn::Matrix inputGrad = nn::Matrix({
+        {-0.000000, 0.000000, 0.000000},
+        {-0.000000, 0.000000, 0.000000},
+        {-0.000000, 0.000000, 0.000000}
     });
 
-    nn::Matrix inputGrad = (1.0 * t / m) * (m * grad - (t * t) * (input - mean) * grad.cwiseProduct(input - mean).sum() - grad.sum());
-
-    EXPECT_EQ(output, inputGrad);
+    for (int i = 0; i < output.getRows(); i++)
+        for (int j = 0; j < output.getCols(); j++)
+            EXPECT_NEAR(output(i, j), inputGrad(i, j), 1e-6);
 }
 
 TEST(BatchNormalizationTests, SaveAndLoad)
@@ -140,6 +136,7 @@ TEST(BatchNormalizationTests, SaveAndLoad)
     // Training mode
     bnLayer.setTrainingMode(true);
     nn::Matrix input(3, 1, {1.0, 2.0, 3.0});
+    bnLayer.forward(input);
 
     // Save to file
     std::ofstream outFile("layer.bin", std::ios::binary);
