@@ -25,9 +25,12 @@ namespace nn
         // Check if the file is open and readable
         if (!file.is_open())
             throw std::runtime_error("File is not open for reading");
-        
+
         // Read momentum
         file.read(reinterpret_cast<char *>(&m_momentum), sizeof(m_momentum));
+
+        // Read epsilon
+        file.read(reinterpret_cast<char *>(&m_epsilon), sizeof(m_epsilon));
 
         // Read running mean and running variance
         m_runningMean = Matrix(file);
@@ -40,7 +43,7 @@ namespace nn
         // Check if reading was successful
         if (!file.good())
             throw std::runtime_error("Failed to read layer from the file.");
-        
+
         resetGradients();
     }
 
@@ -62,37 +65,35 @@ namespace nn
             m_runningVar = m_momentum * m_runningVar + (1.0 - m_momentum) * m_stddev;
 
             // Normalize the input
-            m_normalized = diff / (m_stddev + m_epsilon).map([](double x) { return std::sqrt(x); });
+            m_normalized = diff.colWise() / (m_stddev + m_epsilon).map([](double x) { return std::sqrt(x); });
         }
         else
         {
             // Inference mode: use running statistics
             Matrix diff = m_input.colWise() - m_runningMean;
-            m_normalized = diff / (m_runningVar + m_epsilon).map([](double x) { return std::sqrt(x); });
+            m_normalized = diff.colWise() / (m_runningVar + m_epsilon).map([](double x) { return std::sqrt(x); });
         }
 
         // Scale and shift
-        return m_gamma.cwiseProduct(m_normalized) + m_beta;
+        return (m_normalized.colWise() * m_gamma).colWise() + m_beta;
     }
 
     Matrix BatchNormalization::backward(const Matrix &gradient)
     {
-        // Compute gradients for gamma and beta
-        ColWiseProxy gradColWise = gradient.colWise();
-        m_gradGamma += (gradColWise * m_normalized).rowWise().sum();
-        m_gradBeta += gradient;
+        int m = m_input.getCols();
+        Matrix t = (m_stddev + m_epsilon).map([](double x) { return 1.0 / std::sqrt(x); }); // 1 / sigma
+        Matrix diff = m_input.colWise() - m_mean;                                           // (x_i - mu)
+        Matrix gradDiff = diff.cwiseProduct(gradient);                                      // (dL/dy_i) * (x_i - mu)
 
-        int m = m_input.getRows();
-        double t = 1.0 / std::sqrt(m_stddev + m_epsilon); // 1 / sigma
-        Matrix diff = m_input - m_mean;                   // (x_i - mu)
-        Matrix gradDiff = gradient.cwiseProduct(diff);    // (dL/dy_i) * (x_i - mu)
-
-        // Sum of gradients and gradient differences
-        double sumGrad = gradient.sum();     // sum(dL/dy_j)
-        double sumGradDiff = gradDiff.sum(); // sum((dL/dy_j) * (x_j - mu))
+        // Sum of gradients
+        Matrix sumGrad = gradient.rowWise().sum(); // sum(dL/dy_j)
 
         // Compute input gradient
-        Matrix gradInput = (m_gamma * t / m).cwiseProduct(m * gradient - sumGrad - (t * t) * diff * sumGradDiff);
+        Matrix gradInput = (((m * gradient).colWise() - sumGrad) - ((diff.colWise() * t.cwiseProduct(t)).colWise() * gradDiff.rowWise().sum())).colWise() * (m_gamma.cwiseProduct(t) / m);
+
+        // Compute gradients for gamma and beta
+        m_gradGamma += gradient.cwiseProduct(m_normalized).rowWise().sum();
+        m_gradBeta += sumGrad;
 
         return gradInput;
     }
@@ -121,6 +122,9 @@ namespace nn
 
         // Save momentum
         file.write(reinterpret_cast<const char *>(&m_momentum), sizeof(m_momentum));
+
+        // Save epsilon
+        file.write(reinterpret_cast<const char *>(&m_epsilon), sizeof(m_epsilon));
 
         // Save running mean and running variance
         m_runningMean.save(file);

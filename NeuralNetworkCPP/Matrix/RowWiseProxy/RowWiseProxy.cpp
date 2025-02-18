@@ -9,7 +9,7 @@
 
 namespace nn
 {
-    RowWiseProxy::RowWiseProxy(Matrix &matrix)
+    RowWiseProxy::RowWiseProxy(const Matrix &matrix)
         : m_matrix(matrix) {}
     
     Matrix RowWiseProxy::sum() const
@@ -26,7 +26,7 @@ namespace nn
         return result;
     }
     
-    Matrix operator-(const RowWiseProxy &left, Matrix &right)
+    Matrix operator-(const RowWiseProxy &left, const Matrix &right)
     {
         // Validate input: `right` must be a row vector with matching columns.
         if (right.getRows() != 1 || right.getCols() != left.m_matrix.getCols())
@@ -47,7 +47,7 @@ namespace nn
         return result;
     }
 
-    Matrix operator/(const RowWiseProxy &left, Matrix &right)
+    Matrix operator/(const RowWiseProxy &left, const Matrix &right)
     {
         // Validate input: `right` must be a row vector with matching columns.
         if (right.getRows() != 1 || right.getCols() != left.m_matrix.getCols())

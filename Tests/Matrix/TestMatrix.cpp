@@ -622,6 +622,69 @@ TEST(MatrixTests, ColWiseMultiplication)
     EXPECT_DOUBLE_EQ(result(1, 1), 14);
 }
 
+// Test column-wise division
+TEST(MatrixTests, ColWiseDivision)
+{
+    // Create a 2x2 matrix: {{1, 6}, {2, 8}}
+    nn::Matrix mat(2, 2, {1, 6, 2, 8});
+
+    // Create a column vector: {{1}, {2}}
+    nn::Matrix colVector(2, 1, {1, 2});
+
+    // Perform column-wise division
+    nn::Matrix result = mat.colWise() / colVector;
+
+    // Verify the result: {{1, 6}, {1, 4}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 1);
+    EXPECT_DOUBLE_EQ(result(0, 1), 6);
+    EXPECT_DOUBLE_EQ(result(1, 0), 1);
+    EXPECT_DOUBLE_EQ(result(1, 1), 4);
+}
+
+// Test column-wise addition
+TEST(MatrixTests, ColWiseAddition)
+{
+    // Create a 2x2 matrix: {{1, 6}, {2, 8}}
+    nn::Matrix mat(2, 2, {1, 6, 2, 8});
+
+    // Create a column vector: {{1}, {2}}
+    nn::Matrix colVector(2, 1, {1, 2});
+
+    // Perform column-wise division
+    nn::Matrix result = mat.colWise() + colVector;
+
+    // Verify the result: {{2, 7}, {4, 10}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 2);
+    EXPECT_DOUBLE_EQ(result(0, 1), 7);
+    EXPECT_DOUBLE_EQ(result(1, 0), 4);
+    EXPECT_DOUBLE_EQ(result(1, 1), 10);
+}
+
+// Test column-wise subtraction
+TEST(MatrixTests, ColWiseSubtraction)
+{
+    // Create a 2x2 matrix: {{1, 6}, {2, 8}}
+    nn::Matrix mat(2, 2, {1, 6, 2, 8});
+
+    // Create a column vector: {{1}, {2}}
+    nn::Matrix colVector(2, 1, {1, 2});
+
+    // Perform column-wise division
+    nn::Matrix result = mat.colWise() - colVector;
+
+    // Verify the result: {{0, 5}, {0, 6}}
+    EXPECT_EQ(result.getRows(), 2);
+    EXPECT_EQ(result.getCols(), 2);
+    EXPECT_DOUBLE_EQ(result(0, 0), 0);
+    EXPECT_DOUBLE_EQ(result(0, 1), 5);
+    EXPECT_DOUBLE_EQ(result(1, 0), 0);
+    EXPECT_DOUBLE_EQ(result(1, 1), 6);
+}
+
 // Test column-wise operations when given invalid dimensions
 TEST(MatrixTests, ColWiseInvalidDimensions)
 {

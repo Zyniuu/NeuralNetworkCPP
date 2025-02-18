@@ -130,11 +130,25 @@ namespace nn
         RowWiseProxy rowWise();
 
         /**
+         * @brief Returns a RowWiseProxy to enable row-wise operations.
+         *
+         * @return A RowWiseProxy object bound to this matrix.
+         */
+        RowWiseProxy rowWise() const;
+
+        /**
          * @brief Returns a ColWiseProxy to enable column-wise operations.
          *
          * @return A ColWiseProxy object bound to this matrix.
          */
         ColWiseProxy colWise();
+
+        /**
+         * @brief Returns a ColWiseProxy to enable column-wise operations.
+         *
+         * @return A ColWiseProxy object bound to this matrix.
+         */
+        ColWiseProxy colWise() const;
 
         /** @brief Performs element-wise multiplication (Hadamard product). */
         Matrix cwiseProduct(const Matrix &other) const;

@@ -145,7 +145,17 @@ namespace nn
         return RowWiseProxy(*this);
     }
 
+    RowWiseProxy Matrix::rowWise() const
+    {
+        return RowWiseProxy(*this);
+    }
+
     ColWiseProxy Matrix::colWise()
+    {
+        return ColWiseProxy(*this);
+    }
+
+    ColWiseProxy Matrix::colWise() const
     {
         return ColWiseProxy(*this);
     }
