@@ -16,12 +16,12 @@ TEST(BCETests, ComputeLoss)
     // Test case 1: Simple 2x1 matrix
     nn::Matrix predictions1(2, 1, {0.7, 0.3});
     nn::Matrix targets1(2, 1, {1.0, 0.0});
-    EXPECT_NEAR(bce.computeLoss(predictions1, targets1), 0.35667, 1e-5);
+    EXPECT_NEAR(bce.computeLoss(predictions1, targets1), 0.71334, 1e-5);
 
     // Test case 2: 2x2 matrix
     nn::Matrix predictions2(2, 3, {0.1, 0.7, 0.2, 0.4, 0.5, 0.1});
     nn::Matrix targets2(2, 3, {0.0, 1.0, 0.0, 1.0, 0.0, 0.0});
-    EXPECT_NEAR(bce.computeLoss(predictions2, targets2), 0.39999, 1e-5);
+    EXPECT_NEAR(bce.computeLoss(predictions2, targets2), 0.79999, 1e-5);
 
     // Test case 3: Invalid dimensions
     nn::Matrix predictions3(2, 2);

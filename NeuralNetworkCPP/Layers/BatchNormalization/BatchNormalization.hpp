@@ -27,10 +27,10 @@ namespace nn
         Matrix m_normalized;  ///< Normalized input.
         Matrix m_gradGamma;   ///< Accumulated gradient for gamma.
         Matrix m_gradBeta;    ///< Accumulated gradient for beta.
-        double m_mean;        ///< Mean of the input
-        double m_stddev;      ///< Standard deviation of the input
-        double m_runningMean; ///< Running mean (used during inference).
-        double m_runningVar;  ///< Running variance (used during inference).
+        Matrix m_mean;        ///< Mean of the input
+        Matrix m_stddev;      ///< Standard deviation of the input
+        Matrix m_runningMean; ///< Running mean (used during inference).
+        Matrix m_runningVar;  ///< Running variance (used during inference).
         double m_epsilon;     ///< Small constant for numerical stability.
         double m_momentum;    ///< Momentum for updating running mean and variance.
         bool m_isTraining;    ///< Flag to indicate whether the layer is in training mode.

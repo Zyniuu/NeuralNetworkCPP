@@ -10,10 +10,12 @@
 namespace nn
 {
     BatchNormalization::BatchNormalization(const int numFeatures, const double momentum, const double epsilon)
-        : m_momentum(momentum), m_epsilon(epsilon), m_isTraining(true), m_runningMean(0.0), m_runningVar(1.0)
+        : m_momentum(momentum), m_epsilon(epsilon), m_isTraining(true)
     {
         m_gamma = Matrix(numFeatures, 1, 1.0);
         m_beta = Matrix(numFeatures, 1, 0.0);
+        m_runningMean = Matrix(numFeatures, 1, 0.0);
+        m_runningVar = Matrix(numFeatures, 1, 0.0);
         resetGradients();
     }
 
@@ -28,8 +30,8 @@ namespace nn
         file.read(reinterpret_cast<char *>(&m_momentum), sizeof(m_momentum));
 
         // Read running mean and running variance
-        file.read(reinterpret_cast<char *>(&m_runningMean), sizeof(m_runningMean));
-        file.read(reinterpret_cast<char *>(&m_runningVar), sizeof(m_runningVar));
+        m_runningMean = Matrix(file);
+        m_runningVar = Matrix(file);
 
         // Read gamma and beta
         m_gamma = Matrix(file);
@@ -51,20 +53,22 @@ namespace nn
         {
             // Training mode: use batch statistics
             // Calculate mean and standard deviation
-            m_mean = input.sum() / input.getRows();
-            m_stddev = input.map([this](double x) { return std::pow(x - m_mean, 2); }).sum() / input.getRows();
+            m_mean = m_input.rowWise().sum() / input.getCols();
+            Matrix diff = m_input.colWise() - m_mean;
+            m_stddev = diff.cwiseProduct(diff).rowWise().sum() / m_input.getCols();
 
             // Update running mean and variance
             m_runningMean = m_momentum * m_runningMean + (1.0 - m_momentum) * m_mean;
             m_runningVar = m_momentum * m_runningVar + (1.0 - m_momentum) * m_stddev;
 
             // Normalize the input
-            m_normalized = (input - m_mean) / std::sqrt(m_stddev + m_epsilon);
+            m_normalized = diff / (m_stddev + m_epsilon).map([](double x) { return std::sqrt(x); });
         }
         else
         {
             // Inference mode: use running statistics
-            m_normalized = (input - m_runningMean) / std::sqrt(m_runningVar + m_epsilon);
+            Matrix diff = m_input.colWise() - m_runningMean;
+            m_normalized = diff / (m_runningVar + m_epsilon).map([](double x) { return std::sqrt(x); });
         }
 
         // Scale and shift
@@ -74,7 +78,8 @@ namespace nn
     Matrix BatchNormalization::backward(const Matrix &gradient)
     {
         // Compute gradients for gamma and beta
-        m_gradGamma += gradient.cwiseProduct(m_normalized);
+        ColWiseProxy gradColWise = gradient.colWise();
+        m_gradGamma += (gradColWise * m_normalized).rowWise().sum();
         m_gradBeta += gradient;
 
         int m = m_input.getRows();
@@ -118,8 +123,8 @@ namespace nn
         file.write(reinterpret_cast<const char *>(&m_momentum), sizeof(m_momentum));
 
         // Save running mean and running variance
-        file.write(reinterpret_cast<const char *>(&m_runningMean), sizeof(m_runningMean));
-        file.write(reinterpret_cast<const char *>(&m_runningVar), sizeof(m_runningVar));
+        m_runningMean.save(file);
+        m_runningVar.save(file);
 
         // Save gamma and beta
         m_gamma.save(file);

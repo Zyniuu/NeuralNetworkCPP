@@ -67,6 +67,16 @@
           *                               does not match the original matrix.
           */
          friend Matrix operator+(const ColWiseProxy &left, Matrix &right);
+
+         /**
+          * @brief Subtracts a column vector from every column of a matrix.
+          *
+          * @param other A column vector (Matrix with 1 column).
+          * @return A new Matrix after the column-wise subtraction.
+          * @throws std::invalid_argument If `other` is not a column vector or its row count
+          *                               does not match the original matrix.
+          */
+         friend Matrix operator-(const ColWiseProxy &left, Matrix &right);
      };
  }
  

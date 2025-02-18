@@ -128,6 +128,14 @@ namespace nn
         void backward(const Matrix &gradient);
 
         /**
+         * @brief Predicts the output for a given vector of inputs.
+         *
+         * @param input The vector of vector of inputs.
+         * @return The predicted vector of vector of outputs.
+         */
+        std::vector<std::vector<double>> predict(const std::vector<std::vector<double>> &input);
+
+        /**
          * @brief Initializes a layer based on the provided layer type.
          *
          * @param layerType Enum value of the layer type.

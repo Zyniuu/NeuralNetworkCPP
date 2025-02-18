@@ -91,17 +91,18 @@ namespace nn
 
         int correct = 0;
 
-        // Iterate over the test data
-        for (int i = 0; i < xTest.size(); i++)
-        {
-            // Predict the output for the current input
-            std::vector<double> output = predict(xTest[i]);
+        std::vector<std::vector<double>> testOutput = predict(xTest);
 
+        // Determine if the task is classification or regression
+        bool isClassification = (testOutput[0].size() > 1);
+
+        for (int i = 0; i < testOutput.size(); i++)
+        {
             // If classification (multiple outputs)
-            if (output.size() > 1)
+            if (isClassification)
             {
                 // Find the index of the maximum output
-                int maxOutputIndex = std::max_element(output.begin(), output.end()) - output.begin();
+                int maxOutputIndex = std::max_element(testOutput[i].begin(), testOutput[i].end()) - testOutput[i].begin();
                 int maxTargetIndex = std::max_element(yTest[i].begin(), yTest[i].end()) - yTest[i].begin();
 
                 // Check if the prediction is correct
@@ -109,7 +110,7 @@ namespace nn
                     correct++;
             }
             // If regression (single output)
-            else if (std::round(output[0]) == std::round(yTest[i][0]))
+            else if (std::round(testOutput[i][0]) == std::round(yTest[i][0]))
                 correct++;
         }
 
@@ -279,6 +280,47 @@ namespace nn
         {
             grad = (*it)->backward(grad);
         }
+    }
+
+    std::vector<std::vector<double>> NeuralNetworkCPP::predict(const std::vector<std::vector<double>> &input)
+    {
+        // Set all BatchNormalization layers to inference mode
+        for (const auto &layer : m_layers)
+        {
+            if (layer->getType() == BATCH_NORM)
+            {
+                // Safely cast the Layer pointer to a BatchNormalization pointer
+                BatchNormalization *bnLayer = dynamic_cast<BatchNormalization *>(layer.get());
+                if (bnLayer)
+                    bnLayer->setTrainingMode(false);
+            }
+        }
+
+        Matrix forwardOutput = forward(Matrix(input).transpose()).transpose();
+        std::vector<std::vector<double>> result;
+
+        for (int i = 0; i < forwardOutput.getRows(); i++)
+        {
+            std::vector<double> row;
+            for (int j = 0; j < forwardOutput.getCols(); j++)
+                row.push_back(forwardOutput[{i, j}]);
+            result.push_back(row);
+        }
+
+        // Set all BatchNormalization layers back to training mode
+        for (const auto &layer : m_layers)
+        {
+            if (layer->getType() == BATCH_NORM)
+            {
+                // Safely cast the Layer pointer to a BatchNormalization pointer
+                BatchNormalization *bnLayer = dynamic_cast<BatchNormalization *>(layer.get());
+                if (bnLayer)
+                    bnLayer->setTrainingMode(true);
+            }
+        }
+
+        // Return the output vector
+        return result;
     }
 
     void NeuralNetworkCPP::initLayer(e_layerType layerType, std::ifstream &file)
