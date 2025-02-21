@@ -17,6 +17,7 @@ namespace nn
     void Logger::logTrainingStart()
     {
         // Start training timer
+        std::cout << "[    START ] Training started." << std::endl << std::endl; 
         m_trainStart = std::chrono::steady_clock::now();
     }
 
@@ -41,7 +42,7 @@ namespace nn
         if (isEarlyStopped)
             std::cout << "\n[  STOPPED ] Training stopped early: patience limit reached." << std::endl;
         else
-            std::cout << "\n[ FINISHED ] Training done." << std::endl;
+            std::cout << "\n[     DONE ] Training done." << std::endl;
         std::cout << "[     TIME ] ";
         std::cout << hours << " hours ";
         std::cout << minutes << " minutes ";
