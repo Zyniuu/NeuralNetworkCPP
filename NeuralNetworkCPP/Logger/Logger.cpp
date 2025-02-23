@@ -11,8 +11,8 @@
 
 namespace nn
 {
-    Logger::Logger(const std::vector<e_metric> &metrics, const int progressBarLength)
-        : m_metrics(metrics), m_progressBarLength(progressBarLength) {}
+    Logger::Logger(const int progressBarLength)
+        : m_progressBarLength(progressBarLength) {}
 
     void Logger::logTrainingStart()
     {
@@ -59,7 +59,12 @@ namespace nn
         std::cout << "Epoch " << currentEpoch << "/" << totalEpochs << std::endl;
     }
 
-    void Logger::logEpochEnd(const int totalBatches, const double loss, const double accuracy)
+    void Logger::logEpochEnd(
+        const int totalBatches,
+        const double loss,
+        const std::vector<double> &computedMetrics,
+        const std::vector<e_metric> &metrics
+    )
     {
         // Convert epoch duration on seconds and milliseconds
         auto duration = std::chrono::steady_clock::now() - m_epochStart;
@@ -71,8 +76,8 @@ namespace nn
         std::cout << " - loss: " << std::setw(6) << loss;
 
         // Process the metrics
-        for (const auto &metric : m_metrics)
-            logMetric(metric, accuracy);
+        for (const auto &metric : metrics)
+            logMetric(metric, computedMetrics);
 
         std::cout << std::endl;
     }
@@ -89,13 +94,17 @@ namespace nn
         std::cout << " [" << std::string(progress, '=') << std::string(m_progressBarLength - progress, ' ') << "]";
     }
 
-    void Logger::logMetric(const e_metric metric, const double accuracy)
+    void Logger::logMetric(const e_metric metric, const std::vector<double> &computedMetrics)
     {
         // Print the logs depending on selected metric
         switch (metric)
         {
         case ACCURACY_LOG:
-            std::cout << " - accuracy: " << std::setw(6) << accuracy;
+            std::cout << " - accuracy: " << std::setw(6) << computedMetrics[static_cast<int>(ACCURACY_LOG)];
+            break;
+
+        case MAE_LOG:
+            std::cout << " - MAE: " << std::setw(6) << computedMetrics[static_cast<int>(MAE_LOG)];
             break;
         }
     }

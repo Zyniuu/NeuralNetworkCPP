@@ -57,6 +57,10 @@ namespace nn
         const e_metric metric = ACCURACY_LOG
     )
     {
+        // Check if the test data is empty
+        if (xTest.empty() || yTest.empty())
+            return 0.0;
+
         std::vector<std::vector<double>> predictions = predict(xTest);
 
         return computeMetric(predictions, yTest, metric);
@@ -77,7 +81,7 @@ namespace nn
     {
         // Propagate the gradient backward through the layers
         Matrix grad = gradient;
-        
+
         for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
             grad = (*it)->backward(grad);
     }
@@ -89,6 +93,11 @@ namespace nn
     )
     {
         std::vector<double> result(2, 0.0);
+
+        // Check if the test data is empty
+        if (xTest.empty() || yTest.empty())
+            return result;
+
         std::vector<std::vector<double>> predictions = predict(xTest);
 
         for (auto const metric : metrics)

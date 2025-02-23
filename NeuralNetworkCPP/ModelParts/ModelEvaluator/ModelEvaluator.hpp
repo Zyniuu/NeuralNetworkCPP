@@ -41,7 +41,7 @@ namespace nn
             const std::vector<std::vector<double>> &yTest,
             const e_metric metric = ACCURACY_LOG
         );
-    
+
     protected:
         /**
          * @brief Performs forward propagation through the network.
@@ -63,15 +63,15 @@ namespace nn
          *
          * @param xTest Test data (vector of input vectors).
          * @param yTest Test labels (vector of output vectors).
-         * @param metrics The vector of metrics to compute (default: { ACCURACY_LOG }).
+         * @param metrics The vector of metrics to compute.
          * @return The vector of computed metrics.
          */
         std::vector<double> evaluate(
             const std::vector<std::vector<double>> &xTest,
             const std::vector<std::vector<double>> &yTest,
-            const std::vector<e_metric> &metrics = { ACCURACY_LOG }
+            const std::vector<e_metric> &metrics
         );
-    
+
     private:
         /**
          * @brief Set the training flag for all BatchNormalization layers.
@@ -82,21 +82,21 @@ namespace nn
 
         /**
          * @brief Computes the provided metric.
-         * 
+         *
          * @param predictions Vector of vectors of doubles of predictions.
          * @param targets Vector of vectors of doubles of expected targets.
          * @param metrix Metric to compute.
          * @return Computed metric based on provided preditctions and targets.
          */
         double computeMetric(
-            const std::vector<std::vector<double>> &predictions, 
-            const std::vector<std::vector<double>> &targets, 
+            const std::vector<std::vector<double>> &predictions,
+            const std::vector<std::vector<double>> &targets,
             const e_metric metric
         );
 
         /**
          * @brief Computes the model's accuracy.
-         * 
+         *
          * @param predictions Vector of vectors of doubles of predictions.
          * @param targets Vector of vectors of doubles of expected targets.
          * @return Computed accuracy based on provided preditctions and targets.
@@ -108,7 +108,7 @@ namespace nn
 
         /**
          * @brief Computes the model's Mean Absolute Error.
-         * 
+         *
          * @param predictions Vector of vectors of doubles of predictions.
          * @param targets Vector of vectors of doubles of expected targets.
          * @return Computed MAE based on provided preditctions and targets.

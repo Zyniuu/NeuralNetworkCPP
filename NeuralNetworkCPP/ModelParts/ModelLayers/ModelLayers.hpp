@@ -12,7 +12,7 @@ namespace nn
     {
     protected:
         std::vector<std::unique_ptr<Layer>> m_layers; ///< Vector of layers in the network.
-    
+
     public:
         /**
          * @brief Adds a layer to the network.
