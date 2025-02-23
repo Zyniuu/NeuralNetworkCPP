@@ -104,7 +104,7 @@ namespace nn
             break;
 
         case MAE_LOG:
-            std::cout << " - MAE: " << std::setw(6) << computedMetrics[static_cast<int>(MAE_LOG)];
+            std::cout << " - mae: " << std::setw(6) << computedMetrics[static_cast<int>(MAE_LOG)];
             break;
         }
     }
