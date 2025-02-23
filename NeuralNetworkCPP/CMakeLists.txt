@@ -36,6 +36,9 @@ set(NN_SOURCES
     Activations/Softmax/Softmax.cpp
     Layers/DenseLayer/DenseLayer.cpp
     Layers/BatchNormalization/BatchNormalization.cpp
+    ModelParts/ModelLayers/ModelLayers.cpp
+    ModelParts/ModelEvaluator/ModelEvaluator.cpp
+    ModelParts/ModelTrainer/ModelTrainer.cpp
     NeuralNetworkCPP.cpp
 )
 

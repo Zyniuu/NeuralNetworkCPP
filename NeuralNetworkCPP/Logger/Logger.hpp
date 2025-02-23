@@ -15,7 +15,7 @@ namespace nn
     /**
      * @brief Enum with avaible metrics.
      */
-    enum e_metric { ACCURACY_LOG };
+    enum e_metric { ACCURACY_LOG, MAE_LOG };
 
     /**
      * @class Logger
@@ -25,7 +25,6 @@ namespace nn
     {
     private:
         int m_progressBarLength; ///< Max length of the progress bar.
-        std::vector<e_metric> m_metrics; ///< Metrics to log
         std::chrono::time_point<std::chrono::steady_clock> m_trainStart; ///< Start time of training.
         std::chrono::time_point<std::chrono::steady_clock> m_epochStart; ///< Start time of a batch.
 
@@ -33,10 +32,9 @@ namespace nn
         /**
          * @brief Constructs a Logger with the specified metrics.
          *
-         * @param metrics Metrics to log during training.
          * @param progressBarLength Max length of the progress bar.
          */
-        Logger(const std::vector<e_metric> &metrics, const int progressBarLength = 30);
+        Logger(const int progressBarLength = 30);
 
         /**
          * @brief Starts the training timer.
@@ -63,9 +61,15 @@ namespace nn
          *
          * @param totalBatches Total number of baches.
          * @param loss Computed loss between predictions and targets.
-         * @param accuracy Computed accuracy on validation set.
+         * @param computedMetrics Computed metrics on validation set.
+         * @param metrics Metrics to log.
          */
-        void logEpochEnd(const int totalBatches, const double loss, const double accuracy);
+        void logEpochEnd(
+            const int totalBatches,
+            const double loss,
+            const std::vector<double> &computedMetrics,
+            const std::vector<e_metric> &metrics
+        );
 
         /**
          * @brief Logs the progress of a batch.
@@ -80,9 +84,9 @@ namespace nn
          * @brief Logs the metric info.
          *
          * @param metric The metric to log.
-         * @param accuracy Computed accuracy on validation set.
+         * @param computedMetrics Computed metrics on validation set.
          */
-        void logMetric(const e_metric metric, const double accuracy);
+        void logMetric(const e_metric metric, const std::vector<double> &computedMetrics);
     };
 }
 
