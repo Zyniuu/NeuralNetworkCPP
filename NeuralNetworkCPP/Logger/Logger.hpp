@@ -15,7 +15,7 @@ namespace nn
     /**
      * @brief Enum with avaible metrics.
      */
-    enum e_metric { ACCURACY_LOG };
+    enum e_metric { ACCURACY_LOG, MAE_LOG };
 
     /**
      * @class Logger
