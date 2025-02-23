@@ -6,8 +6,6 @@
 
 #include "NeuralNetworkCPP.hpp"
 #include "GlobalThreadPool/GlobalThreadPool.hpp"
-#include "Utils/Utils.hpp"
-#include <cmath>
 
 namespace nn
 {

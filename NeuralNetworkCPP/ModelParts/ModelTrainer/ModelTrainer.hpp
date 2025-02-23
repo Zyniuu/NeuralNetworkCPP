@@ -6,9 +6,17 @@
 
 #include "../ModelEvaluator/ModelEvaluator.hpp"
 #include "../../Losses/Losses.hpp"
+#include "../../Optimizers/Optimizers.hpp"
 
 namespace nn
 {
+    /**
+     * @class ModelTrainer
+     * @brief Handles the training of a neural network model.
+     *
+     * This class extends ModelEvaluator and provides functionality for compiling and training
+     * the model using an optimizer, loss function, and metrics.
+     */
     class ModelTrainer : public ModelEvaluator
     {
     private:
@@ -18,6 +26,13 @@ namespace nn
         std::vector<e_metric> m_metrics;        ///< Metrics to compute
 
     public:
+        /**
+         * @brief Performs backward propagation through the network.
+         *
+         * @param gradient The gradient of the loss with respect to the output.
+         */
+        void backward(const Matrix &gradient);
+
         /**
          * @brief Compiles the model with the specified optimizer and loss function.
          *

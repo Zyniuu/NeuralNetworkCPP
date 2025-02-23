@@ -9,6 +9,13 @@
 
 namespace nn
 {
+    /**
+     * @class ModelEvaluator
+     * @brief Handles model evaluation, prediction, and metric computation.
+     *
+     * This class extends ModelLayers and provides functionality for making predictions,
+     * evaluating the model, and computing metrics like accuracy and mean absolute error.
+     */
     class ModelEvaluator : public ModelLayers
     {
     public:
@@ -52,13 +59,6 @@ namespace nn
         Matrix forward(const Matrix &input);
 
         /**
-         * @brief Performs backward propagation through the network.
-         *
-         * @param gradient The gradient of the loss with respect to the output.
-         */
-        void backward(const Matrix &gradient);
-
-        /**
          * @brief Evaluates the model on the provided test data.
          *
          * @param xTest Test data (vector of input vectors).
@@ -85,8 +85,8 @@ namespace nn
          *
          * @param predictions Vector of vectors of doubles of predictions.
          * @param targets Vector of vectors of doubles of expected targets.
-         * @param metrix Metric to compute.
-         * @return Computed metric based on provided preditctions and targets.
+         * @param metric Metric to compute.
+         * @return Computed metric based on provided predictions and targets.
          */
         double computeMetric(
             const std::vector<std::vector<double>> &predictions,
@@ -99,7 +99,7 @@ namespace nn
          *
          * @param predictions Vector of vectors of doubles of predictions.
          * @param targets Vector of vectors of doubles of expected targets.
-         * @return Computed accuracy based on provided preditctions and targets.
+         * @return Computed accuracy based on provided predictions and targets.
          */
         double computeAccuracy(
             const std::vector<std::vector<double>> &predictions,
@@ -111,7 +111,7 @@ namespace nn
          *
          * @param predictions Vector of vectors of doubles of predictions.
          * @param targets Vector of vectors of doubles of expected targets.
-         * @return Computed MAE based on provided preditctions and targets.
+         * @return Computed MAE based on provided predictions and targets.
          */
         double computeMAE(
             const std::vector<std::vector<double>> &predictions,

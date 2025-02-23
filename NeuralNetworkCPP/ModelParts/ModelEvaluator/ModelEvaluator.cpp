@@ -33,9 +33,11 @@ namespace nn
         // Set all BatchNormalization layers to inference mode
         setBatchTrainingMode(false);
 
+        // Perform forward propagation
         Matrix forwardOutput = forward(Matrix(input).transpose()).transpose();
         std::vector<std::vector<double>> result;
 
+        // Convert the output matrix to a vector of vectors
         for (int i = 0; i < forwardOutput.getRows(); i++)
         {
             std::vector<double> row;
@@ -54,15 +56,17 @@ namespace nn
     double ModelEvaluator::evaluate(
         const std::vector<std::vector<double>> &xTest,
         const std::vector<std::vector<double>> &yTest,
-        const e_metric metric = ACCURACY_LOG
+        const e_metric metric
     )
     {
         // Check if the test data is empty
         if (xTest.empty() || yTest.empty())
             return 0.0;
 
+        // Get predictions for the test data
         std::vector<std::vector<double>> predictions = predict(xTest);
 
+        // Compute and return the specified metric
         return computeMetric(predictions, yTest, metric);
     }
 
@@ -75,15 +79,6 @@ namespace nn
             output = layer->forward(output);
 
         return output;
-    }
-
-    void ModelEvaluator::backward(const Matrix &gradient)
-    {
-        // Propagate the gradient backward through the layers
-        Matrix grad = gradient;
-
-        for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
-            grad = (*it)->backward(grad);
     }
 
     std::vector<double> ModelEvaluator::evaluate(
@@ -100,6 +95,7 @@ namespace nn
 
         std::vector<std::vector<double>> predictions = predict(xTest);
 
+        // Compute each metric
         for (auto const metric : metrics)
         {
             double temp = computeMetric(predictions, yTest, metric);
@@ -137,6 +133,8 @@ namespace nn
         case MAE_LOG:
             return computeMAE(predictions, targets);
         }
+
+        return 0.0;
     }
 
     double ModelEvaluator::computeAccuracy(
@@ -176,9 +174,11 @@ namespace nn
         const std::vector<std::vector<double>> &targets
     )
     {
+        // Convert predictions and targets to matrices
         Matrix predictionsMatrix = Matrix(predictions);
         Matrix targetsMatrix = Matrix(targets);
 
+        // Compute the absolute error and average it
         return (targetsMatrix - predictionsMatrix).map([](double x) { return std::abs(x); }).sum() / predictionsMatrix.getRows();
     }
 }

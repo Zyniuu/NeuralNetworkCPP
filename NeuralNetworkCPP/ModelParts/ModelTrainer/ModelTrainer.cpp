@@ -10,6 +10,15 @@
 
 namespace nn
 {
+    void ModelTrainer::backward(const Matrix &gradient)
+    {
+        // Propagate the gradient backward through the layers
+        Matrix grad = gradient;
+
+        for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
+            grad = (*it)->backward(grad);
+    }
+
     void ModelTrainer::compile(
         std::unique_ptr<Optimizer> optimizer,
         std::unique_ptr<Loss> lossFunc,
@@ -27,11 +36,11 @@ namespace nn
         const std::vector<std::vector<double>> &xTrain,
         const std::vector<std::vector<double>> &yTrain,
         const int epochs,
-        const int batchSize = 1,
-        const double validationSplit = 0.0,
-        const int patience = 10,
-        const double minDelta = 0.0001,
-        const bool verbose = true
+        const int batchSize,
+        const double validationSplit,
+        const int patience,
+        const double minDelta,
+        const bool verbose
     )
     {
         double bestLoss = std::numeric_limits<double>::max();

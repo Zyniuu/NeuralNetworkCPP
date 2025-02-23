@@ -8,6 +8,12 @@
 
 namespace nn
 {
+    /**
+     * @class ModelLayers
+     * @brief Manages the layers of a neural network model.
+     *
+     * This class provides functionality to add and initialize layers in a neural network.
+     */
     class ModelLayers
     {
     protected:

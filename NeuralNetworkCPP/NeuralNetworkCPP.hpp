@@ -7,10 +7,6 @@
 #ifndef NEURALNETWORKCPP_HPP
 #define NEURALNETWORKCPP_HPP
 
-#include "Layers/Layers.hpp"
-#include "Optimizers/Optimizers.hpp"
-#include "Losses/Losses.hpp"
-#include "Logger/Logger.hpp"
 #include "ModelParts/ModelTrainer/ModelTrainer.hpp"
 #include <thread>
 
