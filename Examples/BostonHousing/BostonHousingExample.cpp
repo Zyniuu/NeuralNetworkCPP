@@ -35,9 +35,9 @@ int main()
     nn::NeuralNetworkCPP model;
 
     // Add layers to the model
-    model.addLayer(std::make_unique<nn::DenseLayer>(13, 128, nn::HE_NORMAL, nn::RELU));
-    model.addLayer(std::make_unique<nn::DenseLayer>(128, 64, nn::HE_NORMAL, nn::RELU));
-    model.addLayer(std::make_unique<nn::DenseLayer>(64, 1, nn::XAVIER_UNIFORM, nn::NONE));
+    model.addLayer(std::make_unique<nn::DenseLayer>(13, 26, nn::HE_NORMAL, nn::RELU));
+    model.addLayer(std::make_unique<nn::DenseLayer>(26, 26, nn::HE_NORMAL, nn::RELU));
+    model.addLayer(std::make_unique<nn::DenseLayer>(26, 1, nn::XAVIER_UNIFORM, nn::NONE));
 
     // Compile the model:
     // - Use the Adam optimizer with default learning rate (0.001)
@@ -65,7 +65,7 @@ int main()
     std::cout << "[    START ] Saving model to the file." << std::endl; 
 
     // Save the trained model to the file
-    model.save("BostoHousing_model.bin");
+    model.save("BostonHousing_model.bin");
 
     std::cout << "[     DONE ] Saving model to the file." << std::endl << std::endl; 
 
