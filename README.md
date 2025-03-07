@@ -8,6 +8,7 @@ A lightweight, modular, and easy-to-use C++ neural network library designed for 
     * [CSVReader](#csvreader)
     * [MinMaxScaler](#minmaxscaler)
     * [StandardScaler](#standardscaler)
+    * [to_categorical](#to_categorical)
 * [Initializers](#initializers)
     * [Xavier/Glorot initializer](#xavierglorot-initializer)
     * [He initializer](#he-initializer)
@@ -111,3 +112,116 @@ model.save("trained_model.bin");
 
 ## Data preprocessing
 
+A csv file reader ([CSVReader](docs/Classes/classnn_1_1_c_s_v_reader.md)) has been implemented into the project, as well as two scalers: [MinMaxScaler](docs/Classes/classnn_1_1_min_max_scaler.md) and [StandardScaler](docs/Classes/classnn_1_1_standard_scaler.md) for data normalization, and [to_categorical](docs/Namespaces/namespacenn.md#function-to_categorical) function for converting labels into one-hot encoded vectors..
+
+### [CSVReader](docs/Classes/classnn_1_1_c_s_v_reader.md)
+
+Start by including csv reader into your project:
+
+```cpp
+#include <NeuralNetworkCPP/DataPreprocessing/CSVReader/CSVReader.hpp>
+```
+
+Create a new reader by providing:
+* filename
+* separator
+* if targets are at the end of each line
+* if the file has a header to skip
+
+```cpp
+nn::CSVReader mnistTrain("mnist_train.csv", ',', false, true);
+```
+
+Next read the csv file contents:
+
+```cpp
+mnistTrain.read();
+```
+
+Now you can retrieve the features from the file, as well as labels:
+
+```cpp
+// Retrieve features
+std::vector<std::vector<double>> data = mnistTrain.getData();
+
+// Retrieve labels
+std::vector<std::vector<double>> labels = mnistTrain.getLabels();
+```
+
+### [MinMaxScaler](docs/Classes/classnn_1_1_min_max_scaler.md)
+
+Start by including [MinMaxScaler](docs/Classes/classnn_1_1_min_max_scaler.md) into your project:
+
+```cpp
+#include <NeuralNetworkCPP/DataPreprocessing/Scalers/MinMaxScaler/MinMaxScaler.hpp>
+```
+
+Create a scaler:
+
+```cpp
+nn::MinMaxScaler scaler;
+```
+
+Now you can fit date into the scaler:
+
+```cpp
+scaler.fit(mnistTrain.getData());
+```
+
+After fitting the data you can transform it to retrieve the normalized values:
+
+```cpp
+std::vector<std::vector<double>> scaledData = scaler.transform(mnistTrain.getData());
+```
+
+Or you can fit and transform the data at once using:
+
+```cpp
+std::vector<std::vector<double>> scaledData = scaler.fitTransform(mnistTrain.getData());
+```
+
+### [StandardScaler](docs/Classes/classnn_1_1_standard_scaler.md)
+
+Start by including [StandardScaler](docs/Classes/classnn_1_1_standard_scaler.md) into your project:
+
+```cpp
+#include <NeuralNetworkCPP/DataPreprocessing/Scalers/StandardScaler/StandardScaler.hpp>
+```
+
+Create a scaler:
+
+```cpp
+nn::StandardScaler scaler;
+```
+
+Now you can fit date into the scaler:
+
+```cpp
+scaler.fit(trainData.getData());
+```
+
+After fitting the data you can transform it to retrieve the normalized values:
+
+```cpp
+std::vector<std::vector<double>> scaledData = scaler.transform(trainData.getData());
+```
+
+Or you can fit and transform the data at once using:
+
+```cpp
+std::vector<std::vector<double>> scaledData = scaler.fitTransform(trainData.getData());
+```
+
+### [to_categorical](docs/Namespaces/namespacenn.md#function-to_categorical)
+
+Start by including [to_categorical](docs/Namespaces/namespacenn.md#function-to_categorical) helper function into your project:
+
+```cpp
+#include <NeuralNetworkCPP/Utils/Utils.hpp>
+```
+
+Converting a vector of class labels into one-hot encoded vectors:
+
+```cpp
+std::vector<std::vector<double>> trainLabels = nn::to_categorical(trainData.getLabels());
+```
