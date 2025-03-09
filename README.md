@@ -15,7 +15,8 @@ A lightweight, modular, and easy-to-use C++ neural network library designed for 
 * [Activation functions](#activation-functions)
     * [ReLU](#relu)
     * [Sigmoid](#sigmoid)
-    * [Softmax](#sofmtax)
+    * [Softmax](#softmax)
+    * [None](#none)
 * [Loss functions](#loss-functions)
     * [BinaryCrossEntropy](#binarycrossentropy)
     * [CategoricalCrossEntropy](#categoricalcrossentropy)
@@ -257,3 +258,44 @@ For flexibility He Uniform was also implemented in the project:
 ```cpp
 model.addLayer(std::make_unique<nn::DenseLayer>(2, 8, nn::HE_UNIFORM, nn::RELU));
 ```
+
+## Activation functions
+
+These are nonlinear functions that decide whether neurons should be activated i.e. pass information on, making the output of one neuron become the input of the next. Without them, a neural network, regardless of the number of layers, would be equivalent to a single linear model. The following activation functions were implemented in the project:
+* [nn::RELU](docs/Classes/classnn_1_1_re_l_u.md)
+* [nn::SIGMOID](docs/Classes/classnn_1_1_sigmoid.md)
+* [nn::SOFTMAX](docs/Classes/classnn_1_1_softmax.md)
+* nn::NONE (for linear regression)
+
+### [ReLU](docs/Classes/classnn_1_1_re_l_u.md)
+
+Used mainly in hidden layers:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(2, 8, nn::HE_NORMAL, nn::RELU));
+```
+
+### [Sigmoid](docs/Classes/classnn_1_1_sigmoid.md)
+
+Used mainly in binary classification problems as an activation function of the output layer:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(8, 1, nn::XAVIER_UNIFORM, nn::SIGMOID));
+```
+
+### [Softmax](docs/Classes/classnn_1_1_softmax.md)
+
+Used mainly in multi-class classification problems as an activation function of the output layer:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(64, 10, nn::XAVIER_UNIFORM, nn::SOFTMAX));
+```
+
+### None
+
+When used, it means that the layer should not apply any activation function. Used in linear regression problems for output layer:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(26, 1, nn::XAVIER_UNIFORM, nn::NONE));
+```
+
