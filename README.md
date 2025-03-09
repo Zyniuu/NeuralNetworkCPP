@@ -28,6 +28,7 @@ A lightweight, modular, and easy-to-use C++ neural network library designed for 
     * [SGD](#sgd)
     * [RMSprop](#rmsprop)
     * [Adam](#adam)
+* [Full documentation](#full-documentation)
 
 ## Usage
 
@@ -415,3 +416,8 @@ model.compile(
     std::make_unique<nn::MeanSquaredError>()
 );
 ```
+## Full documentation
+
+* [Classes](docs/index_classes.md)
+* [Files](docs/index_files.md)
+* [Namespaces](docs/index_namespaces.md)
