@@ -58,7 +58,7 @@ model.addLayer(std::make_unique<nn::DenseLayer>(2, 8, nn::HE_NORMAL, nn::RELU));
 
 In above example we have added a Dense (fully connected) layer to our model with 2 input neurons, 8 output neurons, He normal initializer and ReLU activation function.
 
-Next, before training we need to compile our model by providing optimizer, loss function and optionaly metrics to display during training:
+Next, before training we need to compile our model by providing optimizer, loss function and optionally metrics to display during training:
 
 ```cpp
 model.compile(
