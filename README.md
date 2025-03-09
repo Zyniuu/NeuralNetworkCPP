@@ -299,3 +299,42 @@ When used, it means that the layer should not apply any activation function. Use
 model.addLayer(std::make_unique<nn::DenseLayer>(26, 1, nn::XAVIER_UNIFORM, nn::NONE));
 ```
 
+## Loss functions
+
+Loss functions allow to calculate the error (difference) between predicted output and expected values. In this project, the following loss functions were implemented:
+* [nn::BinaryCrossEntropy](docs/Classes/classnn_1_1_binary_cross_entropy.md)
+* [nn::CategoricalCrossEntropy](docs/Classes/classnn_1_1_categorical_cross_entropy.md)
+* [nn::MeanSquaredError](docs/Classes/classnn_1_1_mean_squared_error.md)
+
+### [BinaryCrossEntropy](docs/Classes/classnn_1_1_binary_cross_entropy.md)
+
+Binary Cross-Entropy is used for binary classification tasks. It measures the difference between predicted probabilities and true binary labels:
+
+```cpp
+model.compile(
+    std::make_unique<nn::Adam>(),
+    std::make_unique<nn::BinaryCrossEntropy>()
+);
+```
+
+### [CategoricalCrossEntropy](docs/Classes/classnn_1_1_categorical_cross_entropy.md)
+
+Categorical Cross-Entropy is used for multi-class classification tasks. It measures the difference between predicted class probabilities and true class labels:
+
+```cpp
+model.compile(
+    std::make_unique<nn::Adam>(),
+    std::make_unique<nn::CategoricalCrossEntropy>()
+);
+```
+
+### [MeanSquaredError](docs/Classes/classnn_1_1_mean_squared_error.md)
+
+MSE is commonly used for regression tasks. It measures the average squared difference between predicted and target values:
+
+```cpp
+model.compile(
+    std::make_unique<nn::Adam>(),
+    std::make_unique<nn::MeanSquaredError>()
+);
+```
