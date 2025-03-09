@@ -113,7 +113,7 @@ model.save("trained_model.bin");
 
 ## Data preprocessing
 
-A csv file reader ([CSVReader](docs/Classes/classnn_1_1_c_s_v_reader.md)) has been implemented into the project, as well as two scalers: [MinMaxScaler](docs/Classes/classnn_1_1_min_max_scaler.md) and [StandardScaler](docs/Classes/classnn_1_1_standard_scaler.md) for data normalization, and [to_categorical](docs/Namespaces/namespacenn.md#function-to_categorical) function for converting labels into one-hot encoded vectors..
+A csv file reader ([CSVReader](docs/Classes/classnn_1_1_c_s_v_reader.md)) has been implemented into the project, as well as two scalers: [MinMaxScaler](docs/Classes/classnn_1_1_min_max_scaler.md) and [StandardScaler](docs/Classes/classnn_1_1_standard_scaler.md) for data normalization, and [to_categorical](docs/Namespaces/namespacenn.md#function-to_categorical) function for converting labels into one-hot encoded vectors.
 
 ### [CSVReader](docs/Classes/classnn_1_1_c_s_v_reader.md)
 
@@ -337,4 +337,33 @@ model.compile(
     std::make_unique<nn::Adam>(),
     std::make_unique<nn::MeanSquaredError>()
 );
+```
+
+## Layers
+
+Two types of layers were implemented in the project:
+* [nn::DenseLayer](docs/Classes/classnn_1_1_dense_layer.md)
+* [nn::BatchNormalization](docs/Classes/classnn_1_1_batch_normalization.md)
+
+### [DenseLayer](docs/Classes/classnn_1_1_dense_layer.md)
+
+A fully connected (dense) layer applies a linear transformation (weights * input + biases). To create a dense layer the following must be provided:
+* number of input neurons
+* number of output neurons
+* initializer
+* activation function
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(28 * 28, 64, nn::HE_NORMAL, nn::RELU));
+model.addLayer(std::make_unique<nn::DenseLayer>(64, 10, nn::XAVIER_UNIFORM, nn::SOFTMAX));
+```
+
+### [BatchNormalization](docs/Classes/classnn_1_1_batch_normalization.md)
+
+Batch Normalization is a technique used to normalize the inputs of each layer to improve the training speed and stability of neural networks. It is important to use it only after each dense layer except for the output layer. To create this layer the number of features (or in simpler terms: number of output neurons of the previous dense layer) needs to be provided:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(28 * 28, 64, nn::HE_NORMAL, nn::RELU));
+model.addLayer(std::make_unique<nn::BatchNormalization>(64));
+model.addLayer(std::make_unique<nn::DenseLayer>(64, 10, nn::XAVIER_UNIFORM, nn::SOFTMAX));
 ```
