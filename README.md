@@ -25,9 +25,9 @@ A lightweight, modular, and easy-to-use C++ neural network library designed for 
     * [DenseLayer](#denselayer)
     * [BatchNormalization](#batchnormalization)
 * [Optimizers](#optimizers)
-    * [Adam](#adam)
-    * [RMSprop](#rmsprop)
     * [SGD](#sgd)
+    * [RMSprop](#rmsprop)
+    * [Adam](#adam)
 
 ## Usage
 
@@ -366,4 +366,52 @@ Batch Normalization is a technique used to normalize the inputs of each layer to
 model.addLayer(std::make_unique<nn::DenseLayer>(28 * 28, 64, nn::HE_NORMAL, nn::RELU));
 model.addLayer(std::make_unique<nn::BatchNormalization>(64));
 model.addLayer(std::make_unique<nn::DenseLayer>(64, 10, nn::XAVIER_UNIFORM, nn::SOFTMAX));
+```
+## Optimizers
+
+Three optimizers were implemented in the project:
+* [nn::SGD](docs/Classes/classnn_1_1_s_g_d.md) (with momentum)
+* [nn::RMSprop](docs/Classes/classnn_1_1_r_m_sprop.md)
+* [nn::Adam](docs/Classes/classnn_1_1_adam.md)
+
+### [SGD](docs/Classes/classnn_1_1_s_g_d.md)
+
+This optimizer updates parameters using the gradient of the loss function and a momentum term to accelerate convergence. When creating this optimizer it is possible to optionally provide:
+* learning rate
+* momentum
+
+```cpp
+model.compile(
+    std::make_unique<nn::SGD>(0.001, 0.9),
+    std::make_unique<nn::MeanSquaredError>()
+);
+```
+
+### [RMSprop](docs/Classes/classnn_1_1_r_m_sprop.md)
+
+This optimizer divides the learning rate by an exponentially decaying average of squared gradients to normalize the updates. When creating this optimizer it is possible to optionally provide:
+* learning rate
+* decay rate for the moving average
+* small constant for numerical stability
+
+```cpp
+model.compile(
+    std::make_unique<nn::RMSprop>(0.001, 0.9, 1e-8),
+    std::make_unique<nn::MeanSquaredError>()
+);
+```
+
+### [Adam](docs/Classes/classnn_1_1_adam.md)
+
+This optimizer combines the benefits of momentum and [RMSprop](docs/Classes/classnn_1_1_r_m_sprop.md) to achieve faster convergence and better performance on a wide range of problems. When creating this optimizer it is possible to optionally provide:
+* learning rate
+* exponential decay rate for the first moment estimates
+* exponential decay rate for the second moment estimates
+* small constant for numerical stability
+
+```cpp
+model.compile(
+    std::make_unique<nn::Adam>(0.001, 0.9, 0.999, 1e-8),
+    std::make_unique<nn::MeanSquaredError>()
+);
 ```
