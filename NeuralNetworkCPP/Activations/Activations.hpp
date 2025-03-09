@@ -8,7 +8,8 @@
 #define ACTIVATIONS_HPP
 
 /**
- * This file is for including all of the avaible activation functions
+ * @file Activations.hpp
+ * @brief This file is for including all of the avaible activation functions.
  */
 
 #include "ReLU/ReLU.hpp"
