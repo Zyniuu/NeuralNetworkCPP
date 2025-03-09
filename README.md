@@ -225,3 +225,35 @@ Converting a vector of class labels into one-hot encoded vectors:
 ```cpp
 std::vector<std::vector<double>> trainLabels = nn::to_categorical(trainData.getLabels());
 ```
+
+## Initializers
+
+Two types of weights initialization were implemented in the project: [Xavier/Glorot](docs/Classes/classnn_1_1_xavier_uniform.md) and [He](docs/Classes/classnn_1_1_he_normal.md).
+
+### Xavier/Glorot initializer
+
+Xavier Uniform initialization is designed for networks using for example sigmoid or tanh activation functions. It draws weights from a uniform distribution within the range [-limit, limit], where limit = sqrt(6 / (fan-in + fan-out)), and fan-in and fan-out are the number of input and output neurons:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(8, 1, nn::XAVIER_UNIFORM, nn::SIGMOID));
+```
+
+For flexibility Xavier Normal was also implemented in the project:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(8, 1, nn::XAVIER_NORMAL, nn::SIGMOID));
+```
+
+### He initializer
+
+He Normal initialization is designed for networks using [ReLU](docs/Classes/classnn_1_1_re_l_u.md) (or variants) activation functions. It draws weights from a normal distribution with a mean of 0 and a standard deviation of sqrt(2 / fan-in), where fan-in is the number of input neurons:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(2, 8, nn::HE_NORMAL, nn::RELU));
+```
+
+For flexibility He Uniform was also implemented in the project:
+
+```cpp
+model.addLayer(std::make_unique<nn::DenseLayer>(2, 8, nn::HE_UNIFORM, nn::RELU));
+```
