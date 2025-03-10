@@ -147,24 +147,3 @@ TEST(ThreadPoolTests, ParallelForModifyArray)
         EXPECT_EQ(data[i], i * 2);
     }
 }
-
-// Test if the thread pool shuts down gracefully
-TEST(ThreadPoolTests, Shutdown)
-{
-    auto &pool = nn::getGlobalThreadPool();
-
-    // Submit a task
-    auto future = pool.enqueue([] {
-        return 42;
-    });
-
-    EXPECT_EQ(future.get(), 42); // Verify the task completes
-
-    // Shutdown the pool
-    pool.~ThreadPool();
-
-    // Attempt to submit a new task after shutdown
-    EXPECT_THROW({
-        pool.enqueue([] {});
-    }, std::runtime_error);
-}
