@@ -42,11 +42,7 @@ namespace nn
     public:
         virtual Matrix forward(const Matrix &input) = 0;
 
-        virtual Matrix backward(const Matrix &gradient) = 0;
-
-        virtual void resetGradients() = 0;
-
-        virtual void applyGradient(Optimizer &optimizer, const int batchSize) = 0;
+        virtual Matrix backward(const Matrix &gradient, Optimizer &optimizer) = 0;
 
         virtual void save(std::ofstream &file) const = 0;
 

@@ -36,9 +36,7 @@ namespace nn
     private:
         Matrix m_weights;                         
         Matrix m_biases;                          
-        Matrix m_input;                           
-        Matrix m_gradWeights;                     
-        Matrix m_gradBiases;                      
+        Matrix m_input;                   
         Matrix m_output;                          
         std::unique_ptr<Activation> m_activation; 
         e_activation m_activationID;              
@@ -50,11 +48,7 @@ namespace nn
 
         Matrix forward(const Matrix &input) override;
 
-        Matrix backward(const Matrix &gradient) override;
-
-        void resetGradients() override;
-
-        void applyGradient(Optimizer &optimizer, const int batchSize) override;
+        Matrix backward(const Matrix &gradient, Optimizer &optimizer) override;
 
         void save(std::ofstream &file) const override;
 

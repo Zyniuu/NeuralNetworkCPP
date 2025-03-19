@@ -28,7 +28,7 @@ namespace nn
         Matrix grad = gradient;
 
         for (auto it = m_layers.rbegin(); it != m_layers.rend(); it++)
-            grad = (*it)->backward(grad);
+            grad = (*it)->backward(grad, *m_optimizer);
     }
 
     void ModelTrainer::compile(
@@ -152,11 +152,6 @@ namespace nn
         double &loss
     )
     {
-        // Reset gradients for all layers
-        for (auto &layer : m_layers)
-            layer->resetGradients();
-
-        // Forward and backward passes (accumulating gradients)
         // Convert the batch of inputs and targets into matrices
         Matrix inputBatch = nn::Matrix(xBatch).transpose(); // Each column is a sample
         Matrix targetBatch = nn::Matrix(yBatch).transpose(); // Each column is a target
@@ -170,10 +165,6 @@ namespace nn
         // Backward pass for the entire batch
         Matrix gradBatch = m_loss->computeGradient(outputBatch, targetBatch);
         backward(gradBatch);
-
-        // Average gradients and update weights
-        for (auto &layer : m_layers)
-            layer->applyGradient(*m_optimizer, xBatch.size());
     }
 }
 ```

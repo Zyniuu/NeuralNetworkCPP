@@ -28,7 +28,6 @@ namespace nn
         m_beta = Matrix(numFeatures, 1, 0.0);
         m_runningMean = Matrix(numFeatures, 1, 0.0);
         m_runningVar = Matrix(numFeatures, 1, 0.0);
-        resetGradients();
     }
 
     BatchNormalization::BatchNormalization(std::ifstream &file)
@@ -55,8 +54,6 @@ namespace nn
         // Check if reading was successful
         if (!file.good())
             throw std::runtime_error("Failed to read layer from the file.");
-
-        resetGradients();
     }
 
     Matrix BatchNormalization::forward(const Matrix &input)
@@ -90,7 +87,7 @@ namespace nn
         return (m_normalized.colWise() * m_gamma).colWise() + m_beta;
     }
 
-    Matrix BatchNormalization::backward(const Matrix &gradient)
+    Matrix BatchNormalization::backward(const Matrix &gradient, Optimizer &optimizer)
     {
         int m = m_input.getCols();
         Matrix t = (m_stddev + m_epsilon).map([](double x) { return 1.0 / std::sqrt(x); }); // 1 / sigma
@@ -104,26 +101,13 @@ namespace nn
         Matrix gradInput = (((m * gradient).colWise() - sumGrad) - ((diff.colWise() * t.cwiseProduct(t)).colWise() * gradDiff.rowWise().sum())).colWise() * (m_gamma.cwiseProduct(t) / m);
 
         // Compute gradients for gamma and beta
-        m_gradGamma += gradient.cwiseProduct(m_normalized).rowWise().sum();
-        m_gradBeta += sumGrad;
-
-        return gradInput;
-    }
-
-    void BatchNormalization::resetGradients()
-    {
-        m_gradGamma = Matrix(m_gamma.getRows(), m_gamma.getCols(), 0.0);
-        m_gradBeta = Matrix(m_beta.getRows(), m_beta.getCols(), 0.0);
-    }
-
-    void BatchNormalization::applyGradient(Optimizer &optimizer, const int batchSize)
-    {
-        // Average gradients over the batch
-        m_gradGamma /= batchSize;
-        m_gradBeta /= batchSize;
+        Matrix gradGamma = gradient.cwiseProduct(m_normalized).rowWise().sum();
+        Matrix gradBeta = sumGrad;
 
         // Update gamma and beta
-        optimizer.update(m_gamma, m_beta, m_gradGamma, m_gradBeta);
+        optimizer.update(m_gamma, m_beta, gradGamma, gradBeta);
+
+        return gradInput;
     }
 
     void BatchNormalization::save(std::ofstream &file) const

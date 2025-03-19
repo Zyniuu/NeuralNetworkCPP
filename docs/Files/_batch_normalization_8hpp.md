@@ -35,9 +35,7 @@ namespace nn
         Matrix m_input;       
         Matrix m_gamma;       
         Matrix m_beta;        
-        Matrix m_normalized;  
-        Matrix m_gradGamma;   
-        Matrix m_gradBeta;    
+        Matrix m_normalized;    
         Matrix m_mean;        
         Matrix m_stddev;      
         Matrix m_runningMean; 
@@ -53,11 +51,7 @@ namespace nn
 
         Matrix forward(const Matrix &input) override;
 
-        Matrix backward(const Matrix &gradient) override;
-
-        void resetGradients() override;
-
-        void applyGradient(Optimizer &optimizer, const int batchSize) override;
+        Matrix backward(const Matrix &gradient, Optimizer &optimizer) override;
 
         void save(std::ofstream &file) const override;
 

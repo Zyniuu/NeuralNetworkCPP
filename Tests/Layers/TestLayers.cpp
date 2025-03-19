@@ -34,13 +34,13 @@ TEST(DenseLayerTests, ForwardPass)
 TEST(DenseLayerTests, BackwardPass)
 {
     nn::DenseLayer layer(3, 1, nn::HE_NORMAL, nn::RELU);
-    layer.resetGradients();
+    nn::Adam optimizer{};
 
     nn::Matrix input(3, 1, {1.0, 2.0, 3.0});
     nn::Matrix output = layer.forward(input);
 
     nn::Matrix gradient(1, 1, {0.5});
-    nn::Matrix gradInput = layer.backward(gradient);
+    nn::Matrix gradInput = layer.backward(gradient, optimizer);
 
     // Check gradient dimensions
     ASSERT_EQ(gradInput.getRows(), 3);
@@ -109,6 +109,7 @@ TEST(BatchNormalizationTests, ForwardPass)
 TEST(BatchNormalizationTests, BackwardPass)
 {
     nn::BatchNormalization bnLayer(3, 0.99, 1e-15);
+    nn::Adam optimizer{};
 
     // Training mode
     bnLayer.setTrainingMode(true);
@@ -116,7 +117,7 @@ TEST(BatchNormalizationTests, BackwardPass)
     nn::Matrix input(3, 3, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0});
     nn::Matrix grad(3, 3, {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9});
     bnLayer.forward(input);
-    nn::Matrix output = bnLayer.backward(grad);
+    nn::Matrix output = bnLayer.backward(grad, optimizer);
 
     nn::Matrix inputGrad = nn::Matrix({
         {-0.000000, 0.000000, 0.000000},

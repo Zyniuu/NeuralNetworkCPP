@@ -25,8 +25,6 @@ namespace nn
         Matrix m_gamma;       ///< Scale parameter (learnable).
         Matrix m_beta;        ///< Shift parameter (learnable).
         Matrix m_normalized;  ///< Normalized input.
-        Matrix m_gradGamma;   ///< Accumulated gradient for gamma.
-        Matrix m_gradBeta;    ///< Accumulated gradient for beta.
         Matrix m_mean;        ///< Mean of the input
         Matrix m_stddev;      ///< Standard deviation of the input
         Matrix m_runningMean; ///< Running mean (used during inference).
@@ -65,22 +63,10 @@ namespace nn
          * @brief Performs backward propagation.
          *
          * @param gradient The gradient of the loss with respect to the output.
+         * @param optimizer The optimizer to use for weights and biases updates.
          * @return The gradient of the loss with respect to the input.
          */
-        Matrix backward(const Matrix &gradient) override;
-
-        /**
-         * @brief Resets the accumulated gradients of the layer.
-         */
-        void resetGradients() override;
-
-        /**
-         * @brief Applies accumulated gradients to the layer.
-         *
-         * @param optimizer The optimizer to use for gamma and beta updates.
-         * @param batchSize Size of the batch from which gradients were accumulated.
-         */
-        void applyGradient(Optimizer &optimizer, const int batchSize) override;
+        Matrix backward(const Matrix &gradient, Optimizer &optimizer) override;
 
         /**
          * @brief Saves the layer's state to a binary file.
